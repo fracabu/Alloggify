@@ -4,10 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Alloggify is an OCR-powered web application that extracts information from identity documents (Italian ID cards, passports, driving licenses) and prepares data for the Alloggiati Web portal (Italian police hospitality reporting system). The project consists of:
+Alloggify is an OCR-powered web application that extracts information from identity documents (Italian ID cards, passports, driving licenses) and prepares data for the Alloggiati Web portal (Italian police hospitality reporting system).
+
+### Current Architecture (MVP)
 
 1. **React Web App**: Vite-based React application for document scanning and data extraction
 2. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form
+
+### Future Vision (SaaS Platform)
+
+The project is planned to evolve into a full SaaS platform with:
+- **Backend API**: Node.js + Express/Fastify with PostgreSQL database
+- **Authentication**: JWT-based auth with OAuth 2.0 support
+- **Payment System**: Stripe integration with subscription tiers (Free, Basic €19, Pro €49, Enterprise €199)
+- **Chrome Web Store**: Published extension with cloud sync
+- **Multi-tenant Architecture**: Support for hotel chains and property managers
+
+**See `SAAS_PLAN.md` for complete roadmap, financial projections, and technical architecture.**
 
 ## Common Development Commands
 
