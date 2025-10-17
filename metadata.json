@@ -1,0 +1,5 @@
+{
+  "name": "Alloggify",
+  "description": "An OCR tool powered by AI to extract information from identity documents and automatically fill the Alloggiati Web form. Alloggify supports various Italian and international documents.",
+  "requestFramePermissions": []
+}

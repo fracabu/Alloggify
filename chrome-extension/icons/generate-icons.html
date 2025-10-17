@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genera Icone per Estensione Chrome</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .canvas-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        canvas {
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .downloads {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 10px;
+            border: 2px solid #4caf50;
+        }
+        .downloads h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        .downloads a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .downloads a:hover {
+            transform: translateY(-2px);
+        }
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ffc107;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Generatore Icone Estensione</h1>
+
+    <div class="instructions">
+        <h3>📋 Istruzioni:</h3>
+        <ol>
+            <li>Le icone saranno generate automaticamente con emoji 🏠</li>
+            <li>Clicca sui link di download sotto</li>
+            <li>Salva i file nella cartella <code>chrome-extension/icons/</code></li>
+            <li>Ricarica l'estensione in Chrome</li>
+        </ol>
+    </div>
+
+    <div class="canvas-container">
+        <h2>Anteprime:</h2>
+        <div style="text-align: center;">
+            <div style="display: inline-block; margin: 20px;">
+                <p><strong>16x16</strong></p>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+            </div>
+            <div style="display: inline-block; margin: 20px;">
+                <p><strong>48x48</strong></p>
+                <canvas id="canvas48" width="48" height="48"></canvas>
+            </div>
+            <div style="display: inline-block; margin: 20px;">
+                <p><strong>128x128</strong></p>
+                <canvas id="canvas128" width="128" height="128"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="downloads" id="downloads">
+        <h3>⬇️ Download Icone:</h3>
+        <p>Clicca sui link sotto per scaricare le icone generate:</p>
+    </div>
+
+    <script>
+        function createIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+
+            // Rounded rectangle background
+            const radius = size * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Emoji/Icon
+            ctx.font = `${size * 0.55}px Arial, "Segoe UI Emoji", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = 'white';
+            ctx.fillText('🏠', size / 2, size / 2);
+
+            // Create download link
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon${size}.png`;
+                a.textContent = `📥 Scarica icon${size}.png`;
+                document.getElementById('downloads').appendChild(a);
+            });
+        }
+
+        // Generate all icons
+        createIcon('canvas16', 16);
+        createIcon('canvas48', 48);
+        createIcon('canvas128', 128);
+
+        console.log('✅ Icone generate con successo!');
+    </script>
+</body>
+</html>
