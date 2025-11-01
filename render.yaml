@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: alloggify-backend
+    runtime: node
+    plan: free
+    region: frankfurt  # Closest to Italy
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /health

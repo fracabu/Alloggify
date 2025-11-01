@@ -1,4 +1,5 @@
 import { DocumentData } from '../types';
+import { API_ENDPOINTS } from '../config/api';
 
 interface AlloggiatiCredentials {
     utente: string;
@@ -24,7 +25,7 @@ export class AlloggiatiApiService {
      */
     async generateToken(credentials: AlloggiatiCredentials): Promise<TokenResponse> {
         try {
-            const response = await fetch('/api/alloggiati-auth', {
+            const response = await fetch(API_ENDPOINTS.auth, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ export class AlloggiatiApiService {
         const xmlSchedina = this.buildSchedinaXml(data);
 
         try {
-            const response = await fetch('/api/alloggiati-test', {
+            const response = await fetch(API_ENDPOINTS.test, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -124,7 +125,7 @@ export class AlloggiatiApiService {
             // Format date as ISO DateTime (YYYY-MM-DDTHH:MM:SS)
             const formattedDate = `${date}T00:00:00`;
 
-            const response = await fetch('/api/alloggiati-ricevuta', {
+            const response = await fetch(API_ENDPOINTS.ricevuta, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -170,7 +171,7 @@ export class AlloggiatiApiService {
         const xmlSchedina = this.buildSchedinaXml(data);
 
         try {
-            const response = await fetch('/api/alloggiati-send', {
+            const response = await fetch(API_ENDPOINTS.send, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
