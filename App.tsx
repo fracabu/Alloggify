@@ -8,6 +8,7 @@ import { UploadIcon, LoaderIcon, ErrorIcon, SuccessIcon } from './components/ico
 import { ApiKeyGuide } from './components/ApiKeyGuide';
 import { AlloggiatiCredentials } from './components/AlloggiatiCredentials';
 import { alloggiatiApi } from './services/alloggiatiApiService';
+import { ConfirmationModal } from './components/ConfirmationModal';
 
 const initialDocumentData: DocumentData = {
     tipo: 'Ospite Singolo',
@@ -119,17 +120,26 @@ const App: React.FC = () => {
         setApiSendSuccess(null);
     };
 
+    const [showConfirmModal, setShowConfirmModal] = React.useState(false);
+
     const handleSendViaApi = async () => {
+        // Check if we have required fields before showing modal
+        if (!documentData.cognome || !documentData.nome || !documentData.dataNascita) {
+            setError('Compila almeno Cognome, Nome e Data di Nascita prima di inviare');
+            return;
+        }
+
+        // Show confirmation modal
+        setShowConfirmModal(true);
+    };
+
+    const handleConfirmSend = async () => {
+        setShowConfirmModal(false);
         setApiSendLoading(true);
         setError(null);
         setApiSendSuccess(null);
 
         try {
-            // Check if we have required fields
-            if (!documentData.cognome || !documentData.nome || !documentData.dataNascita) {
-                throw new Error('Compila almeno Cognome, Nome e Data di Nascita prima di inviare');
-            }
-
             // Test token validity first
             const isTokenValid = await alloggiatiApi.testAuthentication();
             if (!isTokenValid) {
@@ -248,6 +258,14 @@ const App: React.FC = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={showConfirmModal}
+                onClose={() => setShowConfirmModal(false)}
+                onConfirm={handleConfirmSend}
+                data={documentData}
+            />
         </div>
     );
 };
