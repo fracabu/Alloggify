@@ -47,10 +47,8 @@ export default async function handler(req: any, res: any) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/soap+xml; charset=utf-8',
-                'SOAPAction': 'AlloggiatiService/GenerateToken',
             },
             body: soapEnvelope,
-            signal: AbortSignal.timeout(25000), // 25 second timeout
         });
 
         console.log('[AUTH] SOAP Response status:', response.status);
