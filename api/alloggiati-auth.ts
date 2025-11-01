@@ -1,5 +1,10 @@
 const SOAP_ENDPOINT = 'https://alloggiatiweb.poliziadistato.it/service/service.asmx';
 
+// Vercel serverless function configuration
+export const config = {
+    maxDuration: 30, // 30 seconds timeout
+};
+
 export default async function handler(req: any, res: any) {
     // Only allow POST requests
     if (req.method !== 'POST') {
@@ -7,11 +12,18 @@ export default async function handler(req: any, res: any) {
     }
 
     try {
+        console.log('[AUTH] Starting authentication request');
+        console.log('[AUTH] Request method:', req.method);
+        console.log('[AUTH] Request body keys:', Object.keys(req.body || {}));
+
         const { utente, password, wskey } = req.body;
 
         if (!utente || !password || !wskey) {
+            console.error('[AUTH] Missing credentials:', { utente: !!utente, password: !!password, wskey: !!wskey });
             return res.status(400).json({ error: 'Missing required fields: utente, password, wskey' });
         }
+
+        console.log('[AUTH] Credentials received for user:', utente);
 
         // Build SOAP envelope (corrected format from official documentation)
         const soapEnvelope = `<?xml version="1.0" encoding="utf-8"?>
