@@ -6,13 +6,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Alloggify is an OCR-powered web application that extracts information from identity documents (Italian ID cards, passports, driving licenses) and prepares data for the Alloggiati Web portal (Italian police hospitality reporting system).
 
-### Current Architecture (MVP)
+### Project Evolution
 
-1. **React Web App**: Vite-based React application for document scanning and data extraction
-2. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form
+**Phase 1 - Chrome Extension (MVP)**
+- Initial implementation: Browser extension for form auto-fill
+- Client-side localStorage communication
+- Manual submission through portal interface
+- Simple setup, no backend required
 
-### Future Vision (SaaS Platform)
+**Phase 2 - SOAP API Integration (Current)**
+- Discovered official Alloggiati Web SOAP API
+- Implemented WSKEY-based authentication
+- Full automation: OCR → Test → Send → Receipt download
+- Express backend server for SOAP proxy
+- Production-ready for high-volume operations
 
+**Phase 3 - SaaS Platform (Future Vision)**
 The project is planned to evolve into a full SaaS platform with:
 - **Backend API**: Node.js + Express/Fastify with PostgreSQL database
 - **Authentication**: JWT-based auth with OAuth 2.0 support
@@ -21,6 +30,12 @@ The project is planned to evolve into a full SaaS platform with:
 - **Multi-tenant Architecture**: Support for hotel chains and property managers
 
 **See `SAAS_PLAN.md` for complete roadmap, financial projections, and technical architecture.**
+
+### Current Architecture (Dual-Method System)
+
+1. **React Web App**: Vite-based React application for document scanning and data extraction
+2. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
+3. **Express Backend**: SOAP API proxy for direct submission with WSKEY authentication (Method B)
 
 ## Common Development Commands
 
@@ -134,23 +149,78 @@ Alloggify/
 ### Web Application Flow
 
 1. **Entry Point**: `index.tsx` → `App.tsx`
-2. **Document Processing Pipeline**:
+
+2. **Common Document Processing Pipeline** (Both Methods):
    - User uploads image → `App.tsx` (handleFileChange)
    - Image converted to base64 → `utils/fileUtils.ts` (fileToBase64)
    - Gemini API extracts document data → `services/geminiService.ts` (extractDocumentInfo)
    - Data populates form → `components/MainForm.tsx`
-   - User has two submission options:
-     - **Option A**: "Esporta per Estensione" → saves to localStorage → Chrome extension auto-fills portal
-     - **Option B**: "Invia Schedina" → sends via SOAP API through backend server (requires credentials)
+   - User reviews/edits extracted data
 
-3. **SOAP API Submission Flow** (Option B):
-   - User clicks "Invia Schedina" button
-   - Frontend loads credentials from localStorage (populated from .env on startup)
-   - `POST /api/alloggiati/auth` → Get authentication token (if not cached)
-   - `POST /api/alloggiati/test` → Validate schedina data (optional pre-check)
-   - `POST /api/alloggiati/send` → Submit schedina to Alloggiati Web
-   - Backend (`server/`) handles SOAP XML communication
-   - Success response → User can download receipt via `POST /api/alloggiati/ricevuta`
+3. **Method A: Chrome Extension Flow** (Client-Side):
+   ```
+   User clicks "Esporta per Estensione"
+   ↓
+   App.tsx saves data to localStorage (alloggifyData)
+   ↓
+   Custom event "alloggifyDataExported" dispatched
+   ↓
+   User navigates to Alloggiati Web portal
+   ↓
+   Content script (chrome-extension/content.js) injects
+   ↓
+   Floating button "Compila da Alloggify" appears
+   ↓
+   User clicks button → Extension reads localStorage
+   ↓
+   Form fields auto-filled via DOM manipulation
+   ↓
+   Date/sex transformations applied (YYYY-MM-DD → DD/MM/YYYY, etc.)
+   ↓
+   User manually reviews and clicks Submit on portal
+   ```
+
+4. **Method B: SOAP API Flow** (Server-Side):
+   ```
+   User expands "API Alloggiati Web" panel (AlloggiatiCredentials.tsx)
+   ↓
+   Enter credentials: Utente, Password, WSKEY
+   ↓
+   Click "Connetti" → Authentication flow:
+      POST /api/alloggiati/auth
+      ↓
+      server/routes/auth.js processes request
+      ↓
+      server/utils/soap.js builds SOAP XML:
+        <GenerateToken>
+          <Utente>...</Utente>
+          <Password>...</Password>
+          <WsKey>...</WsKey>
+        </GenerateToken>
+      ↓
+      Alloggiati Web SOAP API returns token + expiry
+      ↓
+      Token stored in localStorage (alloggifyToken)
+   ↓
+   User clicks "Invia Schedina" → Submission flow:
+      ConfirmationModal appears for user confirmation
+      ↓
+      POST /api/alloggiati/test (optional validation)
+      ↓
+      POST /api/alloggiati/send
+      ↓
+      server/routes/send.js builds schedina XML
+      ↓
+      SOAP request with token authentication
+      ↓
+      Success → Receipt number returned
+      ↓
+      Optional: Download PDF via POST /api/alloggiati/ricevuta
+   ```
+
+**Key Differences**:
+- **Method A**: Requires manual portal interaction; no WSKEY needed; client-side only
+- **Method B**: Fully automated; requires WSKEY + backend; server-side SOAP communication
 
 ### Key Components
 
@@ -185,31 +255,87 @@ The extension works on:
 
 ### Backend Express Server (SOAP API Integration)
 
-The `server/` directory contains an Express.js backend that provides SOAP API integration with the Alloggiati Web portal.
+The `server/` directory contains an Express.js backend that provides SOAP API integration with the Alloggiati Web portal using **WSKEY authentication**.
 
 **Architecture**:
-- **Port**: 3001 (default)
+- **Port**: 3001 (default, configurable via PORT env var)
 - **CORS**: Configured for localhost:5173 (Vite dev) and Vercel production/preview deployments
 - **Purpose**: Proxies requests to Alloggiati Web SOAP API (avoids CORS issues in browser)
+- **Authentication**: WSKEY-based token generation for API access
 
 **API Endpoints**:
-- `POST /api/alloggiati/auth` - Generate authentication token using credentials
-- `POST /api/alloggiati/test` - Validate schedina data before submission
-- `POST /api/alloggiati/send` - Send schedina to Alloggiati Web
-- `POST /api/alloggiati/ricevuta` - Download receipt PDF
+- `POST /api/alloggiati/auth` - **Generate authentication token** using Username + Password + **WSKEY**
+- `POST /api/alloggiati/test` - Validate schedina data before submission (requires token)
+- `POST /api/alloggiati/send` - Send schedina to Alloggiati Web (requires token)
+- `POST /api/alloggiati/ricevuta` - Download receipt PDF (requires token + date range)
 
 **Key Files**:
 - `server/index.js` - Express app setup, middleware, route registration
 - `server/utils/soap.js` - SOAP client implementation for Alloggiati Web API
-- `server/routes/*.js` - Individual route handlers for each endpoint
+- `server/routes/auth.js` - **WSKEY authentication** and token generation
+- `server/routes/test.js` - Schedina validation endpoint
+- `server/routes/send.js` - Schedina submission endpoint
+- `server/routes/ricevuta.js` - Receipt download endpoint
+
+**WSKEY Role & Authentication Flow**:
+
+The **WSKEY (Web Service Key)** is a secret credential that enables programmatic access to Alloggiati Web API.
+
+1. **What is WSKEY?**
+   - Secret API key generated from Alloggiati Web portal (Profilo → Chiave Web Service)
+   - Base64-encoded string (e.g., `AFWxClHwW6PKdenzGh0nsQMiFqttTvH2...==`)
+   - Permanent until regenerated by user
+   - Required for `GenerateToken` SOAP operation
+
+2. **Authentication Flow**:
+   ```
+   Frontend sends: { utente, password, wskey }
+   ↓
+   server/routes/auth.js receives request
+   ↓
+   server/utils/soap.js builds SOAP envelope:
+     <GenerateToken>
+       <Utente>username</Utente>
+       <Password>password</Password>
+       <WsKey>base64_wskey</WsKey>
+     </GenerateToken>
+   ↓
+   SOAP API validates WSKEY + credentials
+   ↓
+   Returns: { token, expiryTimestamp }
+   ↓
+   Frontend stores token in localStorage
+   ↓
+   Token used for subsequent Test/Send/Ricevuta operations
+   ```
+
+3. **Token vs WSKEY**:
+   - **WSKEY**: Permanent credential (until regenerated); used once per session
+   - **Token**: Temporary session token (expires after 30-60 min); regenerated as needed
+
+4. **Security**:
+   - WSKEY passed from frontend (stored in .env.local or UI)
+   - Never logged or committed to git
+   - Transmitted only over HTTPS
+   - Token automatically refreshed on expiry
 
 **SOAP Integration**:
-The backend communicates with the official Alloggiati Web SOAP API. Credentials are passed from the frontend and stored in localStorage (see App.tsx for token persistence). The server acts as a proxy to handle SOAP XML requests/responses and bypass browser CORS restrictions.
+The backend communicates with the official Alloggiati Web SOAP API endpoint:
+- **URL**: `https://alloggiatiweb.poliziadistato.it/wsAlloggiati/service.asmx`
+- **Protocol**: SOAP 1.1 (XML over HTTPS)
+- **Operations**: GenerateToken, TestSchedula, InviaSchedula, DownloadRicevuta
+
+The server acts as a proxy to:
+- Handle SOAP XML request/response serialization
+- Bypass browser CORS restrictions
+- Manage token lifecycle
+- Provide REST-like interface for frontend
 
 **Environment**:
 - Development: `npm run dev` (auto-reload with --watch flag)
 - Production: `npm start`
 - Logs all requests with timestamp for debugging
+- No database required (stateless operation)
 
 ### Document Type Classification Logic
 
@@ -245,9 +371,23 @@ Configured in both `tsconfig.json` and `vite.config.ts`.
   - Placeholder/title-based searches: `fillByIdOrPlaceholder()` for fields without stable IDs
   - Select option matching: Case-insensitive matching by value or text content
 - **localStorage Keys**:
-  - `alloggifyData`: JSON-serialized DocumentData object
+  - `alloggifyData`: JSON-serialized DocumentData object (for Chrome Extension method)
   - `alloggifyDataTimestamp`: Timestamp of last export
   - `geminiApiKey`: User's Gemini API key (optional, UI-configurable)
-  - `alloggifyToken`: SOAP API authentication token (persisted from login)
-  - `alloggifyCredentials`: Encrypted user credentials for Alloggiati Web (username/password from .env)
+  - `alloggifyToken`: SOAP API authentication token (temporary, expires after session)
+  - `alloggifyCredentials`: JSON object with { utente, password, wskey } for SOAP API
 - **Custom Events**: `alloggifyDataExported` event is dispatched on window when data is exported (for extension bridge)
+- **WSKEY Technical Details**:
+  - **Format**: Base64-encoded string, typically 88 characters ending with `==`
+  - **Generation**: Portal → Profilo → Chiave Web Service → Genera Chiave
+  - **Lifecycle**: Permanent until manually regenerated by user
+  - **Usage**: Required parameter for `GenerateToken` SOAP operation
+  - **Storage**: Environment variable `VITE_ALLOGGIATI_WSKEY` or UI input (stored in localStorage)
+  - **Security**: Never log, commit to git, or expose in error messages
+  - **Validation**: Backend checks presence but doesn't validate format (API validates)
+- **Token Management**:
+  - **Generation**: POST /api/alloggiati/auth with (utente, password, wskey)
+  - **Format**: Opaque string returned by Alloggiati Web API
+  - **Expiry**: Typically 30-60 minutes of inactivity
+  - **Refresh**: Automatic re-authentication when 401/403 errors occur
+  - **Storage**: localStorage.alloggifyToken (cleared on logout or expiry)
