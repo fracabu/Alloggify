@@ -1,14 +1,16 @@
 import React from 'react';
 import { DocumentData } from '../types';
-import { PlugIcon } from './icons/Icons';
+import { PlugIcon, SendIcon, LoaderIcon } from './icons/Icons';
 
 interface MainFormProps {
     data: DocumentData;
     onDataChange: (field: keyof DocumentData, value: string) => void;
     onExport: () => void;
+    onSendApi: () => void;
     onReset: () => void;
     minDate: string;
     maxDate: string;
+    apiSendLoading: boolean;
 }
 
 const InputField: React.FC<{ 
@@ -34,7 +36,7 @@ const InputField: React.FC<{
             placeholder={placeholder || label}
             min={min}
             max={max}
-            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-2 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
         />
     </div>
 );
@@ -48,7 +50,7 @@ const SelectField: React.FC<{ id: keyof DocumentData; label: string; value: stri
             name={id}
             value={value}
             onChange={onChange}
-            className="mt-1 block w-full pl-3 pr-10 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full pl-2 pr-8 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
         >
             {children}
         </select>
@@ -62,17 +64,17 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 // FIX: Export MainForm component to be used in App.tsx and complete the truncated file.
-export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport, onReset, minDate, maxDate }) => {
+export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport, onSendApi, onReset, minDate, maxDate, apiSendLoading }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         onDataChange(name as keyof DocumentData, value);
     };
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
             <fieldset>
-                <legend className="text-lg font-medium text-gray-900 mb-2">Dati Schedina</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <legend className="text-base font-medium text-gray-900 mb-2">Dati Schedina</legend>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <SelectField id="tipo" label="Tipo Alloggiato" value={data.tipo} onChange={handleChange}>
                         <option>Ospite Singolo</option>
                         <option>Capo Famiglia</option>
@@ -89,8 +91,8 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
             </fieldset>
 
             <fieldset>
-                <legend className="text-lg font-medium text-gray-900 mb-2">Dati Anagrafici</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <legend className="text-base font-medium text-gray-900 mb-2">Dati Anagrafici</legend>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <InputField id="cognome" label="Cognome" value={data.cognome} onChange={handleChange} />
                     <InputField id="nome" label="Nome" value={data.nome} onChange={handleChange} />
                     <SelectField id="sesso" label="Sesso" value={data.sesso} onChange={handleChange}>
@@ -105,8 +107,8 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
             </fieldset>
 
             <fieldset>
-                <legend className="text-lg font-medium text-gray-900 mb-2">Documento di Identità</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <legend className="text-base font-medium text-gray-900 mb-2">Documento di Identità</legend>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <SelectField id="tipoDocumento" label="Tipo Documento" value={data.tipoDocumento} onChange={handleChange}>
                         <option value="">Seleziona tipo...</option>
                         <option value="CARTA DI IDENTITA'">CARTA DI IDENTITA'</option>
@@ -125,16 +127,34 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <div className="flex justify-end space-x-4 pt-4">
-                <button type="button" onClick={onReset} className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div className="flex justify-end space-x-3 pt-2">
+                <button type="button" onClick={onReset} className="px-3 py-1.5 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Svuota
                 </button>
                 <button
                     type="button"
-                    onClick={onExport}
-                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    onClick={onSendApi}
+                    disabled={apiSendLoading}
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-300 disabled:cursor-not-allowed"
                 >
-                    <PlugIcon className="-ml-1 mr-2 h-5 w-5" />
+                    {apiSendLoading ? (
+                        <>
+                            <LoaderIcon className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                            Invio...
+                        </>
+                    ) : (
+                        <>
+                            <SendIcon className="-ml-1 mr-2 h-4 w-4" />
+                            Invia Direttamente
+                        </>
+                    )}
+                </button>
+                <button
+                    type="button"
+                    onClick={onExport}
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                >
+                    <PlugIcon className="-ml-1 mr-2 h-4 w-4" />
                     Esporta per Estensione
                 </button>
             </div>

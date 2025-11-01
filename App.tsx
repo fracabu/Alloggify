@@ -6,6 +6,8 @@ import { extractDocumentInfo } from './services/geminiService';
 import { fileToBase64 } from './utils/fileUtils';
 import { UploadIcon, LoaderIcon, ErrorIcon, SuccessIcon } from './components/icons/Icons';
 import { ApiKeyGuide } from './components/ApiKeyGuide';
+import { AlloggiatiCredentials } from './components/AlloggiatiCredentials';
+import { alloggiatiApi } from './services/alloggiatiApiService';
 
 const initialDocumentData: DocumentData = {
     tipo: 'Ospite Singolo',
@@ -28,6 +30,8 @@ const App: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [ocrSuccess, setOcrSuccess] = useState<string | null>(null);
     const [exportSuccess, setExportSuccess] = useState<string | null>(null);
+    const [apiSendLoading, setApiSendLoading] = useState<boolean>(false);
+    const [apiSendSuccess, setApiSendSuccess] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleDataChange = useCallback((field: keyof DocumentData, value: string) => {
@@ -112,6 +116,52 @@ const App: React.FC = () => {
         setError(null);
         setOcrSuccess(null);
         setExportSuccess(null);
+        setApiSendSuccess(null);
+    };
+
+    const handleSendViaApi = async () => {
+        setApiSendLoading(true);
+        setError(null);
+        setApiSendSuccess(null);
+
+        try {
+            // Check if we have required fields
+            if (!documentData.cognome || !documentData.nome || !documentData.dataNascita) {
+                throw new Error('Compila almeno Cognome, Nome e Data di Nascita prima di inviare');
+            }
+
+            // Test token validity first
+            const isTokenValid = await alloggiatiApi.testAuthentication();
+            if (!isTokenValid) {
+                throw new Error('Token scaduto o non valido. Effettua nuovamente il login nella sezione API.');
+            }
+
+            // Test schedina first
+            console.log('🧪 Test validazione schedina...');
+            const testResult = await alloggiatiApi.testSchedina(documentData);
+
+            if (!testResult.success) {
+                throw new Error(`Validazione fallita: ${testResult.message}`);
+            }
+
+            console.log('✅ Validazione OK, invio schedina...');
+
+            // Send schedina
+            const sendResult = await alloggiatiApi.sendSchedina(documentData);
+
+            if (sendResult.success) {
+                setApiSendSuccess(sendResult.message + (sendResult.ricevuta ? ` (Ricevuta: ${sendResult.ricevuta})` : ''));
+                setTimeout(() => setApiSendSuccess(null), 8000);
+            } else {
+                throw new Error(sendResult.message);
+            }
+        } catch (err) {
+            console.error('❌ Errore invio API:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Errore durante l\'invio alla API';
+            setError(errorMessage);
+        } finally {
+            setApiSendLoading(false);
+        }
     };
 
     const today = new Date();
@@ -122,31 +172,39 @@ const App: React.FC = () => {
     const minDate = yesterday.toISOString().split('T')[0];
 
     return (
-        <div className="bg-gray-100 min-h-screen font-sans">
+        <div className="bg-gray-100 h-screen flex flex-col overflow-hidden font-sans">
             <Header />
-            <main className="max-w-screen-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row lg:space-x-8">
-                    <div className="flex-grow bg-white p-6 shadow-md rounded-lg">
-                        <h1 className="text-2xl font-semibold text-gray-800 mb-1">Inserimento On-Line</h1>
-                        <hr className="mb-6 border-t-2 border-dotted border-gray-200" />
-                        <MainForm 
-                            data={documentData} 
-                            onDataChange={handleDataChange} 
-                            onExport={handleExportForExtension} 
+            <main className="flex-1 max-w-screen-2xl mx-auto w-full py-3 px-4 sm:px-6 lg:px-8 overflow-auto">
+                <div className="flex flex-col lg:flex-row lg:space-x-6 h-full">
+                    <div className="flex-grow bg-white p-4 shadow-md rounded-lg overflow-auto">
+                        <h1 className="text-xl font-semibold text-gray-800 mb-1">Inserimento On-Line</h1>
+                        <hr className="mb-3 border-t-2 border-dotted border-gray-200" />
+                        <MainForm
+                            data={documentData}
+                            onDataChange={handleDataChange}
+                            onExport={handleExportForExtension}
+                            onSendApi={handleSendViaApi}
                             onReset={handleResetForm}
                             minDate={minDate}
                             maxDate={maxDate}
+                            apiSendLoading={apiSendLoading}
                         />
                         {exportSuccess && (
-                            <div className="mt-4 flex items-center text-sm text-purple-600 bg-purple-50 p-3 rounded-md">
-                                <SuccessIcon className="h-5 w-5 mr-2 text-purple-500"/>
+                            <div className="mt-2 flex items-center text-xs text-purple-600 bg-purple-50 p-2 rounded-md">
+                                <SuccessIcon className="h-4 w-4 mr-2 text-purple-500"/>
                                 <span>{exportSuccess}</span>
                             </div>
                         )}
+                        {apiSendSuccess && (
+                            <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
+                                <SuccessIcon className="h-4 w-4 mr-2 text-green-500"/>
+                                <span>{apiSendSuccess}</span>
+                            </div>
+                        )}
                     </div>
-                    <div className="w-full lg:w-96 lg:flex-shrink-0 mt-8 lg:mt-0 space-y-8">
-                        <div className="p-4 bg-white shadow-md rounded-lg">
-                            <h3 className="font-semibold text-lg text-center text-gray-700 mb-3">Compila da Documento</h3>
+                    <div className="w-full lg:w-80 lg:flex-shrink-0 mt-4 lg:mt-0 space-y-4">
+                        <div className="p-3 bg-white shadow-md rounded-lg">
+                            <h3 className="font-semibold text-base text-center text-gray-700 mb-2">Compila da Documento</h3>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -158,7 +216,7 @@ const App: React.FC = () => {
                             <button
                                 onClick={triggerFileUpload}
                                 disabled={isLoading}
-                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-colors duration-200"
+                                className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-colors duration-200"
                             >
                                 {isLoading ? (
                                     <>
@@ -173,18 +231,19 @@ const App: React.FC = () => {
                                 )}
                             </button>
                             {error && (
-                                <div className="mt-4 flex items-center text-sm text-red-600 bg-red-50 p-3 rounded-md">
-                                    <ErrorIcon className="h-5 w-5 mr-2"/>
+                                <div className="mt-2 flex items-center text-xs text-red-600 bg-red-50 p-2 rounded-md">
+                                    <ErrorIcon className="h-4 w-4 mr-2"/>
                                     <span>{error}</span>
                                 </div>
                             )}
                             {ocrSuccess && (
-                                <div className="mt-4 flex items-center text-sm text-green-600 bg-green-50 p-3 rounded-md">
-                                    <SuccessIcon className="h-5 w-5 mr-2"/>
+                                <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
+                                    <SuccessIcon className="h-4 w-4 mr-2"/>
                                     <span>{ocrSuccess}</span>
                                 </div>
                             )}
                         </div>
+                        <AlloggiatiCredentials />
                         <ApiKeyGuide />
                     </div>
                 </div>
