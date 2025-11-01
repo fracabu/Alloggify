@@ -26,17 +26,26 @@ export default async function handler(req: any, res: any) {
 </soap12:Envelope>`;
 
         // Call SOAP service
+        console.log('Calling SOAP endpoint:', SOAP_ENDPOINT);
+        console.log('SOAP Request:', soapEnvelope);
+
         const response = await fetch(SOAP_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/soap+xml; charset=utf-8',
+                'SOAPAction': 'https://alloggiatiweb.poliziadistato.it/service/GenerateToken',
             },
             body: soapEnvelope,
         });
 
+        console.log('SOAP Response status:', response.status);
+
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('SOAP Error Response:', errorText.substring(0, 1000));
             return res.status(response.status).json({
-                error: `SOAP service error: ${response.status} ${response.statusText}`
+                error: `SOAP service error: ${response.status} ${response.statusText}`,
+                details: errorText.substring(0, 500)
             });
         }
 
