@@ -63,17 +63,17 @@ export default async function handler(req: any, res: any) {
 
         // Parse XML response
         const tokenMatch = xmlText.match(/<token>(.*?)<\/token>/s);
-        const scadenzaMatch = xmlText.match(/<scadenza>(.*?)<\/scadenza>/s);
+        const expiresMatch = xmlText.match(/<expires>(.*?)<\/expires>/s);
 
-        if (!tokenMatch || !scadenzaMatch) {
+        if (!tokenMatch || !expiresMatch) {
             return res.status(500).json({
-                error: 'Invalid response: missing token or scadenza',
+                error: 'Invalid response: missing token or expires',
                 response: xmlText.substring(0, 500) // First 500 chars for debugging
             });
         }
 
         const token = tokenMatch[1];
-        const scadenza = scadenzaMatch[1];
+        const scadenza = expiresMatch[1];
 
         return res.status(200).json({
             success: true,

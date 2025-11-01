@@ -106,20 +106,20 @@ async function testAuthentication() {
 
         // Parse success response
         const tokenMatch = xmlText.match(/<token>(.*?)<\/token>/s);
-        const scadenzaMatch = xmlText.match(/<scadenza>(.*?)<\/scadenza>/s);
+        const expiresMatch = xmlText.match(/<expires>(.*?)<\/expires>/s);
 
-        if (tokenMatch && scadenzaMatch) {
+        if (tokenMatch && expiresMatch) {
             console.log('✅ AUTENTICAZIONE RIUSCITA!');
             console.log();
             console.log('   Token (primi 20 char):', tokenMatch[1].substring(0, 20) + '...');
-            console.log('   Scadenza:', scadenzaMatch[1]);
+            console.log('   Scadenza:', expiresMatch[1]);
             console.log();
             console.log('🎉 La connessione funziona! Le credenziali sono corrette.');
             console.log();
         } else {
             console.log('⚠️  Response OK ma formato inatteso');
             console.log('   Token trovato:', !!tokenMatch);
-            console.log('   Scadenza trovata:', !!scadenzaMatch);
+            console.log('   Scadenza trovata:', !!expiresMatch);
             console.log();
         }
 
