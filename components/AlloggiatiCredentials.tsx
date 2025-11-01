@@ -14,15 +14,30 @@ export const AlloggiatiCredentials: React.FC = () => {
     const [ricevutaDate, setRicevutaDate] = useState('');
     const [downloadingRicevuta, setDownloadingRicevuta] = useState(false);
 
-    // Load credentials from localStorage on mount
+    // Load credentials from .env or localStorage on mount
     useEffect(() => {
+        // Priority: 1. .env variables, 2. localStorage
+        const envUtente = import.meta.env.VITE_ALLOGGIATI_UTENTE;
+        const envPassword = import.meta.env.VITE_ALLOGGIATI_PASSWORD;
+        const envWskey = import.meta.env.VITE_ALLOGGIATI_WSKEY;
+
         const savedUtente = localStorage.getItem('alloggiatiUtente');
         const savedPassword = localStorage.getItem('alloggiatiPassword');
         const savedWskey = localStorage.getItem('alloggiatiWskey');
 
-        if (savedUtente) setUtente(savedUtente);
-        if (savedPassword) setPassword(savedPassword);
-        if (savedWskey) setWskey(savedWskey);
+        // Use .env if available, otherwise use localStorage
+        if (envUtente) {
+            setUtente(envUtente);
+            console.log('✅ Credentials loaded from .env.local');
+        } else if (savedUtente) {
+            setUtente(savedUtente);
+        }
+
+        if (envPassword) setPassword(envPassword);
+        else if (savedPassword) setPassword(savedPassword);
+
+        if (envWskey) setWskey(envWskey);
+        else if (savedWskey) setWskey(savedWskey);
 
         // Check if we have a valid token
         const token = alloggiatiApi.getToken();

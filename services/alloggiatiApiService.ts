@@ -20,6 +20,50 @@ export class AlloggiatiApiService {
     private token: string | null = null;
     private tokenExpiry: Date | null = null;
 
+    constructor() {
+        // Load token from localStorage on initialization
+        this.loadFromLocalStorage();
+    }
+
+    /**
+     * Load token and credentials from localStorage
+     */
+    private loadFromLocalStorage() {
+        try {
+            const storedToken = localStorage.getItem('alloggiatiToken');
+            const storedExpiry = localStorage.getItem('alloggiatiTokenExpiry');
+
+            if (storedToken && storedExpiry) {
+                this.token = storedToken;
+                this.tokenExpiry = new Date(storedExpiry);
+
+                // Check if token is still valid
+                if (this.isTokenValid()) {
+                    console.log('✅ Token caricato da localStorage, valido fino a:', this.tokenExpiry);
+                } else {
+                    console.log('⚠️ Token in localStorage è scaduto');
+                    this.clearToken();
+                }
+            }
+        } catch (error) {
+            console.error('Errore caricamento token da localStorage:', error);
+        }
+    }
+
+    /**
+     * Save token to localStorage
+     */
+    private saveToLocalStorage() {
+        try {
+            if (this.token && this.tokenExpiry) {
+                localStorage.setItem('alloggiatiToken', this.token);
+                localStorage.setItem('alloggiatiTokenExpiry', this.tokenExpiry.toISOString());
+            }
+        } catch (error) {
+            console.error('Errore salvataggio token in localStorage:', error);
+        }
+    }
+
     /**
      * Generate authentication token using credentials
      */
@@ -47,6 +91,9 @@ export class AlloggiatiApiService {
             // Store token and expiry
             this.token = data.token;
             this.tokenExpiry = new Date(data.scadenza);
+
+            // Save token to localStorage for persistence (only token, not credentials)
+            this.saveToLocalStorage();
 
             console.log('✅ Token generato con successo, scadenza:', this.tokenExpiry);
 
@@ -267,11 +314,17 @@ export class AlloggiatiApiService {
     }
 
     /**
-     * Clear stored token
+     * Clear stored token from memory and localStorage
      */
     clearToken(): void {
         this.token = null;
         this.tokenExpiry = null;
+
+        // Clear from localStorage
+        localStorage.removeItem('alloggiatiToken');
+        localStorage.removeItem('alloggiatiTokenExpiry');
+
+        console.log('🗑️ Token rimosso da memoria e localStorage');
     }
 
     /**
