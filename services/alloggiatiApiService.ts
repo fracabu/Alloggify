@@ -107,6 +107,59 @@ export class AlloggiatiApiService {
     }
 
     /**
+     * Download ricevuta PDF for a specific date
+     * Date must be within last 30 days (excluding today)
+     */
+    async downloadRicevuta(date: string): Promise<{ success: boolean; message: string; pdf?: string }> {
+        if (!this.token || !this.isTokenValid()) {
+            throw new Error('Token scaduto o non disponibile. Effettua il login.');
+        }
+
+        const utente = localStorage.getItem('alloggiatiUtente');
+        if (!utente) {
+            throw new Error('Username non trovato. Effettua il login.');
+        }
+
+        try {
+            // Format date as ISO DateTime (YYYY-MM-DDTHH:MM:SS)
+            const formattedDate = `${date}T00:00:00`;
+
+            const response = await fetch('/api/alloggiati-ricevuta', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    utente,
+                    token: this.token,
+                    data: formattedDate
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                return { success: false, message: result.message || 'Errore download ricevuta' };
+            }
+
+            console.log('📥 Ricevuta scaricata con successo');
+
+            return {
+                success: result.success,
+                message: result.message,
+                pdf: result.pdf
+            };
+        } catch (error) {
+            console.error('❌ Errore download ricevuta:', error);
+            throw new Error(
+                error instanceof Error
+                    ? `Errore download: ${error.message}`
+                    : 'Errore sconosciuto durante download'
+            );
+        }
+    }
+
+    /**
      * Send schedina to Alloggiati Web
      */
     async sendSchedina(data: DocumentData): Promise<{ success: boolean; message: string; ricevuta?: string }> {
@@ -218,6 +271,19 @@ export class AlloggiatiApiService {
     clearToken(): void {
         this.token = null;
         this.tokenExpiry = null;
+    }
+
+    /**
+     * Escape XML special characters
+     */
+    private escapeXml(unsafe: string): string {
+        if (!unsafe) return '';
+        return unsafe.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
     }
 }
 

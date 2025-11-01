@@ -11,6 +11,8 @@ export const AlloggiatiCredentials: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [showCredentials, setShowCredentials] = useState(false);
+    const [ricevutaDate, setRicevutaDate] = useState('');
+    const [downloadingRicevuta, setDownloadingRicevuta] = useState(false);
 
     // Load credentials from localStorage on mount
     useEffect(() => {
@@ -90,6 +92,52 @@ export const AlloggiatiCredentials: React.FC = () => {
         return `${minutes} minuti`;
     };
 
+    const handleDownloadRicevuta = async () => {
+        if (!ricevutaDate) {
+            setError('Seleziona una data');
+            return;
+        }
+
+        setDownloadingRicevuta(true);
+        setError(null);
+        setSuccess(null);
+
+        try {
+            const result = await alloggiatiApi.downloadRicevuta(ricevutaDate);
+
+            if (result.success && result.pdf) {
+                // Convert base64 to blob and download
+                const byteCharacters = atob(result.pdf);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `ricevuta_${ricevutaDate}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                setSuccess(`Ricevuta scaricata: ricevuta_${ricevutaDate}.pdf`);
+                setTimeout(() => setSuccess(null), 5000);
+            } else {
+                setError(result.message || 'Errore durante il download');
+            }
+        } catch (err) {
+            console.error('Errore download ricevuta:', err);
+            setError(err instanceof Error ? err.message : 'Errore durante il download');
+        } finally {
+            setDownloadingRicevuta(false);
+        }
+    };
+
     return (
         <div className="p-3 bg-white shadow-md rounded-lg">
             <div className="flex items-center justify-between mb-2">
@@ -108,6 +156,43 @@ export const AlloggiatiCredentials: React.FC = () => {
                         <span className="text-green-700">✓ Connesso</span>
                         <span className="text-green-600">{getTimeRemaining()}</span>
                     </div>
+
+                    {/* Sezione Download Ricevuta */}
+                    <div className="border-t pt-2">
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                            📥 Scarica Ricevuta (ultimi 30gg)
+                        </label>
+                        <div className="flex gap-2">
+                            <input
+                                type="date"
+                                value={ricevutaDate}
+                                onChange={(e) => setRicevutaDate(e.target.value)}
+                                max={new Date(Date.now() - 86400000).toISOString().split('T')[0]}
+                                min={new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]}
+                                className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                            <button
+                                onClick={handleDownloadRicevuta}
+                                disabled={downloadingRicevuta || !ricevutaDate}
+                                className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+                            >
+                                {downloadingRicevuta ? '...' : 'PDF'}
+                            </button>
+                        </div>
+                    </div>
+
+                    {error && (
+                        <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                            {error}
+                        </div>
+                    )}
+
+                    {success && (
+                        <div className="text-xs text-green-600 bg-green-50 p-2 rounded">
+                            {success}
+                        </div>
+                    )}
+
                     <button
                         onClick={handleLogout}
                         className="w-full text-xs px-2 py-1.5 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
