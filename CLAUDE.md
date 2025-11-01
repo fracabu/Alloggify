@@ -66,14 +66,15 @@ The frontend runs on `http://localhost:5173` and the backend API runs on `http:/
 
 ```env
 # Gemini API for OCR (required for document scanning)
-GEMINI_API_KEY=your_actual_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Backend URL (Express server)
+VITE_BACKEND_URL=http://localhost:3001
 
 # Alloggiati Web credentials (required for SOAP API integration)
-VITE_ALLOGGIATI_USERNAME=your_username
-VITE_ALLOGGIATI_PASSWORD=your_password
-
-# API endpoint (optional, defaults to localhost:3001)
-VITE_API_URL=http://localhost:3001
+VITE_ALLOGGIATI_UTENTE=your_username_here
+VITE_ALLOGGIATI_PASSWORD=your_password_here
+VITE_ALLOGGIATI_WSKEY=your_wskey_here
 ```
 
 **Gemini API Key Resolution Order** (in `geminiService.ts`):
