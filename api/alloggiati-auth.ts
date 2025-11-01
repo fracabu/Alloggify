@@ -13,17 +13,18 @@ export default async function handler(req: any, res: any) {
             return res.status(400).json({ error: 'Missing required fields: utente, password, wskey' });
         }
 
-        // Build SOAP envelope
+        // Build SOAP envelope (corrected format from official documentation)
         const soapEnvelope = `<?xml version="1.0" encoding="utf-8"?>
-<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
-  <soap12:Body>
-    <GenerateToken xmlns="https://alloggiatiweb.poliziadistato.it/service/">
-      <utente>${escapeXml(utente)}</utente>
-      <password>${escapeXml(password)}</password>
-      <wskey>${escapeXml(wskey)}</wskey>
-    </GenerateToken>
-  </soap12:Body>
-</soap12:Envelope>`;
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:all="AlloggiatiService">
+  <soap:Header/>
+  <soap:Body>
+    <all:GenerateToken>
+      <all:Utente>${escapeXml(utente)}</all:Utente>
+      <all:Password>${escapeXml(password)}</all:Password>
+      <all:WsKey>${escapeXml(wskey)}</all:WsKey>
+    </all:GenerateToken>
+  </soap:Body>
+</soap:Envelope>`;
 
         // Call SOAP service
         console.log('Calling SOAP endpoint:', SOAP_ENDPOINT);
@@ -33,7 +34,6 @@ export default async function handler(req: any, res: any) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/soap+xml; charset=utf-8',
-                'SOAPAction': 'https://alloggiatiweb.poliziadistato.it/service/GenerateToken',
             },
             body: soapEnvelope,
         });

@@ -12,16 +12,17 @@ export default async function handler(req: any, res: any) {
             return res.status(400).json({ error: 'Missing required fields: token, schedina' });
         }
 
-        // Build SOAP envelope
+        // Build SOAP envelope (corrected format from official documentation)
         const soapEnvelope = `<?xml version="1.0" encoding="utf-8"?>
-<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
-  <soap12:Body>
-    <Test xmlns="https://alloggiatiweb.poliziadistato.it/service/">
-      <token>${escapeXml(token)}</token>
-      <schedine>${escapeXml(schedina)}</schedine>
-    </Test>
-  </soap12:Body>
-</soap12:Envelope>`;
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:all="AlloggiatiService">
+  <soap:Header/>
+  <soap:Body>
+    <all:Test>
+      <all:token>${escapeXml(token)}</all:token>
+      <all:schedine>${escapeXml(schedina)}</all:schedine>
+    </all:Test>
+  </soap:Body>
+</soap:Envelope>`;
 
         const response = await fetch(SOAP_ENDPOINT, {
             method: 'POST',
