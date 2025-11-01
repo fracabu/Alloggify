@@ -39,25 +39,38 @@ export default async function handler(req: any, res: any) {
 </soap:Envelope>`;
 
         // Call SOAP service
-        console.log('Calling SOAP endpoint:', SOAP_ENDPOINT);
-        console.log('SOAP Request:', soapEnvelope);
+        console.log('[AUTH] Calling SOAP endpoint:', SOAP_ENDPOINT);
+        console.log('[AUTH] SOAP Request envelope created');
+        console.log('[AUTH] User:', utente);
 
         const response = await fetch(SOAP_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/soap+xml; charset=utf-8',
+                'SOAPAction': 'AlloggiatiService/GenerateToken',
             },
             body: soapEnvelope,
+            signal: AbortSignal.timeout(25000), // 25 second timeout
         });
 
-        console.log('SOAP Response status:', response.status);
+        console.log('[AUTH] SOAP Response status:', response.status);
+        console.log('[AUTH] SOAP Response headers:', JSON.stringify(Object.fromEntries(response.headers.entries())));
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('SOAP Error Response:', errorText.substring(0, 1000));
+            console.error('[AUTH] SOAP Error Response:', errorText.substring(0, 1000));
+            console.error('[AUTH] Full error:', {
+                status: response.status,
+                statusText: response.statusText,
+                headers: Object.fromEntries(response.headers.entries())
+            });
             return res.status(response.status).json({
                 error: `SOAP service error: ${response.status} ${response.statusText}`,
-                details: errorText.substring(0, 500)
+                details: errorText.substring(0, 500),
+                requestInfo: {
+                    endpoint: SOAP_ENDPOINT,
+                    user: utente
+                }
             });
         }
 
