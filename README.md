@@ -68,25 +68,52 @@
    ```
 
 2. **Install dependencies**
+
+   Frontend dependencies:
    ```bash
    npm install
    ```
 
-3. **Configure API Key**
+   Backend dependencies:
+   ```bash
+   cd server
+   npm install
+   cd ..
+   ```
+
+3. **Configure Environment Variables**
 
    Create a `.env.local` file in the project root:
    ```env
+   # Gemini API for OCR (required for document scanning)
    GEMINI_API_KEY=your_actual_api_key_here
+
+   # Alloggiati Web credentials (required for SOAP API integration)
+   VITE_ALLOGGIATI_USERNAME=your_username
+   VITE_ALLOGGIATI_PASSWORD=your_password
+
+   # API endpoint (optional, defaults to localhost:3001)
+   VITE_API_URL=http://localhost:3001
    ```
 
-   *Alternatively, you can set the API key through the UI after starting the app.*
+   *Note: You can also set the Gemini API key through the UI after starting the app.*
 
-4. **Start development server**
+4. **Start development servers**
+
+   You need to run **both** frontend and backend:
+
+   **Terminal 1 - Frontend (Vite):**
    ```bash
    npm run dev
    ```
 
-   The app will be available at `http://localhost:3000`
+   **Terminal 2 - Backend (Express):**
+   ```bash
+   cd server
+   npm start
+   ```
+
+   The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:3001`
 
 ---
 
@@ -104,10 +131,18 @@
    - Make corrections if needed
    - All fields are editable
 
-3. **Export for Extension**
+3. **Submit Data** (Two Options)
+
+   **Option A - Chrome Extension:**
    - Click "Esporta per Estensione" button
    - Data is saved to localStorage
-   - Confirmation message appears
+   - Use Chrome extension to auto-fill portal
+
+   **Option B - Direct API Submission:**
+   - Click "Invia Schedina" button
+   - Data is sent directly via SOAP API
+   - Requires backend server running
+   - Receive confirmation and download receipt
 
 ### Chrome Extension Setup
 
@@ -145,6 +180,16 @@ Alloggify/
 │   └── geminiService.ts    # Gemini AI integration
 ├── utils/
 │   └── fileUtils.ts        # File handling utilities
+├── server/                 # Backend Express server
+│   ├── index.js            # Express app entry point
+│   ├── routes/             # API route handlers
+│   │   ├── auth.js         # Token generation endpoint
+│   │   ├── test.js         # Test schedina (validation)
+│   │   ├── send.js         # Send schedina to Alloggiati Web
+│   │   └── ricevuta.js     # Download receipt PDF
+│   ├── utils/
+│   │   └── soap.js         # SOAP client for Alloggiati Web API
+│   └── package.json        # Server dependencies
 ├── chrome-extension/       # Chrome extension
 │   ├── manifest.json       # Extension manifest (v3)
 │   ├── content.js          # Auto-fill logic
@@ -172,16 +217,20 @@ Alloggify/
 
 ## 📋 Available Scripts
 
+### Frontend (Root Directory)
 ```bash
-# Development
-npm run dev          # Start dev server on port 3000
-
-# Production
+npm install          # Install frontend dependencies
+npm run dev          # Start frontend dev server (port 5173)
 npm run build        # Build for production
 npm run preview      # Preview production build
+```
 
-# Dependencies
-npm install          # Install all dependencies
+### Backend (Server Directory)
+```bash
+cd server
+npm install          # Install backend dependencies
+npm start            # Start backend server (port 3001)
+npm run dev          # Start backend with auto-reload
 ```
 
 ---

@@ -25,11 +25,19 @@ The project is planned to evolve into a full SaaS platform with:
 ## Common Development Commands
 
 ```bash
-# Install dependencies
+# Install dependencies (root - frontend)
 npm install
 
-# Run development server (starts on port 3000)
+# Install server dependencies
+cd server && npm install
+
+# Run FRONTEND development server (starts on port 5173)
 npm run dev
+
+# Run BACKEND server (starts on port 3001)
+cd server && npm start
+# OR for dev mode with auto-reload:
+cd server && npm run dev
 
 # Build for production
 npm run build
@@ -38,18 +46,47 @@ npm run build
 npm run preview
 ```
 
+### Running Full Stack Development
+
+For full functionality, you need BOTH frontend and backend running:
+
+```bash
+# Terminal 1 - Frontend (Vite)
+npm run dev
+
+# Terminal 2 - Backend (Express)
+cd server && npm start
+```
+
+The frontend runs on `http://localhost:5173` and the backend API runs on `http://localhost:3001`.
+
 ## Environment Setup
 
-**CRITICAL**: Before running the app, set your Gemini API key in `.env.local`:
-```
+**CRITICAL**: Before running the app, configure `.env.local` in the project root:
+
+```env
+# Gemini API for OCR (required for document scanning)
 GEMINI_API_KEY=your_actual_api_key_here
+
+# Alloggiati Web credentials (required for SOAP API integration)
+VITE_ALLOGGIATI_USERNAME=your_username
+VITE_ALLOGGIATI_PASSWORD=your_password
+
+# API endpoint (optional, defaults to localhost:3001)
+VITE_API_URL=http://localhost:3001
 ```
 
-**API Key Resolution Order** (in `geminiService.ts`):
+**Gemini API Key Resolution Order** (in `geminiService.ts`):
 1. First checks `localStorage.getItem('geminiApiKey')` (user can set via UI)
-2. Falls back to `process.env.API_KEY` (from `.env.local`, injected at build time via Vite config)
+2. Falls back to `import.meta.env.VITE_GEMINI_API_KEY` (from `.env.local`, injected at build time via Vite)
 
-The app includes an `ApiKeyGuide` component that allows users to set their API key through the UI, which stores it in localStorage.
+**Alloggiati Web Credentials**:
+- Credentials are loaded from `.env.local` on app startup
+- Stored in localStorage as `alloggifyCredentials`
+- Token generated via `/api/alloggiati/auth` and persisted in localStorage as `alloggifyToken`
+- Token is automatically refreshed when expired
+
+The app includes an `ApiKeyGuide` component that allows users to set their Gemini API key through the UI, which stores it in localStorage.
 
 ## Project Structure
 
@@ -67,6 +104,16 @@ Alloggify/
 │   └── geminiService.ts # Gemini 2.5 Flash API integration
 ├── utils/
 │   └── fileUtils.ts     # File handling utilities (fileToBase64)
+├── server/              # Backend Express server
+│   ├── index.js         # Express app entry point
+│   ├── routes/          # API route handlers
+│   │   ├── auth.js      # Token generation endpoint
+│   │   ├── test.js      # Test schedina (validation)
+│   │   ├── send.js      # Send schedina to Alloggiati Web
+│   │   └── ricevuta.js  # Download receipt PDF
+│   ├── utils/
+│   │   └── soap.js      # SOAP client utilities for Alloggiati Web API
+│   └── package.json     # Server dependencies
 ├── chrome-extension/    # Chrome extension files
 │   ├── manifest.json    # Extension manifest (v3)
 │   ├── content.js       # Content script for Alloggiati Web
@@ -91,7 +138,18 @@ Alloggify/
    - Image converted to base64 → `utils/fileUtils.ts` (fileToBase64)
    - Gemini API extracts document data → `services/geminiService.ts` (extractDocumentInfo)
    - Data populates form → `components/MainForm.tsx`
-   - User exports to localStorage → picked up by Chrome extension
+   - User has two submission options:
+     - **Option A**: "Esporta per Estensione" → saves to localStorage → Chrome extension auto-fills portal
+     - **Option B**: "Invia Schedina" → sends via SOAP API through backend server (requires credentials)
+
+3. **SOAP API Submission Flow** (Option B):
+   - User clicks "Invia Schedina" button
+   - Frontend loads credentials from localStorage (populated from .env on startup)
+   - `POST /api/alloggiati/auth` → Get authentication token (if not cached)
+   - `POST /api/alloggiati/test` → Validate schedina data (optional pre-check)
+   - `POST /api/alloggiati/send` → Submit schedina to Alloggiati Web
+   - Backend (`server/`) handles SOAP XML communication
+   - Success response → User can download receipt via `POST /api/alloggiati/ricevuta`
 
 ### Key Components
 
@@ -123,6 +181,34 @@ To load the extension for development/testing:
 The extension works on:
 - `https://alloggiatiweb.poliziadistato.it/*` (production portal)
 - `http://localhost:*/*` (local development - uses bridge script)
+
+### Backend Express Server (SOAP API Integration)
+
+The `server/` directory contains an Express.js backend that provides SOAP API integration with the Alloggiati Web portal.
+
+**Architecture**:
+- **Port**: 3001 (default)
+- **CORS**: Configured for localhost:5173 (Vite dev) and Vercel production/preview deployments
+- **Purpose**: Proxies requests to Alloggiati Web SOAP API (avoids CORS issues in browser)
+
+**API Endpoints**:
+- `POST /api/alloggiati/auth` - Generate authentication token using credentials
+- `POST /api/alloggiati/test` - Validate schedina data before submission
+- `POST /api/alloggiati/send` - Send schedina to Alloggiati Web
+- `POST /api/alloggiati/ricevuta` - Download receipt PDF
+
+**Key Files**:
+- `server/index.js` - Express app setup, middleware, route registration
+- `server/utils/soap.js` - SOAP client implementation for Alloggiati Web API
+- `server/routes/*.js` - Individual route handlers for each endpoint
+
+**SOAP Integration**:
+The backend communicates with the official Alloggiati Web SOAP API. Credentials are passed from the frontend and stored in localStorage (see App.tsx for token persistence). The server acts as a proxy to handle SOAP XML requests/responses and bypass browser CORS restrictions.
+
+**Environment**:
+- Development: `npm run dev` (auto-reload with --watch flag)
+- Production: `npm start`
+- Logs all requests with timestamp for debugging
 
 ### Document Type Classification Logic
 
@@ -161,4 +247,6 @@ Configured in both `tsconfig.json` and `vite.config.ts`.
   - `alloggifyData`: JSON-serialized DocumentData object
   - `alloggifyDataTimestamp`: Timestamp of last export
   - `geminiApiKey`: User's Gemini API key (optional, UI-configurable)
+  - `alloggifyToken`: SOAP API authentication token (persisted from login)
+  - `alloggifyCredentials`: Encrypted user credentials for Alloggiati Web (username/password from .env)
 - **Custom Events**: `alloggifyDataExported` event is dispatched on window when data is exported (for extension bridge)
