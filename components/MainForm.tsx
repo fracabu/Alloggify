@@ -13,20 +13,20 @@ interface MainFormProps {
     apiSendLoading: boolean;
 }
 
-const InputField: React.FC<{ 
-    id: keyof DocumentData; 
-    label: string; 
-    value: string; 
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
-    type?: string; 
-    placeholder?: string; 
+const InputField: React.FC<{
+    id: keyof DocumentData;
+    label: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    type?: string;
+    placeholder?: string;
     className?: string;
     min?: string;
     max?: string;
-}> = 
+}> =
     ({ id, label, value, onChange, type = 'text', placeholder, className = '', min, max }) => (
     <div className={className}>
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700 sr-only">{label}</label>
+        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
         <input
             type={type}
             id={id}
@@ -36,21 +36,21 @@ const InputField: React.FC<{
             placeholder={placeholder || label}
             min={min}
             max={max}
-            className="mt-1 block w-full px-2 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            className="block w-full px-3 py-2.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
         />
     </div>
 );
 
-const SelectField: React.FC<{ id: keyof DocumentData; label: string; value: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; children: React.ReactNode; className?: string }> = 
+const SelectField: React.FC<{ id: keyof DocumentData; label: string; value: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; children: React.ReactNode; className?: string }> =
     ({ id, label, value, onChange, children, className = '' }) => (
     <div className={className}>
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700 sr-only">{label}</label>
+        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
         <select
             id={id}
             name={id}
             value={value}
             onChange={onChange}
-            className="mt-1 block w-full pl-2 pr-8 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            className="block w-full pl-3 pr-10 py-2.5 bg-white border border-gray-300 rounded-md shadow-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm transition-all"
         >
             {children}
         </select>
@@ -71,10 +71,12 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
     };
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
-            <fieldset>
-                <legend className="text-base font-medium text-gray-900 mb-2">Dati Schedina</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+            <fieldset className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <legend className="text-sm font-semibold text-gray-800 mb-3 px-2">
+                    📋 Dati Schedina
+                </legend>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <SelectField id="tipo" label="Tipo Alloggiato" value={data.tipo} onChange={handleChange}>
                         <option>Ospite Singolo</option>
                         <option>Capo Famiglia</option>
@@ -90,9 +92,11 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend className="text-base font-medium text-gray-900 mb-2">Dati Anagrafici</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <fieldset className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <legend className="text-sm font-semibold text-gray-800 mb-3 px-2">
+                    👤 Dati Anagrafici
+                </legend>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <InputField id="cognome" label="Cognome" value={data.cognome} onChange={handleChange} />
                     <InputField id="nome" label="Nome" value={data.nome} onChange={handleChange} />
                     <SelectField id="sesso" label="Sesso" value={data.sesso} onChange={handleChange}>
@@ -106,9 +110,11 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend className="text-base font-medium text-gray-900 mb-2">Documento di Identità</legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <fieldset className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <legend className="text-sm font-semibold text-gray-800 mb-3 px-2">
+                    🪪 Documento di Identità
+                </legend>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <SelectField id="tipoDocumento" label="Tipo Documento" value={data.tipoDocumento} onChange={handleChange}>
                         <option value="">Seleziona tipo...</option>
                         <option value="CARTA DI IDENTITA'">CARTA DI IDENTITA'</option>
@@ -127,35 +133,39 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <div className="flex justify-end space-x-3 pt-2">
-                <button type="button" onClick={onReset} className="px-3 py-1.5 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Svuota
+            <div className="flex justify-end items-center gap-3 pt-4 border-t border-gray-200">
+                <button
+                    type="button"
+                    onClick={onReset}
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                >
+                    🗑️ Svuota Form
                 </button>
                 <button
                     type="button"
                     onClick={onSendApi}
                     disabled={apiSendLoading}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-300 disabled:cursor-not-allowed"
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-300 disabled:cursor-not-allowed transition-colors"
                 >
                     {apiSendLoading ? (
                         <>
                             <LoaderIcon className="animate-spin -ml-1 mr-2 h-4 w-4" />
-                            Invio...
+                            Invio in corso...
                         </>
                     ) : (
                         <>
                             <SendIcon className="-ml-1 mr-2 h-4 w-4" />
-                            Invia Direttamente
+                            📤 Invia Direttamente
                         </>
                     )}
                 </button>
                 <button
                     type="button"
                     onClick={onExport}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent rounded-md shadow-sm text-xs font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
                 >
                     <PlugIcon className="-ml-1 mr-2 h-4 w-4" />
-                    Esporta per Estensione
+                    🔌 Esporta per Estensione
                 </button>
             </div>
         </form>

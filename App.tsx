@@ -182,14 +182,17 @@ const App: React.FC = () => {
     const minDate = yesterday.toISOString().split('T')[0];
 
     return (
-        <div className="bg-gray-100 h-screen flex flex-col overflow-hidden font-sans">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col font-sans">
             <Header />
-            <main className="flex-1 max-w-screen-2xl mx-auto w-full py-3 px-4 sm:px-6 lg:px-8 overflow-auto">
-                <div className="flex flex-col lg:flex-row lg:space-x-6 h-full">
+            <main className="flex-1 max-w-screen-2xl mx-auto w-full py-6 px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row lg:gap-6 h-full">
                     {/* Sidebar a sinistra */}
-                    <div className="w-full lg:w-80 lg:flex-shrink-0 mb-4 lg:mb-0 space-y-4">
-                        <div className="p-3 bg-white shadow-md rounded-lg">
-                            <h3 className="font-semibold text-base text-center text-gray-700 mb-2">Compila da Documento</h3>
+                    <aside className="w-full lg:w-80 lg:flex-shrink-0 mb-6 lg:mb-0 space-y-3">
+                        <div className="p-4 bg-white shadow-md rounded-lg border border-gray-200">
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="text-2xl">📄</span>
+                                <h3 className="font-semibold text-base text-gray-700">Carica Documento</h3>
+                            </div>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -201,41 +204,45 @@ const App: React.FC = () => {
                             <button
                                 onClick={triggerFileUpload}
                                 disabled={isLoading}
-                                className="w-full flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-colors duration-200"
+                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all duration-200"
                             >
                                 {isLoading ? (
                                     <>
                                         <LoaderIcon className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
-                                        Processing...
+                                        Elaborazione...
                                     </>
                                 ) : (
                                     <>
                                         <UploadIcon className="-ml-1 mr-2 h-5 w-5" />
-                                        Carica Documento
+                                        Scansiona Documento
                                     </>
                                 )}
                             </button>
                             {error && (
-                                <div className="mt-2 flex items-center text-xs text-red-600 bg-red-50 p-2 rounded-md">
-                                    <ErrorIcon className="h-4 w-4 mr-2"/>
+                                <div className="mt-3 flex items-start text-xs text-red-700 bg-red-50 p-3 rounded-lg border border-red-200">
+                                    <ErrorIcon className="h-4 w-4 mr-2 flex-shrink-0 mt-0.5"/>
                                     <span>{error}</span>
                                 </div>
                             )}
                             {ocrSuccess && (
-                                <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
-                                    <SuccessIcon className="h-4 w-4 mr-2"/>
+                                <div className="mt-3 flex items-start text-xs text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
+                                    <SuccessIcon className="h-4 w-4 mr-2 flex-shrink-0 mt-0.5"/>
                                     <span>{ocrSuccess}</span>
                                 </div>
                             )}
                         </div>
                         <AlloggiatiCredentials />
                         <ApiKeyGuide />
-                    </div>
+                    </aside>
 
                     {/* Main form */}
-                    <div className="flex-grow bg-white p-4 shadow-md rounded-lg overflow-auto">
-                        <h1 className="text-xl font-semibold text-gray-800 mb-1">Inserimento On-Line</h1>
-                        <hr className="mb-3 border-t-2 border-dotted border-gray-200" />
+                    <section className="flex-1 bg-white p-6 shadow-md rounded-lg border border-gray-200 overflow-auto hide-scrollbar main-content-area">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="text-2xl">✍️</span>
+                            <h1 className="text-xl font-semibold text-gray-800">Inserimento Dati Alloggiato</h1>
+                        </div>
+                        <hr className="mb-6 border-t-2 border-dashed border-gray-300" />
+
                         <MainForm
                             data={documentData}
                             onDataChange={handleDataChange}
@@ -246,19 +253,20 @@ const App: React.FC = () => {
                             maxDate={maxDate}
                             apiSendLoading={apiSendLoading}
                         />
+
                         {exportSuccess && (
-                            <div className="mt-2 flex items-center text-xs text-purple-600 bg-purple-50 p-2 rounded-md">
-                                <SuccessIcon className="h-4 w-4 mr-2 text-purple-500"/>
+                            <div className="mt-4 flex items-center text-sm text-purple-700 bg-purple-50 p-3 rounded-lg border border-purple-200">
+                                <SuccessIcon className="h-5 w-5 mr-2 text-purple-600"/>
                                 <span>{exportSuccess}</span>
                             </div>
                         )}
                         {apiSendSuccess && (
-                            <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
-                                <SuccessIcon className="h-4 w-4 mr-2 text-green-500"/>
+                            <div className="mt-4 flex items-center text-sm text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
+                                <SuccessIcon className="h-5 w-5 mr-2 text-green-600"/>
                                 <span>{apiSendSuccess}</span>
                             </div>
                         )}
-                    </div>
+                    </section>
                 </div>
             </main>
 
