@@ -186,33 +186,8 @@ const App: React.FC = () => {
             <Header />
             <main className="flex-1 max-w-screen-2xl mx-auto w-full py-3 px-4 sm:px-6 lg:px-8 overflow-auto">
                 <div className="flex flex-col lg:flex-row lg:space-x-6 h-full">
-                    <div className="flex-grow bg-white p-4 shadow-md rounded-lg overflow-auto">
-                        <h1 className="text-xl font-semibold text-gray-800 mb-1">Inserimento On-Line</h1>
-                        <hr className="mb-3 border-t-2 border-dotted border-gray-200" />
-                        <MainForm
-                            data={documentData}
-                            onDataChange={handleDataChange}
-                            onExport={handleExportForExtension}
-                            onSendApi={handleSendViaApi}
-                            onReset={handleResetForm}
-                            minDate={minDate}
-                            maxDate={maxDate}
-                            apiSendLoading={apiSendLoading}
-                        />
-                        {exportSuccess && (
-                            <div className="mt-2 flex items-center text-xs text-purple-600 bg-purple-50 p-2 rounded-md">
-                                <SuccessIcon className="h-4 w-4 mr-2 text-purple-500"/>
-                                <span>{exportSuccess}</span>
-                            </div>
-                        )}
-                        {apiSendSuccess && (
-                            <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
-                                <SuccessIcon className="h-4 w-4 mr-2 text-green-500"/>
-                                <span>{apiSendSuccess}</span>
-                            </div>
-                        )}
-                    </div>
-                    <div className="w-full lg:w-80 lg:flex-shrink-0 mt-4 lg:mt-0 space-y-4">
+                    {/* Sidebar a sinistra */}
+                    <div className="w-full lg:w-80 lg:flex-shrink-0 mb-4 lg:mb-0 space-y-4">
                         <div className="p-3 bg-white shadow-md rounded-lg">
                             <h3 className="font-semibold text-base text-center text-gray-700 mb-2">Compila da Documento</h3>
                             <input
@@ -255,6 +230,34 @@ const App: React.FC = () => {
                         </div>
                         <AlloggiatiCredentials />
                         <ApiKeyGuide />
+                    </div>
+
+                    {/* Main form */}
+                    <div className="flex-grow bg-white p-4 shadow-md rounded-lg overflow-auto">
+                        <h1 className="text-xl font-semibold text-gray-800 mb-1">Inserimento On-Line</h1>
+                        <hr className="mb-3 border-t-2 border-dotted border-gray-200" />
+                        <MainForm
+                            data={documentData}
+                            onDataChange={handleDataChange}
+                            onExport={handleExportForExtension}
+                            onSendApi={handleSendViaApi}
+                            onReset={handleResetForm}
+                            minDate={minDate}
+                            maxDate={maxDate}
+                            apiSendLoading={apiSendLoading}
+                        />
+                        {exportSuccess && (
+                            <div className="mt-2 flex items-center text-xs text-purple-600 bg-purple-50 p-2 rounded-md">
+                                <SuccessIcon className="h-4 w-4 mr-2 text-purple-500"/>
+                                <span>{exportSuccess}</span>
+                            </div>
+                        )}
+                        {apiSendSuccess && (
+                            <div className="mt-2 flex items-center text-xs text-green-600 bg-green-50 p-2 rounded-md">
+                                <SuccessIcon className="h-4 w-4 mr-2 text-green-500"/>
+                                <span>{apiSendSuccess}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </main>
