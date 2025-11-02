@@ -327,6 +327,61 @@
 
 ---
 
+### 🤖 FASE 6 - AI Chat Assistant (Priorità ALTA) ⭐ NEW!
+
+#### 19. AI Chat Widget (Floating + Dedicated Page)
+- **Percorsi**:
+  - Floating button: visibile in tutte le pagine dashboard
+  - Pagina dedicata: `/dashboard/ai-assistant`
+- **File**:
+  - `src/components/AIChatWidget.tsx`
+  - `src/pages/AIAssistantPage.tsx` (optional full-screen)
+- **Descrizione**: Chat AI 24/7 esperta in hospitality e Alloggiati Web
+- **UI Components necessari**:
+  - Floating button bottom-right (come Intercom)
+  - Chat sidebar con header, messaggi, input
+  - Typing indicator ("L'assistente sta scrivendo...")
+  - Suggested questions dinamiche
+  - Feedback thumbs up/down
+  - Message formatting (Markdown, emoji, links)
+  - Copy message button
+  - New conversation button
+- **Backend endpoint**: `POST /api/ai/chat`
+- **Request**:
+```json
+{
+  "messages": [
+    { "role": "user", "content": "Come compilo cittadinanza?" },
+    { "role": "assistant", "content": "..." }
+  ]
+}
+```
+- **Response**:
+```json
+{
+  "response": "Per compilare la cittadinanza...",
+  "usage": { "input_tokens": 50, "output_tokens": 300 }
+}
+```
+- **AI Provider**: Gemini 2.0 Flash (Google)
+  - Model: `gemini-2.0-flash`
+  - System prompt: Esperto hospitality + Alloggiati Web
+  - Costo: **GRATIS** (FREE tier: 1500 req/day, 2M tokens/day)
+- **Funzionalità**:
+  - Supporto Alloggiati Web (compilazione campi, normativa)
+  - Consigli gestione ospiti
+  - Best practices hospitality
+  - Troubleshooting tecnico Alloggify
+  - Normativa italiana (D.Lgs. 286/1998)
+- **Context aware**: Ricorda conversazione precedente
+- **Multilingua** (Future): IT, EN, FR, DE
+- **Voice input** (Future): Dettare domande
+- **Document upload** (Future): Analisi documento + domanda
+
+**Dettagli completi**: Vedi `AI_CHAT_FEATURE.md`
+
+---
+
 ## 🔧 BACKEND DA IMPLEMENTARE
 
 ### Database Setup (PostgreSQL - Supabase)
@@ -567,6 +622,28 @@ POST   /api/billing/webhook
   2. Aggiungi a `.env`: `JWT_SECRET=...`
   3. Token expiry: 7 giorni (access), 30 giorni (refresh)
 
+### 5. AI Chat - Gemini 2.0 Flash (GRATIS) ⭐
+- **URL**: https://aistudio.google.com/apikey
+- **Modello**: Gemini 2.0 Flash
+- **Piano**: **FREE tier permanente** (1500 req/day, 2M tokens input/day)
+- **Setup**:
+  1. Usa stesso account già configurato per OCR
+  2. Usa stessa API key già in `.env`: `GEMINI_API_KEY=AIzaSy...`
+  3. Nessun setup aggiuntivo necessario!
+- **Vantaggi rispetto ad Anthropic**:
+  - ✅ **Completamente GRATIS** (vs $50/mese con Claude)
+  - ✅ **Già integrato** (stesso SDK usato per OCR)
+  - ✅ **Velocissimo** (< 1 secondo risposta)
+  - ✅ **Ottimo in Italiano** (supporto nativo)
+  - ✅ **Nessun costo operativo** (FREE tier sufficiente)
+- **Pricing**: GRATIS fino a 1500 req/day
+  - FREE tier: 1500 RPD (Requests Per Day), 2M tokens input/day
+  - 500 utenti × 20 msg/mese = ~333 msg/day → **Ben sotto il limite**
+  - Costo mensile: **$0/mese**
+- **System Prompt**: Vedi `AI_CHAT_FEATURE.md` per prompt completo (~2000 tokens)
+- **Rate limits**: 1500 req/day (più che sufficiente per startup)
+- **Costo mensile stimato** (500 utenti, 20 msg/mese): **$0/mese** 🎉
+
 ---
 
 ## 📦 DIPENDENZE NPM DA INSTALLARE
@@ -610,7 +687,11 @@ npm install --save \
   @stripe/react-stripe-js \
   react-hot-toast \
   date-fns \
-  recharts
+  recharts \
+  react-markdown \
+  remark-gfm
+
+# @google/generative-ai è già installato (usato per OCR) ✅
 ```
 
 ---
@@ -760,7 +841,7 @@ STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxx
 STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxx
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxx
 
-# Gemini OCR
+# Gemini (OCR + AI Chat) - Stesso API key per entrambi
 GEMINI_API_KEY=AIzaSyxxxxxxxxxx
 
 # App
