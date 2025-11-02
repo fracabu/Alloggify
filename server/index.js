@@ -11,6 +11,7 @@ const authRoute = require('./routes/auth');
 const testRoute = require('./routes/test');
 const sendRoute = require('./routes/send');
 const ricevutaRoute = require('./routes/ricevuta');
+const chatRoute = require('./routes/chat');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -54,6 +55,7 @@ app.use('/api/alloggiati', authRoute);
 app.use('/api/alloggiati', testRoute);
 app.use('/api/alloggiati', sendRoute);
 app.use('/api/alloggiati', ricevutaRoute);
+app.use('/api/ai', chatRoute);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -81,6 +83,7 @@ app.listen(PORT, () => {
     console.log(`   POST /api/alloggiati/test - Test schedina`);
     console.log(`   POST /api/alloggiati/send - Send schedina`);
     console.log(`   POST /api/alloggiati/ricevuta - Download receipt`);
+    console.log(`   POST /api/ai/chat - AI Chat assistant (Gemini 2.0 Flash)`);
     console.log('='.repeat(60));
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`📅 Started at: ${new Date().toISOString()}`);
