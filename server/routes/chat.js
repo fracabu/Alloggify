@@ -53,9 +53,9 @@ router.post('/chat', async (req, res) => {
             });
         }
 
-        // Initialize model (Gemini 2.0 Flash - fastest and FREE)
+        // Initialize model (Gemini 2.5 Flash - fastest and FREE)
         const model = genAI.getGenerativeModel({
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-exp-1121',
             systemInstruction: systemPrompt || ''
         });
 
