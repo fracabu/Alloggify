@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Sparkles, Zap, Shield, BarChart, Globe, DollarSign, MessageCircle, Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sparkles, Zap, Shield, BarChart, Globe, DollarSign, MessageCircle, Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { Pricing } from '../components/landing/Pricing';
 import { Testimonials } from '../components/landing/Testimonials';
 import { FAQ } from '../components/landing/FAQ';
 import { Footer } from '../components/landing/Footer';
 import { SEOHead } from '../components/SEOHead';
+import { useAuth } from '../hooks/useAuth';
 
 export const LandingPage: React.FC = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+    const userMenuRef = useRef<HTMLDivElement>(null);
+
+    // Close user menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setUserMenuOpen(false);
+            }
+        };
+
+        if (userMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [userMenuOpen]);
 
     const navLinks = [
         { href: '#features', label: 'Funzionalità' },
@@ -49,20 +71,64 @@ export const LandingPage: React.FC = () => {
                             ))}
                         </div>
 
-                        {/* Desktop CTA Buttons */}
+                        {/* Desktop CTA Buttons / User Menu */}
                         <div className="hidden md:flex items-center gap-3">
-                            <Link
-                                to="/login"
-                                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
-                            >
-                                Accedi
-                            </Link>
-                            <Link
-                                to="/signup"
-                                className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm hover:shadow-md"
-                            >
-                                Inizia Gratis
-                            </Link>
+                            {isAuthenticated && user ? (
+                                <div className="relative" ref={userMenuRef}>
+                                    <button
+                                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                        className="flex items-center gap-3 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        <div className="text-right">
+                                            <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
+                                            <p className="text-xs text-gray-500 capitalize">{user.subscriptionPlan}</p>
+                                        </div>
+                                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                            <User className="h-5 w-5 text-indigo-600" />
+                                        </div>
+                                    </button>
+
+                                    {/* Dropdown Menu */}
+                                    {userMenuOpen && (
+                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                                            <Link
+                                                to="/dashboard"
+                                                onClick={() => setUserMenuOpen(false)}
+                                                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                            >
+                                                <LayoutDashboard className="h-4 w-4" />
+                                                Dashboard
+                                            </Link>
+                                            <button
+                                                onClick={() => {
+                                                    logout();
+                                                    setUserMenuOpen(false);
+                                                    navigate('/');
+                                                }}
+                                                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                            >
+                                                <LogOut className="h-4 w-4" />
+                                                Esci
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                                    >
+                                        Accedi
+                                    </Link>
+                                    <Link
+                                        to="/signup"
+                                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm hover:shadow-md"
+                                    >
+                                        Inizia Gratis
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -90,20 +156,57 @@ export const LandingPage: React.FC = () => {
                                     </a>
                                 ))}
                                 <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
-                                    <Link
-                                        to="/login"
-                                        onClick={handleNavClick}
-                                        className="px-4 py-2 text-center text-gray-700 hover:text-gray-900 font-medium transition-colors border border-gray-300 rounded-lg"
-                                    >
-                                        Accedi
-                                    </Link>
-                                    <Link
-                                        to="/signup"
-                                        onClick={handleNavClick}
-                                        className="px-4 py-2 text-center bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
-                                    >
-                                        Inizia Gratis
-                                    </Link>
+                                    {isAuthenticated && user ? (
+                                        <>
+                                            <div className="px-4 py-3 bg-gray-50 rounded-lg">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                                                        <User className="h-6 w-6 text-indigo-600" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
+                                                        <p className="text-xs text-gray-500 capitalize">{user.subscriptionPlan}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <Link
+                                                to="/dashboard"
+                                                onClick={handleNavClick}
+                                                className="flex items-center justify-center gap-2 px-4 py-2 text-center bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+                                            >
+                                                <LayoutDashboard className="h-4 w-4" />
+                                                Dashboard
+                                            </Link>
+                                            <button
+                                                onClick={() => {
+                                                    logout();
+                                                    setMobileMenuOpen(false);
+                                                    navigate('/');
+                                                }}
+                                                className="flex items-center justify-center gap-2 px-4 py-2 text-center text-red-600 hover:text-red-700 font-medium transition-colors border border-red-300 rounded-lg"
+                                            >
+                                                <LogOut className="h-4 w-4" />
+                                                Esci
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Link
+                                                to="/login"
+                                                onClick={handleNavClick}
+                                                className="px-4 py-2 text-center text-gray-700 hover:text-gray-900 font-medium transition-colors border border-gray-300 rounded-lg"
+                                            >
+                                                Accedi
+                                            </Link>
+                                            <Link
+                                                to="/signup"
+                                                onClick={handleNavClick}
+                                                className="px-4 py-2 text-center bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+                                            >
+                                                Inizia Gratis
+                                            </Link>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
