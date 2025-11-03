@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Zap, Shield, BarChart, Globe, DollarSign, Menu, X } from 'lucide-react';
+import { Sparkles, Zap, Shield, BarChart, Globe, DollarSign, MessageCircle, Menu, X } from 'lucide-react';
 import { Pricing } from '../components/landing/Pricing';
 import { Testimonials } from '../components/landing/Testimonials';
 import { FAQ } from '../components/landing/FAQ';
@@ -118,7 +118,7 @@ export const LandingPage: React.FC = () => {
                         {/* Badge */}
                         <div className="mb-6 flex justify-center">
                             <span className="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
-                                🚀 Automatizza Alloggiati Web
+                                🆕 Nuovo: AI Assistant + Automazione Completa
                             </span>
                         </div>
 
@@ -181,6 +181,11 @@ export const LandingPage: React.FC = () => {
                                 icon: Zap,
                                 title: 'Compilazione Automatica',
                                 desc: 'Extension Chrome riempie il form istantaneamente. Da 20 minuti a 30 secondi.'
+                            },
+                            {
+                                icon: MessageCircle,
+                                title: 'AI Assistant Esperto',
+                                desc: 'Supporto 24/7 su Alloggiati Web, normativa D.Lgs 286/98, casi complessi. Chat intelligente sempre disponibile.'
                             },
                             {
                                 icon: Shield,

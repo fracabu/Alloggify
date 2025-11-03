@@ -5,6 +5,11 @@
 
 const express = require('express');
 const router = express.Router();
+
+// Polyfill fetch for better Windows/Node.js compatibility
+const fetch = require('node-fetch');
+global.fetch = fetch;
+
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize Gemini AI
@@ -93,8 +98,16 @@ router.post('/chat', async (req, res) => {
             }
         });
 
-        // Send message and get response
-        const result = await chat.sendMessage(lastMessage.content);
+        // Send message and get response with timeout
+        console.log(`[AI Chat] Sending message to Gemini API: "${lastMessage.content.substring(0, 50)}..."`);
+
+        const result = await Promise.race([
+            chat.sendMessage(lastMessage.content),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Request timeout after 30 seconds')), 30000)
+            )
+        ]);
+
         const response = result.response;
         const text = response.text();
 
@@ -114,6 +127,7 @@ router.post('/chat', async (req, res) => {
 
     } catch (error) {
         console.error('[AI Chat Error]', error);
+        console.error('[AI Chat Error Stack]', error.stack);
 
         // Handle specific errors
         if (error.message && error.message.includes('API_KEY_INVALID')) {
@@ -127,6 +141,23 @@ router.post('/chat', async (req, res) => {
             return res.status(429).json({
                 error: 'Rate limit exceeded',
                 message: 'Too many requests. Please try again later.'
+            });
+        }
+
+        // Handle network/fetch errors (common on Windows)
+        if (error.message && (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND') || error.message.includes('ETIMEDOUT'))) {
+            console.error('[AI Chat] Network error - possible causes: firewall, proxy, DNS, or Windows network settings');
+            return res.status(503).json({
+                error: 'Network error',
+                message: 'Unable to connect to Gemini API. Please check your internet connection, firewall, or proxy settings.',
+                details: process.env.NODE_ENV === 'development' ? error.message : undefined
+            });
+        }
+
+        if (error.message && error.message.includes('timeout')) {
+            return res.status(504).json({
+                error: 'Request timeout',
+                message: 'The AI service took too long to respond. Please try again.'
             });
         }
 

@@ -31,11 +31,12 @@ The project is planned to evolve into a full SaaS platform with:
 
 **See `SAAS_PLAN.md` for complete roadmap, financial projections, and technical architecture.**
 
-### Current Architecture (Dual-Method System)
+### Current Architecture (Hybrid System)
 
 1. **React Web App**: Vite-based React application for document scanning and data extraction
 2. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
 3. **Express Backend**: SOAP API proxy for direct submission with WSKEY authentication (Method B)
+4. **AI Chat Assistant**: Gemini 2.5 Flash-powered assistant for hospitality support (integrated in dashboard)
 
 ## Common Development Commands
 
@@ -356,6 +357,39 @@ import { DocumentData } from '@/types';
 ```
 
 Configured in both `tsconfig.json` and `vite.config.ts`.
+
+## AI Chat Assistant Feature
+
+The application includes a Gemini 2.5 Flash-powered AI assistant accessible via a floating chat widget in the dashboard.
+
+**Architecture**:
+- **Frontend**: `src/components/AIChatWidget.tsx` - Floating chat button and UI
+- **Backend**: `server/routes/chat.js` - API endpoint for chat interactions
+- **Model**: Gemini 2.5 Flash (completely FREE up to 1500 req/day)
+- **System Prompt**: Embedded in AIChatWidget component (expert in Alloggiati Web, Italian hospitality, regulations)
+
+**Key Features**:
+- Contextual conversation with chat history
+- Suggested questions for quick help
+- Expert knowledge on Alloggiati Web portal, Italian hospitality regulations (D.Lgs. 286/1998), document types, troubleshooting
+- Markdown-formatted responses with emoji visual cues
+- Real-time typing indicator
+
+**API Endpoint**:
+- `POST /api/ai/chat` - Send message and get AI response
+- Request body: `{ systemPrompt: string, messages: Array<{role, content}> }`
+- Response: `{ response: string, usage: {inputTokens, outputTokens, totalTokens} }`
+
+**Environment Variable**:
+- Uses same `GEMINI_API_KEY` as OCR feature
+- Falls back to localStorage if not set in `.env.local`
+
+**Common Issues**:
+- **"fetch failed" error on Windows**: Fixed by installing `node-fetch@2` as polyfill
+- **503 Network error**: Check firewall, proxy, or internet connection
+- **504 Timeout**: Request took >30 seconds, retry recommended
+
+**See `AI_CHAT_FEATURE.md` for detailed design documentation, system prompt, and roadmap.**
 
 ## Important Technical Notes
 
