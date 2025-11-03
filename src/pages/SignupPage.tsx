@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
 
 export const SignupPage: React.FC = () => {
     const navigate = useNavigate();
-    const { signup } = useAuth();
+    const { signup, isAuthenticated, loading: authLoading } = useAuth();
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -18,6 +18,13 @@ export const SignupPage: React.FC = () => {
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (isAuthenticated && !authLoading) {
+            navigate('/dashboard/scan', { replace: true });
+        }
+    }, [isAuthenticated, authLoading, navigate]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
