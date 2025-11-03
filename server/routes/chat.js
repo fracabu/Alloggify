@@ -59,8 +59,16 @@ router.post('/chat', async (req, res) => {
             systemInstruction: systemPrompt || ''
         });
 
-        // Build conversation history
-        const history = messages.slice(0, -1).map(msg => ({
+        // Build conversation history (exclude last message and filter out initial assistant messages)
+        let history = messages.slice(0, -1);
+
+        // Remove leading assistant messages (welcome message)
+        while (history.length > 0 && history[0].role === 'assistant') {
+            history = history.slice(1);
+        }
+
+        // Map to Gemini format
+        history = history.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: msg.content }]
         }));
