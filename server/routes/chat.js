@@ -55,7 +55,7 @@ router.post('/chat', async (req, res) => {
 
         // Initialize model (Gemini 2.5 Flash - fastest and FREE)
         const model = genAI.getGenerativeModel({
-            model: 'gemini-exp-1121',
+            model: 'gemini-2.5-flash',
             systemInstruction: systemPrompt || ''
         });
 
