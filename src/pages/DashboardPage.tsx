@@ -6,7 +6,7 @@ import { DocumentData } from '../../types';
 import { extractDocumentInfo } from '../../services/geminiService';
 import { fileToBase64 } from '../../utils/fileUtils';
 import { UploadIcon, LoaderIcon, ErrorIcon, SuccessIcon } from '../../components/icons/Icons';
-import { ApiKeyGuide } from '../../components/ApiKeyGuide';
+// import { ApiKeyGuide } from '../../components/ApiKeyGuide'; // COMMENTED: SaaS will use centralized Gemini API key
 import { AlloggiatiCredentials } from '../../components/AlloggiatiCredentials';
 import { alloggiatiApi } from '../../services/alloggiatiApiService';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
@@ -268,7 +268,8 @@ export const DashboardPage: React.FC = () => {
                             )}
                         </div>
                         <AlloggiatiCredentials />
-                        <ApiKeyGuide />
+                        {/* <ApiKeyGuide /> */}
+                        {/* Commented for SaaS: Gemini API key will be centralized (server-side) */}
                     </aside>
 
                     {/* Main Form */}

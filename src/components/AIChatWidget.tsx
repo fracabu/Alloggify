@@ -75,18 +75,76 @@ Per STRANIERI EXTRA-UE:
 - Comunicare la cittadinanza del documento usato
 - Se italiano con doppia cittadinanza: comunicare ITALIA
 
-## 5. Troubleshooting Alloggify
+## 5. DUE METODI DI INVIO (IMPORTANTE!)
 
-### Extension Chrome
-- Compatibile con Alloggiati Web (alloggiatiweb.poliziadistato.it)
-- Legge dati da localStorage
-- Compila automaticamente i campi del form
-- Converte formati (date YYYY-MM-DD → DD/MM/YYYY, sesso M/F)
+Alloggify offre DUE modalità per inviare le schedine ad Alloggiati Web:
+
+### METODO A: Extension Chrome (Manuale)
+**Come funziona:**
+1. Utente scansiona documento su Alloggify → OCR estrae dati
+2. Click "Esporta per Estensione" → dati salvati in localStorage
+3. Utente naviga su alloggiatiweb.poliziadistato.it
+4. Extension Chrome legge i dati e auto-compila il form
+5. Utente verifica e clicca MANUALMENTE "Invia" sul portale
+
+**Pro:**
+- ✅ Non serve WSKEY
+- ✅ Nessuna configurazione API
+- ✅ Utente controlla invio finale
+
+**Contro:**
+- ❌ Richiede navigazione manuale sul portale
+- ❌ Submission manuale
+- ❌ Non può essere automatizzato completamente
+
+**Quando usarlo:**
+- Utenti senza WSKEY
+- Primo utilizzo/test
+- Strutture che preferiscono controllo manuale
+
+### METODO B: API SOAP con WSKEY (Automatico) 🚀
+**Come funziona:**
+1. Utente configura WSKEY nel pannello "API Alloggiati Web" (sidebar destra)
+2. Inserisce: Utente, Password, WSKEY (generata da portale Alloggiati Web)
+3. Click "Connetti" → genera token di autenticazione
+4. Scansiona documento → OCR estrae dati
+5. Click "Invia Schedina" → invio AUTOMATICO tramite SOAP API
+6. Ricevuta generata ISTANTANEAMENTE
+
+**Pro:**
+- ✅ Completamente automatico (no navigazione portale)
+- ✅ Invio in 2 secondi
+- ✅ Ricevuta immediata
+- ✅ Validazione schedina pre-invio
+
+**Contro:**
+- ❌ Richiede WSKEY (da generare su portale)
+- ❌ Setup iniziale più complesso
+
+**Quando usarlo:**
+- Strutture con alto volume (10+ ospiti/giorno)
+- Utenti che vogliono massima automazione
+- Professionisti hospitality
+
+### Come Generare WSKEY
+1. Accedi su alloggiatiweb.poliziadistato.it
+2. Vai su "Profilo" → "Chiave Web Service"
+3. Click "Genera Chiave" → copia stringa Base64
+4. Incolla in Alloggify nel pannello API
+
+⚠️ **IMPORTANTE**: La WSKEY è legata alla tua struttura. Non condividerla mai!
+
+## 6. Troubleshooting Tecnico
 
 ### OCR Gemini
 - Accuratezza 99%+
 - Supporta: Carta identità italiana, CIE, Passaporti EU/extra-EU, Patenti
 - Se OCR sbaglia: correzione manuale prima di esportare
+
+### Errori Comuni WSKEY
+- "Token scaduto": Rifare login (pannello API)
+- "WSKEY non valida": Rigenera WSKEY su portale
+- "Validazione fallita": Controlla campi obbligatori (Cognome, Nome, Data Nascita)
 
 ### Quota Scansioni
 - Piano FREE: 5 scan/mese
@@ -131,10 +189,10 @@ Alla fine di ogni risposta, aggiungi:
 - Separa paragrafi per leggibilità`;
 
 const SUGGESTED_QUESTIONS = [
-  "Come compilo il campo cittadinanza?",
+  "Qual è la differenza tra Extension Chrome e WSKEY?",
+  "Come genero la WSKEY per l'invio automatico?",
   "Devo comunicare anche i minori?",
   "Quali documenti sono validi per stranieri?",
-  "Come funziona l'estensione Chrome?",
   "Quali sono le sanzioni per mancata comunicazione?"
 ];
 
