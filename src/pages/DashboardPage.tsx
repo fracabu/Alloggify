@@ -22,6 +22,7 @@ const initialDocumentData: DocumentData = {
     sesso: '',
     dataNascita: '',
     luogoNascita: '',
+    statoNascita: 'ITALIA',
     cittadinanza: 'ITALIA',
     tipoDocumento: '',
     numeroDocumento: '',
@@ -36,7 +37,9 @@ export const DashboardPage: React.FC = () => {
     const [ocrSuccess, setOcrSuccess] = useState<string | null>(null);
     const [exportSuccess, setExportSuccess] = useState<string | null>(null);
     const [apiSendLoading, setApiSendLoading] = useState<boolean>(false);
+    const [apiTestLoading, setApiTestLoading] = useState<boolean>(false);
     const [apiSendSuccess, setApiSendSuccess] = useState<string | null>(null);
+    const [apiTestSuccess, setApiTestSuccess] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -69,6 +72,7 @@ export const DashboardPage: React.FC = () => {
                 sesso: extractedData.sex || '',
                 dataNascita: formattedDateOfBirth || '',
                 luogoNascita: extractedData.placeOfBirth || '',
+                statoNascita: extractedData.stateOfBirth || 'ITALIA',
                 cittadinanza: extractedData.citizenship || 'ITALIA',
                 tipoDocumento: extractedData.documentType || '',
                 numeroDocumento: extractedData.documentNumber || '',
@@ -121,6 +125,42 @@ export const DashboardPage: React.FC = () => {
         setOcrSuccess(null);
         setExportSuccess(null);
         setApiSendSuccess(null);
+        setApiTestSuccess(null);
+    };
+
+    const handleTestApi = async () => {
+        if (!documentData.cognome || !documentData.nome || !documentData.dataNascita) {
+            setError('Compila almeno Cognome, Nome e Data di Nascita prima di testare');
+            return;
+        }
+
+        setApiTestLoading(true);
+        setError(null);
+        setApiTestSuccess(null);
+
+        try {
+            // Verifica autenticazione
+            const isTokenValid = await alloggiatiApi.testAuthentication();
+            if (!isTokenValid) {
+                throw new Error('Token scaduto o non valido. Effettua nuovamente il login nella sezione API.');
+            }
+
+            console.log('🧪 Test validazione schedina...');
+            const testResult = await alloggiatiApi.testSchedina(documentData);
+
+            if (testResult.success) {
+                setApiTestSuccess('✅ Validazione OK! I dati sono corretti e pronti per l\'invio.');
+                setTimeout(() => setApiTestSuccess(null), 8000);
+            } else {
+                throw new Error(`Validazione fallita: ${testResult.message}`);
+            }
+        } catch (err) {
+            console.error('❌ Errore test API:', err);
+            const errorMessage = err instanceof Error ? err.message : 'Errore durante il test di validazione';
+            setError(errorMessage);
+        } finally {
+            setApiTestLoading(false);
+        }
     };
 
     const handleSendViaApi = async () => {
@@ -185,8 +225,24 @@ export const DashboardPage: React.FC = () => {
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
+                            <div className="h-8 w-8">
+                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="dashHouseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
+                                            <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 50 15 L 10 50 L 20 50 L 20 85 L 80 85 L 80 50 L 90 50 Z" fill="url(#dashHouseGradient)" />
+                                    <rect x="20" y="50" width="60" height="35" fill="url(#dashHouseGradient)" />
+                                    <path d="M 40 60 L 40 85 L 60 85 L 60 60 L 55 60 L 55 80 L 45 80 L 45 60 Z" fill="#312E81" opacity="0.8" />
+                                    <circle cx="52" cy="72" r="2" fill="white" />
+                                    <rect x="28" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
+                                    <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
+                                </svg>
+                            </div>
                             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                                Alloggify
+                                CheckInly
                             </h1>
                         </Link>
 
@@ -285,16 +341,24 @@ export const DashboardPage: React.FC = () => {
                             onDataChange={handleDataChange}
                             onExport={handleExportForExtension}
                             onSendApi={handleSendViaApi}
+                            onTestApi={handleTestApi}
                             onReset={handleResetForm}
                             minDate={minDate}
                             maxDate={maxDate}
                             apiSendLoading={apiSendLoading}
+                            apiTestLoading={apiTestLoading}
                         />
 
                         {exportSuccess && (
                             <div className="mt-4 flex items-center text-sm text-purple-700 bg-purple-50 p-3 rounded-lg border border-purple-200">
                                 <SuccessIcon className="h-5 w-5 mr-2 text-purple-600"/>
                                 <span>{exportSuccess}</span>
+                            </div>
+                        )}
+                        {apiTestSuccess && (
+                            <div className="mt-4 flex items-center text-sm text-blue-700 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                <SuccessIcon className="h-5 w-5 mr-2 text-blue-600"/>
+                                <span>{apiTestSuccess}</span>
                             </div>
                         )}
                         {apiSendSuccess && (

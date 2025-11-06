@@ -349,16 +349,16 @@ export class AlloggiatiApiService {
         const comuneCode = this.getComuneCode(data.luogoNascita);
         record += pad(comuneCode, 9);
         
-        // Provincia Nascita (114-115): 2 chars - Sigla Provincia (only if Italy)
-        const provinciaNascita = data.cittadinanza === 'ITALIA' ? getProvincia(data.luogoNascita) : '';
+        // Provincia Nascita (114-115): 2 chars - Sigla Provincia (only if Stato Nascita = ITALIA)
+        const provinciaNascita = data.statoNascita === 'ITALIA' ? getProvincia(data.luogoNascita) : '';
         record += pad(provinciaNascita, 2);
         
-        // Stato Nascita (116-124): 9 chars - Codice Stato (ITALIA = 100000100)
-        const codiceStatoNascita = data.cittadinanza === 'ITALIA' ? '100000100' : '100000000';
+        // Stato Nascita (116-124): 9 chars - Codice Stato (CRITICAL: use statoNascita field!)
+        const codiceStatoNascita = this.getStatoCode(data.statoNascita);
         record += pad(codiceStatoNascita, 9);
         
-        // Cittadinanza (125-133): 9 chars - Codice Stato (ITALIA = 100000100)
-        const codiceCittadinanza = data.cittadinanza === 'ITALIA' ? '100000100' : '100000000';
+        // Cittadinanza (125-133): 9 chars - Codice Stato
+        const codiceCittadinanza = this.getStatoCode(data.cittadinanza);
         record += pad(codiceCittadinanza, 9);
         
         // Tipo Documento (134-138): 5 chars - Codice Tabella Documenti
@@ -367,8 +367,23 @@ export class AlloggiatiApiService {
         // Numero Documento (139-158): 20 chars
         record += pad(data.numeroDocumento.toUpperCase(), 20);
         
-        // Luogo Rilascio (159-167): 9 chars - Codice Stato (ITALIA = 100000100)
-        const codiceLuogoRilascio = data.luogoRilascioDocumento === 'ITALIA' ? '100000100' : '100000000';
+        // Luogo Rilascio (159-167): 9 chars - Codice Comune o Codice Stato
+        // Try as comune first (for Italian cities), fallback to stato (for countries)
+        console.log('[CSV] Luogo Rilascio input:', data.luogoRilascioDocumento);
+        let codiceLuogoRilascio = this.getComuneCode(data.luogoRilascioDocumento);
+        console.log('[CSV] Codice Comune trovato:', codiceLuogoRilascio);
+        
+        if (!codiceLuogoRilascio) {
+            // Not a comune, try as stato (country)
+            codiceLuogoRilascio = this.getStatoCode(data.luogoRilascioDocumento);
+            console.log('[CSV] Codice Stato trovato:', codiceLuogoRilascio);
+        }
+        
+        if (!codiceLuogoRilascio) {
+            console.error('❌ ERRORE: Luogo Rilascio non trovato! Verifica che la Tabella Luoghi sia scaricata.');
+            codiceLuogoRilascio = '100000100'; // Fallback ITALIA
+        }
+        
         record += pad(codiceLuogoRilascio, 9);
 
         console.log('[CSV] Generated record length:', record.length, 'chars');
@@ -424,7 +439,19 @@ export class AlloggiatiApiService {
             if (stored) {
                 const data = JSON.parse(stored);
                 this.tabellaLuoghi = new Map(Object.entries(data));
-                console.log('✅ Tabella Luoghi caricata da localStorage:', this.tabellaLuoghi.size, 'voci');
+                
+                // Count comuni and stati separately
+                let comuni = 0;
+                let stati = 0;
+                this.tabellaLuoghi.forEach((value) => {
+                    if (value.provincia === 'ES') {
+                        stati++;
+                    } else {
+                        comuni++;
+                    }
+                });
+                
+                console.log(`✅ Tabella Luoghi caricata: ${comuni} comuni + ${stati} stati (${this.tabellaLuoghi.size} totale)`);
             }
         } catch (error) {
             console.error('Errore caricamento Tabella Luoghi:', error);
@@ -635,6 +662,36 @@ export class AlloggiatiApiService {
 
         console.warn(`⚠️ Tipo documento non trovato: "${cleanName}"`);
         return 'IDENT'; // Default to CARTA DI IDENTITA'
+    }
+
+    /**
+     * Get stato (country) code from name
+     * Uses Tabella Luoghi which includes Stati (countries)
+     * ITALIA = 100000100
+     * States in the table have Provincia = 'ES' (Estero)
+     */
+    getStatoCode(statoName: string): string {
+        const cleanName = statoName.trim().toUpperCase();
+
+        // ITALIA is a special case with fixed code
+        if (cleanName === 'ITALIA' || cleanName === 'ITALY') {
+            return '100000100';
+        }
+
+        // Try to find in Tabella Luoghi (if loaded)
+        if (this.tabellaLuoghi) {
+            const stato = this.tabellaLuoghi.get(cleanName);
+            if (stato) {
+                console.log(`✅ Stato trovato: ${cleanName} → ${stato.codice}`);
+                return stato.codice;
+            }
+        } else {
+            console.warn('⚠️ Tabella Luoghi non ancora caricata, usa il login per scaricarla');
+        }
+
+        console.warn(`⚠️ Stato non trovato nella tabella: "${cleanName}". Scarica la Tabella Luoghi dal menu API.`);
+        // Return empty string to trigger validation error (better than wrong code)
+        return '';
     }
 
     /**

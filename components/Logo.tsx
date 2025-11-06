@@ -1,35 +1,82 @@
 import React from 'react';
 
-export const Logo: React.FC<{ className?: string }> = ({ className }) => {
+export const Logo: React.FC<{ className?: string; showText?: boolean }> = ({ className, showText = false }) => {
     return (
-        <svg
-            className={className}
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="Alloggify Logo"
-        >
-            <defs>
-                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#4F46E5', stopOpacity: 1 }} />
-                </linearGradient>
-            </defs>
-            <g transform="translate(5, 5)">
-                 {/* Stylized 'A' shape */}
+        <div className="flex items-center gap-2">
+            {/* House Icon */}
+            <svg
+                className={className}
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-label="CheckInly Logo"
+            >
+                <defs>
+                    <linearGradient id="houseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
+                        <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
+                    </linearGradient>
+                </defs>
+                
+                {/* Roof - Triangle */}
                 <path
-                    d="M 45 0 L 0 90 H 15 L 35 40 H 55 L 75 90 H 90 L 45 0 Z M 45 25 L 60 65 H 30 L 45 25 Z"
-                    fill="url(#logoGradient)"
+                    d="M 50 15 L 10 50 L 20 50 L 20 85 L 80 85 L 80 50 L 90 50 Z"
+                    fill="url(#houseGradient)"
                 />
-                 {/* Integrated checkmark */}
+                
+                {/* House body */}
+                <rect
+                    x="20"
+                    y="50"
+                    width="60"
+                    height="35"
+                    fill="url(#houseGradient)"
+                />
+                
+                {/* Open Door - Darker shade to show it's open */}
                 <path
-                    d="M 60 60 L 70 70 L 95 45"
-                    stroke="white"
-                    strokeWidth="10"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    d="M 40 60 L 40 85 L 60 85 L 60 60 L 55 60 L 55 80 L 45 80 L 45 60 Z"
+                    fill="#312E81"
+                    opacity="0.8"
                 />
-            </g>
-        </svg>
+                
+                {/* Door handle */}
+                <circle
+                    cx="52"
+                    cy="72"
+                    r="2"
+                    fill="white"
+                />
+                
+                {/* Window left */}
+                <rect
+                    x="28"
+                    y="58"
+                    width="8"
+                    height="8"
+                    fill="white"
+                    opacity="0.9"
+                    rx="1"
+                />
+                
+                {/* Window right */}
+                <rect
+                    x="64"
+                    y="58"
+                    width="8"
+                    height="8"
+                    fill="white"
+                    opacity="0.9"
+                    rx="1"
+                />
+            </svg>
+            
+            {/* Text "CheckInly" */}
+            {showText && (
+                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                    CheckInly
+                </span>
+            )}
+        </div>
     );
 };
+

@@ -53,8 +53,24 @@ export const LandingPage: React.FC = () => {
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
+                            <div className="h-8 w-8">
+                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="houseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
+                                            <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 50 15 L 10 50 L 20 50 L 20 85 L 80 85 L 80 50 L 90 50 Z" fill="url(#houseGradient)" />
+                                    <rect x="20" y="50" width="60" height="35" fill="url(#houseGradient)" />
+                                    <path d="M 40 60 L 40 85 L 60 85 L 60 60 L 55 60 L 55 80 L 45 80 L 45 60 Z" fill="#312E81" opacity="0.8" />
+                                    <circle cx="52" cy="72" r="2" fill="white" />
+                                    <rect x="28" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
+                                    <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
+                                </svg>
+                            </div>
                             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                                Alloggify
+                                CheckInly
                             </h1>
                         </Link>
 
@@ -267,7 +283,7 @@ export const LandingPage: React.FC = () => {
             <section id="features" className="py-20 bg-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
-                        Perché Scegliere Alloggify?
+                        Perché Scegliere CheckInly?
                     </h2>
                     <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
                         La soluzione più completa per automatizzare il processo Alloggiati Web
@@ -409,7 +425,7 @@ export const LandingPage: React.FC = () => {
                             Crea Account Gratuito
                         </Link>
                         <p className="mt-6 text-sm opacity-75">
-                            Unisciti a 500+ strutture ricettive che hanno già scelto Alloggify
+                            Unisciti a 500+ strutture ricettive che hanno già scelto CheckInly
                         </p>
                     </div>
                 </div>

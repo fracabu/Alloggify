@@ -42,7 +42,8 @@ export async function extractDocumentInfo(base64Image: string, mimeType: string)
 - After correctly classifying the document type, extract all other fields.
 - sex: 'Maschio' or 'Femmina'.
 - dateOfBirth: Format as 'YYYY-MM-DD'.
-- placeOfBirth: For Italian citizens, provide the MUNICIPALITY name in uppercase, without country code (e.g., 'ROMA'). For foreign citizens, provide the full COUNTRY name in uppercase (e.g., 'TUNISIA').
+- placeOfBirth: For Italian citizens, provide the MUNICIPALITY name in uppercase, without country code (e.g., 'ROMA'). For foreign citizens, provide the CITY or REGION name in uppercase (e.g., 'TUNISI').
+- stateOfBirth: CRITICAL - ALWAYS provide the COUNTRY of birth in uppercase. For Italian citizens: 'ITALIA'. For foreign citizens: the country name in Italian uppercase (e.g., 'TUNISIA', 'FRANCIA', 'GERMANIA', 'MAROCCO').
 - citizenship: The full country name in Italian, e.g., 'ITALIA'.
 - issuingPlace: The Italian MUNICIPALITY or foreign COUNTRY of issuance, in uppercase (e.g., 'ROMA' or 'GERMANIA'). Do not include country codes.
 
@@ -64,14 +65,15 @@ export async function extractDocumentInfo(base64Image: string, mimeType: string)
                         firstName: { type: Type.STRING },
                         sex: { type: Type.STRING, description: "Sex ('Maschio' or 'Femmina'). Returns an empty string if not found." },
                         dateOfBirth: { type: Type.STRING, description: 'Format: YYYY-MM-DD' },
-                        placeOfBirth: { type: Type.STRING, description: "For Italian citizens, the municipality name in uppercase (e.g., 'ROMA'). For foreign citizens, the country name in uppercase (e.g., 'TUNISIA'). No country codes." },
+                        placeOfBirth: { type: Type.STRING, description: "For Italian citizens, the municipality name in uppercase (e.g., 'ROMA'). For foreign citizens, the city/region in uppercase (e.g., 'TUNISI'). No country codes." },
+                        stateOfBirth: { type: Type.STRING, description: "CRITICAL: ALWAYS the country of birth in uppercase. Italian citizens: 'ITALIA'. Foreign: 'TUNISIA', 'FRANCIA', 'GERMANIA', 'MAROCCO', etc." },
                         citizenship: { type: Type.STRING, description: "Full country name in Italian, e.g. ITALIA or TUNISIA" },
                         documentType: { type: Type.STRING, description: `CRITICAL: Identify in order: 1. Passport ('PASSAPORTO ORDINARIO'), 2. Driving License ('PATENTE DI GUIDA'), 3. Italian ID. For Italian IDs, default to 'CARTA DI IDENTITA'' unless a chip/EU flag proves it is 'CARTA IDENTITA' ELETTRONICA'.` },
                         documentNumber: { type: Type.STRING },
                         issuingPlace: { type: Type.STRING, description: "The Italian municipality or foreign country of issuance, in uppercase (e.g., 'ROMA' or 'GERMANIA'). No country codes." }
                     },
                     required: [
-                        "lastName", "firstName", "sex", "dateOfBirth", "placeOfBirth", 
+                        "lastName", "firstName", "sex", "dateOfBirth", "placeOfBirth", "stateOfBirth",
                         "citizenship", "documentType", "documentNumber", "issuingPlace"
                     ]
                 }

@@ -7,10 +7,12 @@ interface MainFormProps {
     onDataChange: (field: keyof DocumentData, value: string) => void;
     onExport: () => void;
     onSendApi: () => void;
+    onTestApi: () => void;
     onReset: () => void;
     minDate: string;
     maxDate: string;
     apiSendLoading: boolean;
+    apiTestLoading: boolean;
 }
 
 const InputField: React.FC<{
@@ -64,7 +66,7 @@ const formatDateForDisplay = (dateString: string) => {
 };
 
 // FIX: Export MainForm component to be used in App.tsx and complete the truncated file.
-export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport, onSendApi, onReset, minDate, maxDate, apiSendLoading }) => {
+export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport, onSendApi, onTestApi, onReset, minDate, maxDate, apiSendLoading, apiTestLoading }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         onDataChange(name as keyof DocumentData, value);
@@ -105,8 +107,9 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                         <option value="Femmina">Femmina</option>
                     </SelectField>
                     <InputField id="dataNascita" label="Data di Nascita" value={data.dataNascita} onChange={handleChange} type="date" />
-                    <InputField id="luogoNascita" label="Luogo di Nascita" placeholder="Comune o Stato Estero" value={data.luogoNascita} onChange={handleChange} />
-                    <InputField id="cittadinanza" label="Cittadinanza" placeholder="Comune o Stato Estero" value={data.cittadinanza} onChange={handleChange} />
+                    <InputField id="luogoNascita" label="Luogo di Nascita (Comune)" placeholder="Es: MILANO" value={data.luogoNascita} onChange={handleChange} className="sm:col-span-2" />
+                    <InputField id="statoNascita" label="Stato di Nascita" placeholder="Es: ITALIA" value={data.statoNascita} onChange={handleChange} />
+                    <InputField id="cittadinanza" label="Cittadinanza" placeholder="Es: ITALIA" value={data.cittadinanza} onChange={handleChange} />
                 </div>
             </fieldset>
 
@@ -140,6 +143,23 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                     className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
                 >
                     🗑️ Svuota Form
+                </button>
+                <button
+                    type="button"
+                    onClick={onTestApi}
+                    disabled={apiTestLoading}
+                    className="inline-flex items-center px-4 py-2 border border-yellow-500 rounded-md shadow-sm text-sm font-medium text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:bg-yellow-100 disabled:cursor-not-allowed transition-colors"
+                >
+                    {apiTestLoading ? (
+                        <>
+                            <LoaderIcon className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                            Test in corso...
+                        </>
+                    ) : (
+                        <>
+                            🧪 Test Validazione
+                        </>
+                    )}
                 </button>
                 <button
                     type="button"

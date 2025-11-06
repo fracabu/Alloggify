@@ -8,6 +8,7 @@ export interface DocumentData {
     sesso: string;
     dataNascita: string;
     luogoNascita: string;
+    statoNascita: string;
     cittadinanza: string;
     tipoDocumento: string;
     numeroDocumento: string;
@@ -20,6 +21,7 @@ export interface ExtractedInfo {
     sex: 'Maschio' | 'Femmina' | '';
     dateOfBirth: string; // YYYY-MM-DD
     placeOfBirth: string;
+    stateOfBirth: string;
     citizenship: string;
     documentType: string;
     documentNumber: string;
