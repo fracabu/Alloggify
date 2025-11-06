@@ -68,7 +68,19 @@ export const AlloggiatiCredentials: React.FC = () => {
 
             setIsAuthenticated(true);
             setTokenExpiry(new Date(result.scadenza));
-            setSuccess('Autenticazione riuscita! Token valido fino a ' + new Date(result.scadenza).toLocaleString('it-IT'));
+            setSuccess('Autenticazione riuscita! Scaricamento tabelle...');
+
+            // Download reference tables (comuni, documenti, etc.)
+            try {
+                await Promise.all([
+                    alloggiatiApi.downloadTabelleLuoghi(),
+                    alloggiatiApi.downloadTabellaDocumenti()
+                ]);
+                setSuccess('Autenticazione riuscita! Token valido fino a ' + new Date(result.scadenza).toLocaleString('it-IT'));
+            } catch (tableError) {
+                console.warn('⚠️ Errore download tabelle:', tableError);
+                setSuccess('Autenticazione riuscita (senza tabelle). Token valido fino a ' + new Date(result.scadenza).toLocaleString('it-IT'));
+            }
 
             setTimeout(() => setSuccess(null), 5000);
         } catch (err) {

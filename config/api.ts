@@ -28,4 +28,5 @@ export const API_ENDPOINTS = {
     test: `${API_BASE_URL}/api/alloggiati/test`,
     send: `${API_BASE_URL}/api/alloggiati/send`,
     ricevuta: `${API_BASE_URL}/api/alloggiati/ricevuta`,
+    tabelle: `${API_BASE_URL}/api/alloggiati/tabelle`,
 };

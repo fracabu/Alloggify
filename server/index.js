@@ -14,6 +14,7 @@ const authRoute = require('./routes/auth');
 const testRoute = require('./routes/test');
 const sendRoute = require('./routes/send');
 const ricevutaRoute = require('./routes/ricevuta');
+const tabelleRoute = require('./routes/tabelle');
 const chatRoute = require('./routes/chat');
 
 const app = express();
@@ -58,6 +59,7 @@ app.use('/api/alloggiati', authRoute);
 app.use('/api/alloggiati', testRoute);
 app.use('/api/alloggiati', sendRoute);
 app.use('/api/alloggiati', ricevutaRoute);
+app.use('/api/alloggiati', tabelleRoute);
 app.use('/api/ai', chatRoute);
 
 // Error handling middleware
