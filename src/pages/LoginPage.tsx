@@ -56,7 +56,7 @@ export const LoginPage: React.FC = () => {
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-block">
                         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
-                            Alloggify
+                            CheckInly
                         </h1>
                     </Link>
                     <p className="mt-2 text-gray-600">Accedi al tuo account</p>

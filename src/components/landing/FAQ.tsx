@@ -11,12 +11,12 @@ export const FAQ: React.FC = () => {
 
     const faqs: FAQItem[] = [
         {
-            question: 'Come funziona l\'OCR di Alloggify?',
-            answer: 'Alloggify utilizza l\'intelligenza artificiale di Google Gemini 2.5 Flash per scansionare documenti d\'identità (carte d\'identità, passaporti, patenti) ed estrarre automaticamente tutti i dati anagrafici. L\'accuratezza è del 99.2% e il processo richiede meno di 2 secondi per documento.'
+            question: 'Come funziona l\'OCR di CheckInly?',
+            answer: 'CheckInly utilizza l\'intelligenza artificiale di Google Gemini 2.5 Flash per scansionare documenti d\'identità (carte d\'identità, passaporti, patenti) ed estrarre automaticamente tutti i dati anagrafici. L\'accuratezza è del 99.2% e il processo richiede meno di 2 secondi per documento.'
         },
         {
             question: 'È compatibile con tutti i tipi di documenti?',
-            answer: 'Sì! Alloggify supporta tutti i documenti di identità italiani (carta d\'identità, carta d\'identità elettronica, patente) e documenti internazionali (passaporti EU ed extra-EU). Il sistema riconosce automaticamente il tipo di documento e adatta l\'estrazione dati di conseguenza.'
+            answer: 'Sì! CheckInly supporta tutti i documenti di identità italiani (carta d\'identità, carta d\'identità elettronica, patente) e documenti internazionali (passaporti EU ed extra-EU). Il sistema riconosce automaticamente il tipo di documento e adatta l\'estrazione dati di conseguenza.'
         },
         {
             question: 'I miei dati sono sicuri? Come funziona la privacy?',
@@ -32,18 +32,18 @@ export const FAQ: React.FC = () => {
         },
         {
             question: 'Serve installare software sul mio computer?',
-            answer: 'No! Alloggify è completamente cloud-based. Hai bisogno solo di: 1) Un browser moderno per accedere alla web app, 2) L\'estensione Chrome (gratuita) se vuoi la compilazione automatica su Alloggiati Web. L\'installazione dell\'estensione richiede un solo click.'
+            answer: 'No! CheckInly è completamente cloud-based. Hai bisogno solo di: 1) Un browser moderno per accedere alla web app, 2) L\'estensione Chrome (gratuita) se vuoi la compilazione automatica su Alloggiati Web. L\'installazione dell\'estensione richiede un solo click.'
         },
         {
             question: 'Come funziona la compilazione automatica su Alloggiati Web?',
-            answer: 'Dopo aver scansionato il documento nella nostra web app, clicchi su "Esporta per Estensione". Poi apri il portale Alloggiati Web della Polizia di Stato. L\'estensione Chrome rileva automaticamente la pagina e mostra un pulsante "Compila da Alloggify". Con un click, tutti i campi vengono riempiti istantaneamente.'
+            answer: 'Dopo aver scansionato il documento nella nostra web app, clicchi su "Esporta per Estensione". Poi apri il portale Alloggiati Web della Polizia di Stato. L\'estensione Chrome rileva automaticamente la pagina e mostra un pulsante "Compila da CheckInly". Con un click, tutti i campi vengono riempiti istantaneamente.'
         },
         {
             question: 'Cosa succede se l\'OCR fa un errore?',
             answer: 'Prima di inviare i dati ad Alloggiati Web, puoi sempre revisionare e correggere manualmente qualsiasi campo nel form. Ti consigliamo sempre di verificare i dati prima dell\'invio. In caso di errori ricorrenti, il nostro supporto è a disposizione per migliorare il sistema.'
         },
         {
-            question: 'Posso usare Alloggify con più strutture?',
+            question: 'Posso usare CheckInly con più strutture?',
             answer: 'Sì! Con il piano Pro o Enterprise puoi gestire più account utente e più strutture. Ogni utente può avere le proprie credenziali e accedere ai dati della propria struttura. Ideale per property manager o catene alberghiere.'
         },
         {
@@ -51,7 +51,7 @@ export const FAQ: React.FC = () => {
             answer: 'Sì! Tutti i piani includono supporto via email. I piani Pro ed Enterprise includono supporto chat prioritario. Il piano Enterprise include anche training on-site e un account manager dedicato. Inoltre abbiamo guide video e documentazione completa disponibile 24/7.'
         },
         {
-            question: 'Posso provare Alloggify prima di pagare?',
+            question: 'Posso provare CheckInly prima di pagare?',
             answer: 'Certamente! Il piano Free ti dà 5 scansioni gratuite al mese senza bisogno di carta di credito. È perfetto per testare il servizio. Se ti piace, puoi fare upgrade in qualsiasi momento dalla dashboard.'
         },
         {
@@ -73,7 +73,7 @@ export const FAQ: React.FC = () => {
                         Domande Frequenti
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Tutto quello che devi sapere su Alloggify
+                        Tutto quello che devi sapere su CheckInly
                     </p>
                 </div>
 

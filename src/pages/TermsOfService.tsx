@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { HomeModernIcon } from '@heroicons/react/24/outline';
 
 export const TermsOfServicePage: React.FC = () => {
     return (
@@ -10,8 +11,9 @@ export const TermsOfServicePage: React.FC = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
                         <Link to="/" className="flex items-center gap-2">
-                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                                Alloggify
+                            <HomeModernIcon className="h-8 w-8 text-primary-500" />
+                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
+                                CheckInly
                             </h1>
                         </Link>
                         <Link to="/" className="text-gray-600 hover:text-gray-900 font-medium">
@@ -32,7 +34,7 @@ export const TermsOfServicePage: React.FC = () => {
                             Termini di Servizio
                         </h1>
                         <p className="text-xl text-gray-600">
-                            Condizioni d'uso del servizio Alloggify
+                            Condizioni d'uso del servizio CheckInly
                         </p>
                         <p className="text-sm text-gray-500 mt-4">
                             Ultimo aggiornamento: {new Date().toLocaleDateString('it-IT')}
@@ -50,10 +52,10 @@ export const TermsOfServicePage: React.FC = () => {
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Accettazione dei Termini</h2>
                             <div className="prose max-w-none text-gray-600">
                                 <p className="mb-4">
-                                    Benvenuto su Alloggify. Utilizzando il nostro servizio, accetti di essere vincolato dai presenti Termini di Servizio ("Termini"). Se non accetti questi Termini, non utilizzare il servizio.
+                                    Benvenuto su CheckInly. Utilizzando il nostro servizio, accetti di essere vincolato dai presenti Termini di Servizio ("Termini"). Se non accetti questi Termini, non utilizzare il servizio.
                                 </p>
                                 <p>
-                                    Alloggify è fornito da <strong>Alloggify SRL</strong>, con sede in Via Example 123, 00100 Roma, Italia, P.IVA: IT12345678901.
+                                    CheckInly è fornito da <strong>CheckInly SRL</strong>, con sede in Via Example 123, 00100 Roma, Italia, P.IVA: IT12345678901.
                                 </p>
                             </div>
                         </section>
@@ -63,7 +65,7 @@ export const TermsOfServicePage: React.FC = () => {
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Descrizione del Servizio</h2>
                             <div className="prose max-w-none text-gray-600">
                                 <p className="mb-4">
-                                    Alloggify è un servizio di automazione OCR che consente agli utenti di:
+                                    CheckInly è un servizio di automazione OCR che consente agli utenti di:
                                 </p>
                                 <ul className="list-disc pl-6 space-y-2">
                                     <li>Estrarre dati da documenti d'identità tramite intelligenza artificiale</li>
@@ -72,7 +74,7 @@ export const TermsOfServicePage: React.FC = () => {
                                     <li>Scaricare ricevute di invio in formato PDF</li>
                                 </ul>
                                 <p className="mt-4 text-sm bg-sky-50 border border-sky-200 rounded-lg p-4">
-                                    <strong>Nota:</strong> Alloggify è un servizio di supporto. La responsabilità finale della correttezza e completezza dei dati inviati rimane all'utente e al gestore della struttura ricettiva.
+                                    <strong>Nota:</strong> CheckInly è un servizio di supporto. La responsabilità finale della correttezza e completezza dei dati inviati rimane all'utente e al gestore della struttura ricettiva.
                                 </p>
                             </div>
                         </section>
@@ -81,7 +83,7 @@ export const TermsOfServicePage: React.FC = () => {
                         <section>
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Requisiti Account</h2>
                             <div className="prose max-w-none text-gray-600">
-                                <p className="mb-4">Per utilizzare Alloggify devi:</p>
+                                <p className="mb-4">Per utilizzare CheckInly devi:</p>
                                 <ul className="list-disc pl-6 space-y-2">
                                     <li>Avere almeno 18 anni</li>
                                     <li>Fornire informazioni accurate e complete durante la registrazione</li>
@@ -176,7 +178,7 @@ export const TermsOfServicePage: React.FC = () => {
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Proprietà Intellettuale</h2>
                             <div className="prose max-w-none text-gray-600">
                                 <p className="mb-4">
-                                    Tutti i diritti, titoli e interessi relativi ad Alloggify (inclusi software, design, loghi, contenuti) appartengono ad Alloggify SRL. Ti concediamo una licenza limitata, non esclusiva, non trasferibile per utilizzare il servizio.
+                                    Tutti i diritti, titoli e interessi relativi ad CheckInly (inclusi software, design, loghi, contenuti) appartengono ad CheckInly SRL. Ti concediamo una licenza limitata, non esclusiva, non trasferibile per utilizzare il servizio.
                                 </p>
                                 <p>
                                     I dati che carichi rimangono di tua proprietà. Ci concedi una licenza limitata per processarli al solo fine di fornirti il servizio.
@@ -192,7 +194,7 @@ export const TermsOfServicePage: React.FC = () => {
                                     <div className="flex items-start gap-3">
                                         <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
                                         <p className="text-sm">
-                                            <strong>Importante:</strong> Alloggify è fornito "così com'è" senza garanzie di alcun tipo, esplicite o implicite.
+                                            <strong>Importante:</strong> CheckInly è fornito "così com'è" senza garanzie di alcun tipo, esplicite o implicite.
                                         </p>
                                     </div>
                                 </div>

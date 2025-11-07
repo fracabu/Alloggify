@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, MapPinIcon, PhoneIcon, HomeModernIcon } from '@heroicons/react/24/outline';
 
 export const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -12,9 +12,12 @@ export const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Company Info */}
                     <div>
-                        <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-600 mb-4">
-                            Alloggify
-                        </h3>
+                        <div className="flex items-center gap-2 mb-4">
+                            <HomeModernIcon className="h-8 w-8 text-primary-500" />
+                            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-primary-600">
+                                CheckInly
+                            </h3>
+                        </div>
                         <p className="text-sm text-gray-400 mb-4 leading-relaxed">
                             La soluzione più veloce per automatizzare Alloggiati Web.
                             Risparmia tempo, riduci errori, concentrati sull'accoglienza.
@@ -128,8 +131,8 @@ export const Footer: React.FC = () => {
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-xs text-gray-400">
                                 <EnvelopeIcon className="h-4 w-4" />
-                                <a href="mailto:support@alloggify.com" className="hover:text-white">
-                                    support@alloggify.com
+                                <a href="mailto:support@checkinly.com" className="hover:text-white">
+                                    support@checkinly.com
                                 </a>
                             </div>
                         </div>
@@ -143,16 +146,15 @@ export const Footer: React.FC = () => {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         {/* Copyright */}
                         <p className="text-sm text-gray-400">
-                            © {currentYear} Alloggify. Tutti i diritti riservati.
+                            © {currentYear} CheckInly. Tutti i diritti riservati.
                         </p>
 
-                        {/* Social Links - Placeholder */}
+                        {/* Social Links - Under Construction */}
                         <div className="flex items-center gap-4">
                             <a
-                                href="https://twitter.com/alloggify"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
+                                href="#"
+                                onClick={(e) => { e.preventDefault(); alert('Coming soon! 🚧'); }}
+                                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                                 aria-label="Twitter"
                             >
                                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -160,10 +162,9 @@ export const Footer: React.FC = () => {
                                 </svg>
                             </a>
                             <a
-                                href="https://linkedin.com/company/alloggify"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
+                                href="#"
+                                onClick={(e) => { e.preventDefault(); alert('Coming soon! 🚧'); }}
+                                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                                 aria-label="LinkedIn"
                             >
                                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -171,10 +172,9 @@ export const Footer: React.FC = () => {
                                 </svg>
                             </a>
                             <a
-                                href="https://facebook.com/alloggify"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
+                                href="#"
+                                onClick={(e) => { e.preventDefault(); alert('Coming soon! 🚧'); }}
+                                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                                 aria-label="Facebook"
                             >
                                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -182,10 +182,9 @@ export const Footer: React.FC = () => {
                                 </svg>
                             </a>
                             <a
-                                href="https://instagram.com/alloggify"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
+                                href="#"
+                                onClick={(e) => { e.preventDefault(); alert('Coming soon! 🚧'); }}
+                                className="text-gray-400 hover:text-white transition-colors cursor-pointer"
                                 aria-label="Instagram"
                             >
                                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

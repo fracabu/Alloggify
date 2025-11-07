@@ -10,14 +10,14 @@ export interface SEOHeadProps {
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
-    title = 'Alloggify - Automatizza Alloggiati Web in 30 Secondi',
+    title = 'CheckInly - Automatizza Alloggiati Web in 30 Secondi',
     description = 'OCR AI-powered + compilazione automatica per Alloggiati Web. Risparmia 100+ ore al mese per la tua struttura ricettiva. Accuratezza 99%, GDPR compliant.',
     keywords = 'alloggiati web, ocr, automazione, hotel, b&b, polizia, schedina, compilazione automatica',
-    ogImage = 'https://alloggify.com/og-image.jpg',
+    ogImage = 'https://checkinly.com/og-image.jpg',
     ogType = 'website',
     canonicalUrl
 }) => {
-    const fullTitle = title.includes('Alloggify') ? title : `${title} | Alloggify`;
+    const fullTitle = title.includes('CheckInly') ? title : `${title} | CheckInly`;
 
     useEffect(() => {
         // Set document title
@@ -41,7 +41,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
 
         // Open Graph / Facebook
         updateMeta('og:type', ogType, true);
-        updateMeta('og:url', canonicalUrl || 'https://alloggify.com', true);
+        updateMeta('og:url', canonicalUrl || 'https://checkinly.com', true);
         updateMeta('og:title', fullTitle, true);
         updateMeta('og:description', description, true);
         updateMeta('og:image', ogImage, true);
@@ -49,7 +49,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
 
         // Twitter
         updateMeta('twitter:card', 'summary_large_image', true);
-        updateMeta('twitter:url', canonicalUrl || 'https://alloggify.com', true);
+        updateMeta('twitter:url', canonicalUrl || 'https://checkinly.com', true);
         updateMeta('twitter:title', fullTitle, true);
         updateMeta('twitter:description', description, true);
         updateMeta('twitter:image', ogImage, true);
@@ -57,7 +57,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         // Additional
         updateMeta('robots', 'index, follow');
         updateMeta('language', 'Italian');
-        updateMeta('author', 'Alloggify SRL');
+        updateMeta('author', 'CheckInly SRL');
 
         // Canonical link
         if (canonicalUrl) {
@@ -80,7 +80,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         script.textContent = JSON.stringify({
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "Alloggify",
+            "name": "CheckInly",
             "applicationCategory": "BusinessApplication",
             "description": description,
             "offers": {

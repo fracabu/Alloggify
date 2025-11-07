@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { SparklesIcon, BoltIcon, ShieldCheckIcon, ChartBarIcon, GlobeAltIcon, CurrencyDollarIcon, ChatBubbleLeftRightIcon, Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
+import { SparklesIcon, BoltIcon, ShieldCheckIcon, ChartBarIcon, GlobeAltIcon, CurrencyDollarIcon, ChatBubbleLeftRightIcon, Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon, Squares2X2Icon, DocumentTextIcon, PaperAirplaneIcon, ArrowDownTrayIcon, CloudIcon, HomeModernIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon as SparklesIconSolid, CheckCircleIcon, BoltIcon as BoltIconSolid, LockClosedIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
 import { Pricing } from '../components/landing/Pricing';
 import { Testimonials } from '../components/landing/Testimonials';
 import { FAQ } from '../components/landing/FAQ';
@@ -53,22 +54,7 @@ export const LandingPage: React.FC = () => {
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
-                            <div className="h-8 w-8">
-                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="houseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
-                                            <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 50 15 L 10 50 L 20 50 L 20 85 L 80 85 L 80 50 L 90 50 Z" fill="url(#houseGradient)" />
-                                    <rect x="20" y="50" width="60" height="35" fill="url(#houseGradient)" />
-                                    <path d="M 40 60 L 40 85 L 60 85 L 60 60 L 55 60 L 55 80 L 45 80 L 45 60 Z" fill="#312E81" opacity="0.8" />
-                                    <circle cx="52" cy="72" r="2" fill="white" />
-                                    <rect x="28" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
-                                    <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
-                                </svg>
-                            </div>
+                            <HomeModernIcon className="h-8 w-8 text-primary-500" />
                             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                                 CheckInly
                             </h1>
@@ -236,23 +222,24 @@ export const LandingPage: React.FC = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         {/* Badge */}
                         <div className="mb-6 flex justify-center">
-                            <span className="inline-block px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold">
-                                🆕 Nuovo: AI Assistant + Automazione Completa
+                            <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold">
+                                <SparklesIconSolid className="h-4 w-4" />
+                                Nuovo: AI Assistant + Automazione Completa
                             </span>
                         </div>
 
                         {/* Main Headline */}
                         <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-                            Compila Alloggiati Web in{' '}
+                            Basta{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
-                                30 Secondi
-                            </span>
-                            ,<br className="hidden md:block" /> Non 30 Minuti
+                                Perdere Ore
+                            </span>{' '}
+                            su<br className="hidden md:block" /> Alloggiati Web
                         </h1>
 
                         {/* Subheadline */}
                         <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-                            OCR AI-powered + compilazione automatica. Risparmia 100+ ore al mese per la tua struttura ricettiva.
+                            Scansiona documenti in 1 secondo, invia tutto con 1 click. L'AI fa il lavoro noioso, tu ti dedichi agli ospiti.
                         </p>
 
                         {/* CTA Buttons */}
@@ -272,9 +259,20 @@ export const LandingPage: React.FC = () => {
                         </div>
 
                         {/* Social Proof */}
-                        <p className="text-sm text-gray-500">
-                            ✅ Nessuna carta di credito richiesta • ⚡ Attivo in 2 minuti • 🔒 100% GDPR compliant
-                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+                            <span className="inline-flex items-center gap-1.5">
+                                <CheckBadgeIcon className="h-4 w-4 text-blue-600" />
+                                99.2% accuracy con Google Vision
+                            </span>
+                            <span className="inline-flex items-center gap-1.5">
+                                <BoltIconSolid className="h-4 w-4 text-amber-500" />
+                                Attivo in 2 minuti
+                            </span>
+                            <span className="inline-flex items-center gap-1.5">
+                                <LockClosedIcon className="h-4 w-4 text-primary-600" />
+                                100% GDPR compliant
+                            </span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -293,38 +291,28 @@ export const LandingPage: React.FC = () => {
                         {[
                             {
                                 icon: SparklesIcon,
-                                title: 'OCR Intelligente',
-                                desc: 'Scansiona documenti in 1 secondo con AI Gemini 2.5 Flash. Accuratezza 99.2%'
+                                title: 'OCR AI Google Vision',
+                                desc: 'Estrazione dati da documenti in 1 secondo. 99.2% di accuratezza. Supporta carte d\'identità, passaporti, patenti EU ed extra-EU.'
                             },
                             {
-                                icon: BoltIcon,
-                                title: 'Compilazione Automatica',
-                                desc: 'Extension Chrome riempie il form istantaneamente. Da 20 minuti a 30 secondi.'
+                                icon: CloudIcon,
+                                title: 'API SOAP Diretta',
+                                desc: 'Integrazione nativa con Alloggiati Web tramite WSKEY. Invio automatico e ricevuta ufficiale dalla Questura.'
                             },
                             {
                                 icon: ChatBubbleLeftRightIcon,
-                                title: 'AI Assistant Esperto',
-                                desc: 'Supporto 24/7 su Alloggiati Web, normativa D.Lgs 286/98, casi complessi. Chat intelligente sempre disponibile.'
+                                title: 'AI Assistant 24/7',
+                                desc: 'Supporto intelligente su normativa D.Lgs 286/98, casi complessi, e risoluzione problemi. Sempre disponibile.'
                             },
                             {
                                 icon: ShieldCheckIcon,
-                                title: 'GDPR Compliant',
-                                desc: 'Dati criptati, no salvataggio permanente. Server italiani, privacy garantita.'
+                                title: 'GDPR & Sicurezza',
+                                desc: 'Dati criptati end-to-end. Nessun salvataggio permanente. Server italiani certificati, privacy garantita al 100%.'
                             },
                             {
-                                icon: ChartBarIcon,
-                                title: 'Dashboard Avanzato',
-                                desc: 'Statistiche dettagliate, cronologia completa, esportazione dati Excel/CSV.'
-                            },
-                            {
-                                icon: GlobeAltIcon,
-                                title: 'Supporto Internazionale',
-                                desc: 'Documenti EU ed extra-EU supportati. Carte d\'identità, passaporti, patenti.'
-                            },
-                            {
-                                icon: CurrencyDollarIcon,
-                                title: 'Risparmio Garantito',
-                                desc: 'ROI 500%+ rispetto a processo manuale. Recupera l\'investimento in 1 mese.'
+                                icon: BoltIcon,
+                                title: 'Velocità Estrema',
+                                desc: 'Da 20 minuti per ospite a 30 secondi. Risparmia oltre 100 ore al mese per la tua struttura ricettiva.'
                             }
                         ].map((feature, idx) => (
                             <div
@@ -349,42 +337,54 @@ export const LandingPage: React.FC = () => {
                         Come Funziona
                     </h2>
                     <p className="text-xl text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-                        3 semplici passi per risparmiare ore di lavoro
+                        4 semplici passi per risparmiare ore di lavoro
                     </p>
 
-                    <div className="max-w-5xl mx-auto">
-                        <div className="grid md:grid-cols-3 gap-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[
                                 {
                                     step: '1',
                                     title: 'Scansiona il Documento',
                                     desc: 'Carica la foto del documento d\'identità. Il nostro OCR AI estrae tutti i dati in 1 secondo.',
-                                    emoji: '📄'
+                                    icon: DocumentTextIcon,
+                                    iconColor: 'text-blue-600'
                                 },
                                 {
                                     step: '2',
                                     title: 'Verifica i Dati',
                                     desc: 'Controlla rapidamente che i dati estratti siano corretti. Puoi modificare qualsiasi campo.',
-                                    emoji: '✅'
+                                    icon: CheckCircleIcon,
+                                    iconColor: 'text-green-600'
                                 },
                                 {
                                     step: '3',
                                     title: 'Invia ad Alloggiati Web',
-                                    desc: 'Con un click, l\'estensione Chrome compila automaticamente il form del portale Polizia.',
-                                    emoji: '🚀'
+                                    desc: 'Invio diretto tramite API SOAP con autenticazione WSKEY. Ricevuta immediata dalla Questura.',
+                                    icon: PaperAirplaneIcon,
+                                    iconColor: 'text-primary-600'
+                                },
+                                {
+                                    step: '4',
+                                    title: 'Scarica la Ricevuta',
+                                    desc: 'Il giorno dopo, scarica automaticamente la ricevuta ufficiale della Questura in formato PDF.',
+                                    icon: ArrowDownTrayIcon,
+                                    iconColor: 'text-purple-600'
                                 }
                             ].map((step, idx) => (
                                 <div key={idx} className="relative">
                                     <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow h-full">
-                                        <div className="text-6xl mb-4 text-center">{step.emoji}</div>
+                                        <div className="mb-4 flex justify-center">
+                                            <step.icon className={`h-16 w-16 ${step.iconColor}`} />
+                                        </div>
                                         <div className="absolute top-4 right-4 w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold">
                                             {step.step}
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{step.title}</h3>
                                         <p className="text-gray-600 text-center leading-relaxed">{step.desc}</p>
                                     </div>
-                                    {idx < 2 && (
-                                        <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 text-3xl text-indigo-300">
+                                    {idx < 3 && (
+                                        <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 text-5xl font-bold text-primary-500">
                                             →
                                         </div>
                                     )}

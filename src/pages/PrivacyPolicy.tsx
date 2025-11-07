@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Lock, Eye, UserCheck } from 'lucide-react';
+import { HomeModernIcon } from '@heroicons/react/24/outline';
 
 export const PrivacyPolicyPage: React.FC = () => {
     return (
@@ -10,8 +11,9 @@ export const PrivacyPolicyPage: React.FC = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
                         <Link to="/" className="flex items-center gap-2">
-                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                                Alloggify
+                            <HomeModernIcon className="h-8 w-8 text-primary-500" />
+                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
+                                CheckInly
                             </h1>
                         </Link>
                         <Link to="/" className="text-gray-600 hover:text-gray-900 font-medium">
@@ -67,7 +69,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Dati che Raccogliamo</h2>
                             <div className="prose max-w-none text-gray-600">
                                 <p className="mb-4">
-                                    Raccogliamo solo i dati essenziali per fornire il servizio Alloggify:
+                                    Raccogliamo solo i dati essenziali per fornire il servizio CheckInly:
                                 </p>
                                 <ul className="list-disc pl-6 space-y-2 mb-4">
                                     <li><strong>Dati Account:</strong> Email, nome completo, nome azienda (opzionale)</li>
@@ -182,7 +184,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                                     <li><strong>DPO (Data Protection Officer):</strong> dpo@alloggify.com</li>
                                 </ul>
                                 <p className="mt-4">
-                                    Indirizzo: Alloggify SRL, Via Example 123, 00100 Roma, Italia
+                                    Indirizzo: CheckInly SRL, Via Example 123, 00100 Roma, Italia
                                 </p>
                             </div>
                         </section>

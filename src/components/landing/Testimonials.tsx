@@ -24,7 +24,7 @@ export const Testimonials: React.FC = () => {
             location: 'Roma',
             image: '👩', // Placeholder emoji
             rating: 5,
-            text: 'Prima impiegavo 20 minuti per ospite per compilare manualmente Alloggiati Web. Ora con Alloggify bastano 30 secondi! Un vero game changer per la mia struttura.',
+            text: 'Prima impiegavo 20 minuti per ospite per compilare manualmente Alloggiati Web. Ora con CheckInly bastano 30 secondi! Un vero game changer per la mia struttura.',
             stats: 'Risparmia 15 ore/mese'
         },
         {
@@ -34,7 +34,7 @@ export const Testimonials: React.FC = () => {
             location: 'Firenze',
             image: '👨',
             rating: 5,
-            text: 'In alta stagione gestisco 50 check-in al giorno. Senza Alloggify sarebbe impossibile. L\'OCR è preciso e la compilazione automatica funziona perfettamente.',
+            text: 'In alta stagione gestisco 50 check-in al giorno. Senza CheckInly sarebbe impossibile. L\'OCR è preciso e la compilazione automatica funziona perfettamente.',
             stats: '50+ check-in al giorno automatizzati'
         },
         {
@@ -54,7 +54,7 @@ export const Testimonials: React.FC = () => {
             location: 'Venezia',
             image: '👨',
             rating: 5,
-            text: 'Gestisco 3 proprietà diverse. Con Alloggify posso centralizzare tutto e risparmiare ore di lavoro amministrativo ogni settimana. Consigliatissimo!',
+            text: 'Gestisco 3 proprietà diverse. Con CheckInly posso centralizzare tutto e risparmiare ore di lavoro amministrativo ogni settimana. Consigliatissimo!',
             stats: '3 proprietà gestite'
         }
     ];
@@ -78,7 +78,7 @@ export const Testimonials: React.FC = () => {
                         Cosa Dicono i Nostri Clienti
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Oltre 500 strutture ricettive risparmiano tempo ogni giorno con Alloggify
+                        Oltre 500 strutture ricettive risparmiano tempo ogni giorno con CheckInly
                     </p>
                 </div>
 
