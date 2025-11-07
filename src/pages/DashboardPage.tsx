@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { HomeModernIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../hooks/useAuth';
 import { MainForm } from '../../components/MainForm';
 import { DocumentData } from '../../types';
@@ -224,22 +225,7 @@ export const DashboardPage: React.FC = () => {
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
-                            <div className="h-8 w-8">
-                                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="dashHouseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" style={{ stopColor: '#6366F1', stopOpacity: 1 }} />
-                                            <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 1 }} />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 50 15 L 10 50 L 20 50 L 20 85 L 80 85 L 80 50 L 90 50 Z" fill="url(#dashHouseGradient)" />
-                                    <rect x="20" y="50" width="60" height="35" fill="url(#dashHouseGradient)" />
-                                    <path d="M 40 60 L 40 85 L 60 85 L 60 60 L 55 60 L 55 80 L 45 80 L 45 60 Z" fill="#312E81" opacity="0.8" />
-                                    <circle cx="52" cy="72" r="2" fill="white" />
-                                    <rect x="28" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
-                                    <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
-                                </svg>
-                            </div>
+                            <HomeModernIcon className="h-8 w-8 text-primary-500" />
                             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                                 CheckInly
                             </h1>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ArrowRightOnRectangleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { HomeModernIcon } from '@heroicons/react/24/solid';
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -52,18 +53,25 @@ export const LoginPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center px-4">
             <div className="max-w-md w-full">
-                {/* Logo/Brand */}
-                <div className="text-center mb-8">
-                    <Link to="/" className="inline-block">
-                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
-                            CheckInly
-                        </h1>
-                    </Link>
-                    <p className="mt-2 text-gray-600">Accedi al tuo account</p>
+                {/* Logo Icon - Positioned above card */}
+                <div className="relative mb-16">
+                    <div className="absolute left-1/2 -translate-x-1/2 -top-8">
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-purple-600 rounded-full flex items-center justify-center shadow-xl border-4 border-white">
+                            <HomeModernIcon className="h-10 w-10 text-white" />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+                <div className="bg-white rounded-2xl shadow-xl p-8 pt-16 relative">
+                    {/* Title */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600 mb-2">
+                            CheckInly
+                        </h1>
+                        <p className="text-gray-600">Accedi al tuo account</p>
+                    </div>
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Error Message */}
                         {error && (
