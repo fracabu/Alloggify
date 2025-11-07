@@ -346,7 +346,7 @@ export const AIChatWidget: React.FC = () => {
                 className="hover:bg-white/10 p-2 rounded transition-colors"
                 aria-label="Chiudi chat"
               >
-                <XMarkIconclassName="w-5 h-5" />
+                <XMarkIcon className="w-5 h-5" />
               </button>
             </div>
           </div>
