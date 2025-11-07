@@ -99,7 +99,7 @@ export const LandingPage: React.FC = () => {
                                             <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
                                             <p className="text-xs text-gray-500 capitalize">{user.subscriptionPlan}</p>
                                         </div>
-                                        <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                        <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
                                             <UserIcon className="h-5 w-5 text-primary-500" />
                                         </div>
                                     </button>
@@ -176,7 +176,7 @@ export const LandingPage: React.FC = () => {
                                         <>
                                             <div className="px-4 py-3 bg-gray-50 rounded-lg">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                                                    <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
                                                         <UserIcon className="h-6 w-6 text-primary-500" />
                                                     </div>
                                                     <div>
@@ -236,7 +236,7 @@ export const LandingPage: React.FC = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         {/* Badge */}
                         <div className="mb-6 flex justify-center">
-                            <span className="inline-block px-4 py-2 bg-indigo-100 text-primary-600 rounded-full text-sm font-semibold">
+                            <span className="inline-block px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold">
                                 🆕 Nuovo: AI Assistant + Automazione Completa
                             </span>
                         </div>
@@ -265,7 +265,7 @@ export const LandingPage: React.FC = () => {
                             </Link>
                             <a
                                 href="#pricing"
-                                className="px-8 py-4 border-2 border-primary-500 text-primary-500 rounded-lg font-semibold text-lg hover:bg-indigo-50 transition-all"
+                                className="px-8 py-4 border-2 border-primary-500 text-primary-500 rounded-lg font-semibold text-lg hover:bg-primary-50 transition-all"
                             >
                                 Vedi Prezzi
                             </a>
@@ -331,7 +331,7 @@ export const LandingPage: React.FC = () => {
                                 key={idx}
                                 className="group p-8 bg-gray-50 rounded-xl hover:bg-white hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-indigo-100"
                             >
-                                <div className="mb-4 inline-block p-3 bg-indigo-100 rounded-lg group-hover:bg-primary-500 transition-colors">
+                                <div className="mb-4 inline-block p-3 bg-primary-100 rounded-lg group-hover:bg-primary-500 transition-colors">
                                     <feature.icon className="h-8 w-8 text-primary-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>

@@ -1,0 +1,1948 @@
+﻿WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 1 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+ 
+
+SERVIZI ALLOGGIATI 
+Servizi di cooperazione del sistema della Polizia di Stato Alloggiati Web  
+
+ 
+ 
+ 
+
+Indice 
+ 
+
+1 INTRODUZIONE ............................................................................................................... 2 
+
+1.1 SCOPO ........................................................................................................................ 2 
+1.2 RIFERIMENTI ................................................................................................................. 2 
+1.3 ACRONIMI E DEFINIZIONI .................................................................................................... 2 
+
+2 DESCRIZIONE DEL SERVIZIO ............................................................................................. 3 
+
+3 ARCHITETTURA .............................................................................................................. 4 
+
+3.1 ABILITAZIONE AL SERVIZIO WEB SERVICE DI ALLOGGIATI WEB ............................................ 4 
+3.2 PREMESSA - DEFINIZIONE OGGETTI ................................................................................. 5 
+
+EsitoOperazioneServizio ........................................................................................................................................................ 5 
+TokenInfo ................................................................................................................................................................................ 5 
+ElencoSchedineEsito .............................................................................................................................................................. 6 
+TipoTabella ............................................................................................................................................................................ 6 
+
+3.3 METODI ..................................................................................................................... 7 
+Generazione Token di Autenticazione .................................................................................................................................... 7 
+Controllo del Token di Autenticazione ................................................................................................................................... 8 
+Controllo preliminare dell’elenco delle schedine .................................................................................................................. 9 
+Invio dell’elenco delle schedine ........................................................................................................................................... 10 
+Controllo preliminare dell’elenco delle schedine di un Appartamento ................................................................................ 11 
+Invio dell’elenco delle schedine di un Appartamento ........................................................................................................... 12 
+Controllo preliminare dell’elenco delle schedine con riferimento dell’Appartamento ........................................................ 13 
+Invio dell’elenco delle schedine con riferimento dell’Appartamento ................................................................................... 14 
+Aggiunta di un nuovo Appartamento .................................................................................................................................... 15 
+Eliminazione di un Appartamento ........................................................................................................................................ 16 
+Download della Ricevuta ..................................................................................................................................................... 17 
+Download delle Tabelle........................................................................................................................................................ 18 
+
+4 TRACCIATI RECORD ...................................................................................................... 19 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 2 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+1     INTRODUZIONE 
+
+1.1 Scopo 
+
+ Il documento ha l'obiettivo di fornire le linee guida per il corretto utilizzo dei Web-Service di interscambio 
+
+dati tra il sistema Alloggiati Web, sviluppato dal Centro Elettronico Nazionale della Polizia di Stato e i sistemi 
+
+gestionali delle strutture ricettive. 
+
+ Le nuove modalità di comunicazione sono adottate ai sensi dell’art. 5 comma 1-bis del decreto-legge 14 
+
+giugno 2019 n. 53 convertito con modificazioni dalla legge 8 agosto 2019, n. 77, recante: “Disposizioni urgenti in 
+
+materia di ordine e sicurezza pubblica”  che prevede, che le modalità di comunicazione, con mezzi informatici o 
+
+telematici, dei dati delle persone alloggiate sono integrate con decreto del Ministro dell'interno (pubblicato il 16 
+
+settembre 2021), al fine di consentire il collegamento diretto tra i sistemi informatici delle autorità di pubblica 
+
+sicurezza e i sistemi gestionali delle strutture ricettive. 
+
+ 
+
+1.2 Riferimenti 
+
+ 
+Codice/Data Titolo del documento Autore/i 
+
+Modifiche e integrazioni al decreto 7 gennaio 2013, 
+recante: “Disposizioni concernenti la comunicazione 
+
+16 settembre 2021 Decreto Ministro dell’Interno 
+alle autorità di pubblica sicurezza dell'arrivo di persone 
+alloggiate in strutture ricettive”. 
+ 
+Disposizioni urgenti in materia di ordine e sicurezza 
+
+14 giugno 2019 pubblica Decreto Legge n.53 
+
+ 
+ 
+ 
+
+1.3 Acronimi e Definizioni 
+
+CEN Centro Elettronico Nazionale 
+WSKEY Stringa alfanumerica univoca generata dal sistema 
+CSV Comma-Separated Values 
+SOAP Simple Object Access Protocol 
+XML Extensible Markup Language 
+
+ 
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 3 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+2 DESCRIZIONE DEL SERVIZIO 
+
+ Il servizio di cooperazione applicativi tra i sistemi gestionali delle strutture ricettive e il sistema Alloggiati 
+
+Web si basa sul protocollo SOAP (Simple Object Access Protocol). Il SOAP è un protocollo basato su XML 
+
+(extensible markup language) che consente a due applicazioni di comunicare tra loro sul Web. Pubblicato come 
+
+Working Draft dal W3C nel dicembre 2001 (www.w3.org/TR/soap12-part0, www.w3.org/TR/soap12-
+
+part1, www.w3.org/TR/soap12-part2), SOAP definisce il formato dei messaggi che due applicazioni possono 
+
+scambiarsi utilizzando i protocolli Internet, come ad esempio HTTP, per fornire dati e richiedere elaborazioni. Il 
+
+protocollo è indipendente dalla piattaforma hardware e software ed è indipendente dal linguaggio di programmazione 
+
+utilizzato per sviluppare le applicazioni comunicanti. 
+
+ Grazie a questo protocollo, il concetto di Web come piattaforma per la pubblicazione di documenti contenenti 
+
+informazioni fruibili da esseri umani cambia radicalmente. È possibile affiancare alla pubblicazione classica delle 
+
+pagine Web una pubblicazione delle informazioni destinate alle applicazioni. Questo nuovo tipo di pubblicazione 
+
+costituisce i cosiddetti servizi Web. Un servizio Web è un’applicazione che fornisce funzionalità tramite il Web in 
+
+maniera indipendente dalla piattaforma utilizzata. I meccanismi che consentono questa indipendenza sono XML e 
+
+HTTP. 
+
+ Un messaggio SOAP non è altro che un documento XML che descrive una richiesta di elaborazione o il 
+
+risultato di una elaborazione. In particolare, un messaggio SOAP è costituito dai seguenti elementi (Fig. 1): 
+
+• Envelope: Rappresenta il contenitore del messaggio e costituisce l’elemento root del documento XML 
+
+• Header: È un elemento opzionale che contiene informazioni globali sul messaggio; ad esempio, nell’header 
+
+potrebbe essere specificata la lingua di riferimento del messaggio, la data dell’invio, ecc. 
+
+• Body: Rappresenta la richiesta di elaborazione o la risposta derivata da una elaborazione  
+
+• Fault: Se presente, fornisce informazioni sugli errori che si sono verificati durante l’elaborazione; questo 
+
+elemento può essere presente soltanto nei messaggi di risposta. 
+
+ 
+
+ 
+Figura 1: Elementi SOAP 
+
+ 
+
+ È opportuno evidenziare che SOAP definisce soltanto la struttura dei messaggi non il loro contenuto. I tag 
+
+per descrivere una richiesta di elaborazione o un risultato vengono definiti in uno schema specifico ed utilizzati 
+
+all’interno della struttura SOAP sfruttando il meccanismo dei namespace. 
+
+ 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 4 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+3 ARCHITETTURA 
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+  
+
+  
+
+ 
+Figura 2: Schema Architetturale 
+
+ 
+ 
+
+3.1 ABILITAZIONE AL SERVIZIO WEB SERVICE DI ALLOGGIATI WEB 
+
+ 
+I gestori delle strutture ricettive che intendono utilizzare i servizi di cooperazione applicativa esposti dal 
+
+sistema Alloggiati Web devono utilizzare le credenziali di accesso (utente, password, codici e puk), per accedere 
+
+all’interfaccia web del portale Alloggiati https://alloggiatiweb.polziadistato.it al fine di abilitare il servizio di 
+
+cooperazione applicativa. 
+
+La fase di attivazione della funzionalità dei servizi di cooperazione applicativa prevede la generazione della 
+
+“WSKEY” (stringa alfanumerica univoca generata dal sistema). 
+
+Questa stringa univoca (revocabile e rigenerabile direttamente dalla struttura ricettiva) dovrà essere utilizzata 
+
+congiuntamente alle credenziali di accesso per ottenere dal sistema un token di autenticazione valido per l’utilizzo 
+
+dei suddetti servizi web. 
+
+Il token ha una validità temporanea e combinata con l’informazione dell’utente e consentirà l’utilizzo delle 
+
+funzionalità offerte dai servizi web.  
+
+Il servizio è disponibile all’url: https://alloggiatiweb.poliziadistato.it/service/service.asmx 
+
+Per ottenere il wsdl https://alloggiatiweb.poliziadistato.it/service/service.asmx?wsdl 
+
+ 
+ 
+
+ 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 5 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+
+ 
+
+Figura 3: Schema Architetturale 
+ 
+
+3.2 PREMESSA - DEFINIZIONE OGGETTI 
+
+EsitoOperazioneServizio 
+
+Nella tabella di seguito riportata è presenta la descrizione del metodo “EsitoOperazioneServizio” 
+ 
+
+Attributi 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Indica se la funzione invocata è stata 
+esito boolean  
+
+eseguita correttamente (senza errori) 
+
+Codice dell’errore riscontrato 
+errorCod string Tabella TipoErrore 
+
+nell’esecuzione della funzionalità 
+
+Descrizione dell’errore riscontrato 
+errorDes string  
+
+nell’esecuzione della funzionalità 
+
+Dettaglio degli errori specifici e relativi alla 
+erroreDettaglio string  
+
+singola funzionalità 
+
+ 
+ 
+ 
+ 
+
+TokenInfo 
+
+ 
+
+Attributi 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 6 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+issued Data di emissione del token datetime  
+
+expires Data di scadenza del token datetime  
+
+Token da utilizzare per l’accesso alle 
+token string  
+
+funzionalità 
+
+ 
+ 
+
+ElencoSchedineEsito 
+
+ 
+ 
+
+Attributi 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Numero di schedine valide rispetto al 
+SchedineValide int  
+
+totale inviato 
+
+Elenco “riga a riga” degli esiti 
+relativi ad ogni schedina inviata, con Lista di 
+
+Dettaglio  
+l’eventuale dettaglio dello specifico EsitoOperazioneServizio 
+errore riscontrato 
+
+ 
+ 
+
+TipoTabella 
+
+ 
+
+Attributi 
+
+Id Descri zione 
+
+0 Luoghi 
+
+1 Tipi_Documento 
+
+2 Tipi_Alloggiato 
+
+3 TipoErrore 
+
+4 ListaAppartamenti 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 7 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+3.3 METODI 
+
+Generazione Token di Autenticazione 
+
+ 
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Questo metodo consente, date le informazioni di sicurezza di autenticazione 
+GenerateToken legate all’utente, di ottenere un token temporaneo valido da utilizzare per 
+
+usufruire delle funzionalità dei servizi. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Password Password corrente string  
+
+Chiave di sicurezza corrente della Generata dall’interfaccia 
+WsKey string 
+
+struttura grafica 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Indica se la funzione invocata è stata 
+result EsitoOperazioneServizio  
+
+eseguita correttamente 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+In caso di esecuzione senza errori restituisce il token di Vedi la definizione 
+TokenInfo 
+
+autenticazione dell’oggetto 
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap- <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+envelope" xmlns:all="AlloggiatiService"> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   <soap:Header/> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Body>    <soap:Body> 
+      <all:GenerateToken>       <GenerateTokenResponse xmlns="AlloggiatiService"> 
+         <all:Utente>XX002458</all:Utente>          <GenerateTokenResult> 
+         <all:Password>7JxxjNv1</all:Password>             <issued>2021-11-12T13:13:47.1540692+01:00</issued> 
+         <all:WsKey>qui va inserita la WSKEY</all:WsKey>             <expires>2021-11-12T14:13:47.1540692+01:00</expires> 
+      </all:GenerateToken>             <token>TOKENdiAutenticazioneValido</token> 
+   </soap:Body>          </GenerateTokenResult> 
+</soap:Envelope>          <result> 
+
+            <esito>true</esito> 
+            <ErroreCod/> 
+            <ErroreDes/> 
+            <ErroreDettaglio/> 
+         </result> 
+      </GenerateTokenResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 8 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Controllo del Token di Autenticazione  
+
+ 
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il controllo di correttezza e validità delle informazioni di 
+Authentication_Test autenticazione per l’utilizzo dei servizi. Utilizzabile per controllare la corretta 
+
+generazione del token. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce lo stato di validità delle informazioni di 
+EsitoOperazioneServizio  
+
+autenticazione fornite con l’eventuale errore riscontrato  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+  
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:all="AlloggiatiService"> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   <soap:Header/> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Body>    <soap:Body> 
+      <all:Authentication_Test>       <Authentication_TestResponse xmlns="AlloggiatiService"> 
+         <all:Utente>XX002458</all:Utente>          <Authentication_TestResult> 
+         <all:token>qui va inserito il token</all:token>             <esito>true</esito> 
+      </all:Authentication_Test>             <ErroreCod/> 
+   </soap:Body>             <ErroreDes/> 
+</soap:Envelope>             <ErroreDettaglio/> 
+
+         </Authentication_TestResult> 
+      </Authentication_TestResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+ 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 9 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Controllo preliminare dell’elenco delle schedine 
+
+ 
+METODO  
+
+NOME Descrizione 
+
+Questo metodo consente di effettuare il solo controllo di correttezza di un 
+Test elenco di schedine; può essere utilizzato per testare il meccanismo di 
+
+generazione delle stringhe secondo il tracciato record previsto. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string 
+
+tracciato record previsto 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+
+   <soap:Header/> 
+   <soap:Body> 
+
+   <soap:Body>       <TestResponse xmlns="AlloggiatiService"> 
+      <all:Test>          <TestResult> 
+         <all:Utente>XX002458</all:Utente>             <esito>true</esito> 
+         <all:token>TOKENVALIDO</all:token>             <ErroreCod/> 
+
+         <all:ElencoSchedine>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+            <all:string>Riga1TracciatoRecord</all:string> 
+         </TestResult> 
+
+            <all:string>Riga2TracciatoRecord</all:string>          <result> 
+             <all:string>Riga3TracciatoRecord</all:string>             <SchedineValide>1</SchedineValide> 
+         </all:ElencoSchedine>             <Dettaglio> 
+      </all:Test>                <EsitoOperazioneServizio> 
+
+   </soap:Body>                   <esito>false</esito> 
+                  <ErroreCod>11</ErroreCod> 
+
+</soap:Envelope> 
+                  <ErroreDes>SCHEDINA_FORMATO_NON_CORRETTO</ErroreDes> 
+                  <ErroreDettaglio>Dimensione Riga errata</ErroreDettaglio> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>false</esito> 
+                  <ErroreCod>12</ErroreCod> 
+                  <ErroreDes>SCHEDINA_CAMPO_NON_CORRETTO</ErroreDes> 
+                  <ErroreDettaglio>Data di Arrivo Errata</ErroreDettaglio> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </TestResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 10 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Invio dell’elenco delle schedine 
+
+  
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il controllo di correttezza e il contestuale invio di un 
+Send 
+
+elenco di schedine. Le sole schedine corrette saranno acquisite dal sistema. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string 
+
+tracciato record previsto 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+
+   <soap:Header/> 
+   <soap:Body> 
+
+   <soap:Body>       <SendResponse xmlns="AlloggiatiService"> 
+      <all:Send>          <SendResult> 
+         <all:Utente>XX002458</all:Utente>             <esito>true</esito> 
+         <all:token>TOKENVALIDO</all:token>             <ErroreCod/> 
+
+         <all:ElencoSchedine>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+            <all:string>Riga1TracciatoRecord</all:string> 
+         </SendResult> 
+
+            <all:string>Riga2TracciatoRecord</all:string>          <result> 
+             <all:string>Riga3TracciatoRecord</all:string>             <SchedineValide>3</SchedineValide> 
+         </all:ElencoSchedine>             <Dettaglio> 
+      </all:Send>                <EsitoOperazioneServizio> 
+
+   </soap:Body>                   <esito>true</esito> 
+                  <ErroreCod/> 
+
+</soap:Envelope> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </SendResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 11 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Controllo preliminare dell’elenco delle schedine di un Appartamento  
+
+ 
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Questo metodo consente di effettuare il solo controllo di correttezza di un 
+elenco di schedine relativo ad uno specifico appartamento; può essere 
+utilizzato per testare il meccanismo di generazione delle stringhe secondo il 
+
+GestioneAppartamenti_Test 
+tracciato record previsto. 
+Il seguente metodo è disponibile solo per le utenze di categoria “Gestione 
+Appartamenti” 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string 
+
+tracciato record previsto 
+
+Deve appartenere ad un 
+Indice di riferimento 
+
+IdAppartamento Int appartamento attivo fra quelli 
+dell’appartamento relativo all’utente 
+
+inseriti dall’utente 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap- <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+envelope" xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_TestResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_TestResult> 
+
+      <all:GestioneAppartamenti_Test>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:ElencoSchedine>          </GestioneAppartamenti_TestResult> 
+            <all:string>Riga1TracciatoRecord</all:string>          <result> 
+
+            <all:string>Riga2TracciatoRecord</all:string>             <SchedineValide>3</SchedineValide> 
+            <Dettaglio> 
+
+            <all:string>Riga3TracciatoRecord</all:string>                <EsitoOperazioneServizio> 
+         </all:ElencoSchedine>                   <esito>true</esito> 
+
+         <all:IdAppartamento>000004</all:IdAppartamento>                   <ErroreCod/> 
+                  <ErroreDes/> 
+
+       </all:GestioneAppartamenti_Test>                   <ErroreDettaglio/> 
+   </soap:Body>                </EsitoOperazioneServizio> 
+
+</soap:Envelope>                <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </GestioneAppartamenti_TestResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 12 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Invio dell’elenco delle schedine di un Appartamento  
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il controllo di correttezza e il contestuale invio di un 
+elenco di schedine relativo ad uno specifico appartamento. Le sole schedine 
+corrette saranno acquisite dal sistema. 
+
+GestioneAppartamenti_Send 
+ 
+Il seguente metodo è disponibile solo per le utenze di categoria “Gestione 
+Appartamenti”. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string 
+
+tracciato record previsto 
+
+Deve appartenere ad un 
+Indice di riferimento 
+
+IdAppartamento Int appartamento attivo fra quelli 
+dell’appartamento relativo all’utente 
+
+inseriti dall’utente 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap- <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+envelope" xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_SendResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_SendResult> 
+
+      <all:GestioneAppartamenti_Send>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:ElencoSchedine>          </GestioneAppartamenti_SendResult> 
+            <all:string>Riga1TracciatoRecord</all:string>          <result> 
+
+            <all:string>Riga2TracciatoRecord</all:string>             <SchedineValide>3</SchedineValide> 
+            <Dettaglio> 
+
+             <all:string>Riga3TracciatoRecord</all:string>                <EsitoOperazioneServizio> 
+         </all:ElencoSchedine>                   <esito>true</esito> 
+
+         <all:IdAppartamento>000004</all:IdAppartamento>                   <ErroreCod/> 
+                  <ErroreDes/> 
+
+      </all:GestioneAppartamenti_Send>                   <ErroreDettaglio/> 
+   </soap:Body>                </EsitoOperazioneServizio> 
+
+</soap:Envelope>                <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </GestioneAppartamenti_SendResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 13 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+ 
+
+Controllo preliminare dell’elenco delle schedine con riferimento dell’Appartamento 
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Questo metodo consente di effettuare il solo controllo di correttezza di un 
+elenco di schedine relativo a diversi appartamenti; può essere utilizzato per 
+testare il meccanismo di generazione delle stringhe secondo il tracciato record 
+
+GestioneAppartamenti_FileUnico_Test previsto. 
+ 
+Il seguente metodo è disponibile solo per le utenze di categoria “Gestione 
+Appartamenti”. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string tracciato record specifico (file 
+
+unico) 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_FileUnico_TestResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_FileUnico_TestResult> 
+
+      <all:GestioneAppartamenti_FileUnico_Test>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:ElencoSchedine>          </GestioneAppartamenti_FileUnico_TestResult> 
+            <all:string>Riga1TracciatoRecordFileUnico</all:string>          <result> 
+
+            <all:string>Riga2TracciatoRecordFileUnico</all:string>             <SchedineValide>3</SchedineValide> 
+            <Dettaglio> 
+
+             <all:string>Riga3TracciatoRecordFileUnico</all:string>                <EsitoOperazioneServizio> 
+         </all:ElencoSchedine>                   <esito>true</esito> 
+
+      </all:GestioneAppartamenti_FileUnico_Test>                   <ErroreCod/> 
+                  <ErroreDes/> 
+
+   </soap:Body>                   <ErroreDettaglio/> 
+</soap:Envelope>                </EsitoOperazioneServizio> 
+
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </GestioneAppartamenti_FileUnico_TestResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 14 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Invio dell’elenco delle schedine con riferimento dell’Appartamento 
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il controllo di correttezza e il contestuale invio di 
+un elenco di schedine relativo a diversi appartamenti. Le sole schedine 
+corrette saranno acquisite dal sistema. 
+
+GestioneAppartamenti_FileUnico_Send 
+ 
+Il seguente metodo è disponibile solo per le utenze di categoria “Gestione 
+Appartamenti”. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente Utente assegnato alla struttura string             
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Ogni riga deve rispettare il 
+ElencoSchedine Elenco di schedine da inviare Lista di string tracciato record specifico 
+
+(file unico) 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Per ogni riga inviata restituisce lo 
+result specifico esito con la descrizione ElencoSchedineEsito  
+
+dell’eventuale errore riscontrato. 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_FileUnico_SendResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_FileUnico_SendResult> 
+
+      <all:GestioneAppartamenti_FileUnico_Send>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:ElencoSchedine>          </GestioneAppartamenti_FileUnico_SendResult> 
+            <all:string>Riga1TracciatoRecordFileUnico</all:string>          <result> 
+
+            <all:string>Riga2TracciatoRecordFileUnico</all:string>             <SchedineValide>3</SchedineValide> 
+            <Dettaglio> 
+
+             <all:string>Riga3TracciatoRecordFileUnico</all:string>                <EsitoOperazioneServizio> 
+         </all:ElencoSchedine>                   <esito>true</esito> 
+
+      </all:GestioneAppartamenti_FileUnico_Send>                   <ErroreCod/> 
+                  <ErroreDes/> 
+
+   </soap:Body>                   <ErroreDettaglio/> 
+</soap:Envelope>                </EsitoOperazioneServizio> 
+
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+               <EsitoOperazioneServizio> 
+                  <esito>true</esito> 
+                  <ErroreCod/> 
+                  <ErroreDes/> 
+                  <ErroreDettaglio/> 
+               </EsitoOperazioneServizio> 
+            </Dettaglio> 
+         </result> 
+      </GestioneAppartamenti_FileUnico_SendResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 15 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Aggiunta di un nuovo Appartamento  
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di aggiungere un nuovo appartamento tra quelli gestibili 
+dall’utente. 
+
+GestioneAppartamenti_AggiungiAppartamento  
+Il seguente metodo è disponibile solo per le utenze di categoria 
+“Gestione Appartamenti”. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente assegnato alla 
+Utente string             
+
+struttura 
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Descrizione che identifica il Ogni riga deve rispettare 
+Descrizione Lista di string 
+
+singolo appartamento il tracciato record previsto 
+
+Appartenente alla Tabella 
+Codice del Comune ove è 
+
+ComuneCodice string Luoghi nella provincia di 
+ubicato l’appartamento 
+
+competenza dell’utente 
+
+Indirizzo ove è ubicato 
+Indirizzo string  
+
+l’appartamento 
+
+Nominativo del proprietario 
+Proprietario string  
+
+dell’appartamento gestito 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_AggiungiAppartamentoResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_AggiungiAppartamentoResult> 
+
+      <all:GestioneAppartamenti_AggiungiAppartamento>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:Descrizione>Provo da ws alloggiati</all:Descrizione>          </GestioneAppartamenti_AggiungiAppartamentoResult> 
+         <all:ComuneCodice>415063049</all:ComuneCodice>       </GestioneAppartamenti_AggiungiAppartamentoResponse> 
+
+         <all:Indirizzo>via inserita da ws, 8</all:Indirizzo>    </soap:Body> 
+</soap:Envelope> 
+
+         <all:Proprietario>nominativoProprietatioo</all:Proprietario> 
+      </all:GestioneAppartamenti_AggiungiAppartamento> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 16 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Eliminazione di un Appartamento  
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di eliminare un appartamento tra quelli gestibili dall’utente. 
+Per l’elenco degli appartamenti fare riferimento al paragrafo 3.3.12 
+
+GestioneAppartamenti_DisabilitaAppartamento  
+Il seguente metodo è disponibile solo per le utenze di categoria 
+“Gestione Appartamenti”. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente assegnato alla 
+Utente string             
+
+struttura 
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Indice di riferimento Deve appartenere ad un 
+IdAppartamento dell’appartamento relativo int appartamento attivo fra 
+
+all’utente quelli inseriti dall’utente 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <GestioneAppartamenti_DisabilitaAppartamentoResponse xmlns="AlloggiatiService"> 
+         <GestioneAppartamenti_DisabilitaAppartamentoResult> 
+
+      <all:GestioneAppartamenti_DisabilitaAppartamento>             <esito>true</esito> 
+          <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+          <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:IdAppartamento>7</all:IdAppartamento>          </GestioneAppartamenti_DisabilitaAppartamentoResult> 
+      </all:GestioneAppartamenti_DisabilitaAppartamento>       </GestioneAppartamenti_DisabilitaAppartamentoResponse> 
+
+   </soap:Body>    </soap:Body> 
+
+</soap:Envelope> </soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 17 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Download della Ricevuta  
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il download della ricevuta relativa agli invii 
+Ricevuta 
+
+effettuati in una specifica data, se presente. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente assegnato alla 
+Utente string             
+
+struttura 
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+Data relativa alla ricevuta Ultimi 30gg escluso il 
+Data DateTime 
+
+da scaricare. giorno corrente 
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+PDF File pdf relativo alla ricevuta Array di Byte  
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <RicevutaResponse xmlns="AlloggiatiService"> 
+         <RicevutaResult> 
+
+      <all:Ricevuta>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:Data>2021-12-10T00:00:00</all:Data>          </RicevutaResult> 
+      </all:Ricevuta>          <PDF>ARRAYDIBYTE</PDF> 
+
+   </soap:Body>       </RicevutaResponse> 
+   </soap:Body> 
+
+</soap:Envelope> </soap:Envelope> 
+
+ 
+  
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 18 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+Download delle Tabelle 
+
+ 
+
+METODO  
+
+NOME Descrizione 
+
+Consente di effettuare il download delle tabelle di riferimento in 
+formato CSV separato da ‘;’ 
+ 
+Per l’elenco delle tabelle disponibili fare riferimento al paragrafo 
+
+Tabella 3.2.4 
+Questo metodo consente, per le sole utenze di categoria “Gestione 
+Appartamenti”, il download della lista degli appartamenti ad esse 
+associate da utilizzare per individuare l’informazione 
+dell’IdAppartamento. 
+
+PARAMETRI DI INPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+Utente assegnato alla 
+Utente string             
+
+struttura 
+
+Token crittografato per Generato in precedenza ed 
+token string 
+
+l’autenticazione ancora valido 
+
+tipo Tabella da scaricare TipoTabella  
+
+PARAMETRI DI OUTPUT 
+
+Nome Descrizione Tipo Informazioni Aggiuntive 
+
+CSV File csv della tabella string Carattere separatore ; 
+
+RISPOSTA 
+
+Descrizione Tipo Informazioni Aggiuntive 
+
+Restituisce l’esito generale della funzionalità EsitoOperazioneServizio  
+
+ESEMPI  - RICHIESTA / RISPOSTA 
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+xmlns:all="AlloggiatiService"> xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+   <soap:Header/>    <soap:Body> 
+
+   <soap:Body>       <TabellaResponse xmlns="AlloggiatiService"> 
+         <TabellaResult> 
+
+      <all:Tabella>             <esito>true</esito> 
+         <all:Utente>XX002458</all:Utente>             <ErroreCod/> 
+
+         <all:token>TOKENVALIDO</all:token>             <ErroreDes/> 
+            <ErroreDettaglio/> 
+
+         <all:tipo>ListaAppartamenti</all:tipo>          </TabellaResult> 
+      </all:Tabella>          <CSV>IDAPP;Descrizione;COMUNE;PROV;Indirizzo;Proprietario 
+
+   </soap:Body> 0;VILLA XX INT. 10;LIGNANO-SABBIADORO;UD;VIA CEN N. 5;COGNOME PAOLO 
+1;VILLA XX INT. 10;LIGNANO-SABBIADORO;UD;VIA CEN N. 5;COGNOME PAOLO 
+
+</soap:Envelope> 3;VILLA PAOLINA INT. 3;LIGNANO-SABBIADORO;UD;VIA ADRIATICA N. 
+28;TAGLIALEGNE PAOLA 
+4;CASA MIA MARIO;TRIVIGNANO UDINESE;UD;VIA CEN 22;LUCA CERRELLI 
+5;INSERTIO DA WS MALLOGGIATI;TRIVIGNANO UDINESE;UD;VIA INSERITA DA WS, 
+8;SONO IO IL PROPRIETARIO 
+9;PROVO DA WS ALLOGGIATI DUE;BAGNARIA ARSA;UD;VIA INSERITA DA WS, 
+8;NOMINATIVOPROPRIETATIOO</CSV> 
+      </TabellaResponse> 
+   </soap:Body> 
+</soap:Envelope> 
+
+ 
+ 
+
+ 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 19 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+
+4 TRACCIATI RECORD 
+
+TABELLA 1 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+  
+
+ 
+ 
+
+Totale 
+Campo DA A Tipo Alloggiato (16-17-18) Tipo Alloggiato (19-20) Vincoli 
+
+Caratteri 
+
+Codice Tabella Tipo 
+Tipo Alloggiato 0 1 2 Obbligatorio Obbligatorio 
+
+Alloggiati 
+
+Data Arrivo 2 11 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+
+Numero Giorni di 12 13 2 Obbligatorio Obbligatorio Massimo 30 gg 
+Permanenza 
+
+Cognome 14 63 50 Obbligatorio Obbligatorio  
+
+Nome 64 93 30 Obbligatorio Obbligatorio  
+
+Sesso 94 94 1 Obbligatorio Obbligatorio 1 (M) - 2 (F) 
+
+Data Nascita 95 104 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+
+Codice Tabella 
+Comune Nascita 105 113 9 Obbligatorio Se Stato Nascita Italia Obbligatorio Se Stato Italia Comuni 
+
+Provincia Nascita 114 115 2 Obbligatorio Se Stato Nascita Italia Obbligatorio Se Stato Italia Sigla Provincia 
+
+Stato Nascita 116 124 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+
+Cittadinanza 125 133 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+
+Codice Tabella 
+Tipo Documento 134 138 5 Obbligatorio Riempire con Blank 
+
+Documenti 
+
+Numero Documento 139 158 20 Obbligatorio Riempire con Blank  
+
+Codice Tabella Stati 
+Luogo Rilascio Documento 159 167 9 Obbligatorio (Stato o Comune) Riempire con Blank 
+
+o Comuni 
+
+     
+
+TOTALE CARATTERI DATI ALLOGGIATO 168  
+
+Aggiunta Caratteri di ( CR + LF ) Tranne 
+2  
+
+l'ultimo 
+ 
+
+         
+TOTALE CARATTERI 
+
+ 170 
+RIGA  
+
+ 
+ 
+   t 
+ 
+
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 20 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale  
+
+ 
+ 
+
+ 
+ 
+
+TABELLA 2 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+Totale Tipo Alloggiato Tipo Alloggiato 
+Campo DA A Vincoli 
+
+Caratteri (16-17-18) (19-20) 
+
+Codice  Tabella Tipo 
+Tipo Alloggiato 0 1 2 Obbligatorio Obbligatorio 
+
+Alloggiati 
+Data Arrivo 2 11 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+
+Numero Giorni di 
+12 13 2 Obbligatorio Obbligatorio Massimo 30 gg 
+
+Permanenza 
+Cognome 14 63 50 Obbligatorio Obbligatorio  
+
+Nome 64 93 30 Obbligatorio Obbligatorio  
+
+Sesso 94 94 1 Obbligatorio Obbligatorio 1 (M) - 2 (F) 
+
+Data Nascita 95 104 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+Obbligatorio 
+
+Obbligatorio 
+Comune Nascita 105 113 9 Se Stato Nascita Codice Tabella Comuni 
+
+Se Stato Italia 
+Italia 
+
+Obbligatorio 
+Obbligatorio 
+
+Provincia Nascita 114 115 2 Se Stato Nascita Sigla Provincia 
+Se Stato Italia 
+
+Italia 
+
+Stato Nascita 116 124 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+
+Cittadinanza 125 133 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+Codice Tabella 
+
+Tipo Documento 134 138 5 Obbligatorio Riempire con Blank 
+Documenti 
+
+Numero Documento 139 158 20 Obbligatorio Riempire con Blank  
+
+Luogo Rilascio Obbligatorio Codice Tabella Stati o 
+159 167 9 Riempire con Blank 
+
+Documento (Stato o Comune) Comuni 
+
+ID presente nell’elenco 
+ID Appartamento 168 173 6 Obbligatorio Obbligatorio appartamenti (non 
+
+disabilitati) 
+TOTALE CARATTERI DATI 
+
+174    
+ALLOGGIATO 
+
+Aggiunta Caratteri di  ( CR + LF ) 
+2    
+
+Tranne l'ultimo 
+
+TOTALE CARATTERI 
+    176    
+
+RIGA 
+ 
+
+
+
+WS_ALLOGGIATI 
+Documento di Descrizione  Rev. 01 
+
+ Pag 21 di 21 
+24/01/2022 
+
+ 
+
+ 
+
+Centro Elettronico Nazionale

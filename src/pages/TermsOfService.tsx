@@ -25,7 +25,7 @@ export const TermsOfServicePage: React.FC = () => {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 py-16">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-6">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-full mb-6">
                             <FileText className="h-8 w-8 text-white" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -111,7 +111,7 @@ export const TermsOfServicePage: React.FC = () => {
                                             <li>• Funzionalità base</li>
                                         </ul>
                                     </div>
-                                    <div className="border border-indigo-200 bg-indigo-50 rounded-lg p-4">
+                                    <div className="border border-primary-200 bg-primary-50 rounded-lg p-4">
                                         <div className="flex items-center gap-2 mb-2">
                                             <CheckCircle className="h-5 w-5 text-indigo-600" />
                                             <h3 className="font-semibold">Piani Premium</h3>
@@ -246,7 +246,7 @@ export const TermsOfServicePage: React.FC = () => {
                     <div className="mt-12 text-center">
                         <Link
                             to="/signup"
-                            className="inline-block px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                            className="inline-block px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl"
                         >
                             Accetta e Crea Account
                         </Link>

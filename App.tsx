@@ -59,7 +59,7 @@ const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => {
                 </p>
                 <a
                     href="/"
-                    className="inline-block px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    className="inline-block px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
                 >
                     Torna alla Home
                 </a>

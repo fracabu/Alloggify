@@ -424,7 +424,7 @@ export const AIChatWidget: React.FC = () => {
                   <button
                     key={index}
                     onClick={() => handleSend(question)}
-                    className="text-xs bg-white hover:bg-indigo-50 text-primary-600 border border-indigo-200 px-3 py-1.5 rounded-full transition-colors"
+                    className="text-xs bg-white hover:bg-primary-50 text-primary-600 border border-primary-200 px-3 py-1.5 rounded-full transition-colors"
                   >
                     {question}
                   </button>

@@ -1,0 +1,1107 @@
+﻿Servizio di Invio Telematico delle Schedine Alloggiati 
+
+ 
+
+ 
+
+ 
+ 
+ 
+ 
+
+ 
+GUIDA 
+
+ 
+SERVIZIO ALLOGGIATI WEB 
+
+ 
+  
+
+ 1 
+
+
+
+ 
+
+ 
+
+Indice 
+ 
+ 
+1. Autenticazione ............................................................................................................................. 3 
+
+2. Pagina Iniziale .............................................................................................................................. 6 
+
+3. Inserimento Schedine .................................................................................................................. 7 
+
+4. Invio File ..................................................................................................................................... 16 
+
+5. Scarica Ricevute ......................................................................................................................... 19 
+
+6. Analisi Invii .................................................................................................................................. 20 
+
+7. Guide ........................................................................................................................................... 21 
+
+8. Gestione Appartamenti ............................................................................................................. 22 
+
+9. Modifica Password .................................................................................................................... 26 
+
+10. Chiave web per utilizzo Web Service – WSKEY .................................................................... 28 
+
+11. Recupero Credenziali di Accesso ........................................................................................... 29 
+
+12. File tracciato record................................................................................................................ 31 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+
+ 
+ 
+
+ 2 
+
+
+
+ 
+
+ 
+ 
+ 
+
+1. Autenticazione 
+ 
+
+PASSO 1: Per accedere ai servizi del portale Alloggiati Web raggiungere l’Home Page 
+all’indirizzo https://alloggiatiweb.poliziadistato.it, successivamente selezionare il menù 
+ACCESSO e selezionare la voce CODICI (Fig.1.1). 
+
+In alternativa utilizzare il link “Accedi all’area di Lavoro del portale alloggiati” presente nella 
+finestra “COLLEGAMENTI RAPIDI” (Fig.1.1). 
+ 
+
+ 
+   Fig.1.1: Home-page portale. 
+
+ 
+PASSO 2: Selezionare il link Area di Lavoro (Codici) (Fig. 1.2). 
+ 
+
+ 3 
+
+
+
+ 
+   Fig.1.2: Area di Lavoro. 
+
+ 
+   Fig.1.3: Accesso. 
+
+ 
+
+PASSO 3: Inserire “nome utente” e “password” e selezionare il link “Accedi” (Fig. 1.3); nel caso di 
+credenziali errate verrà mostrato un messaggio di errore. 
+ 
+
+PASSO 4: Effettuato l’accesso, il sistema mostrerà un tastierino numerico per l’inserimento e la 
+verifica dei codici dispositivi. L’utente ha una scheda codici nella quale sono presenti 16 gruppi di 
+codici e ogni gruppo è formato da una stringa di 4 numeri. Il sistema indicherà, tramite una 
+generazione casuale, quale numero della stringa di un determinato gruppo di codici inserire nei 
+
+riquadri bianchi. (Fig. 1.4) 
+
+ 4 
+
+
+
+  
+   Fig.1.4: Codici dispositivi. 
+
+ 
+
+NB: se si effettuano tre tentativi errati il sistema obbligherà nuovamente l’inserimento di utenza e 
+password. 
+ 
+
+ 5 
+
+
+
+2. Pagina Iniziale 
+ 
+
+ 
+   Fig.2.1: Pagina iniziale 
+
+ 
+ Una volta eseguito l’accesso il sistema mostra una pagina principale con le seguenti 
+
+informazioni: 
+• In alto a sinistra i menù dei servizi offerti dal sistema (Fig 2.1.2); 
+
+• In alto a destra il nome utente. 
+Nella sezione principale 
+• L’informazione della Questura competente territorialmente ed eventuali 
+
+comunicazioni/avvisi. 
+Nella sezione secondaria: 
+
+• L’informazione dell’ultima data di accesso e l’ultima data del cambio password; 
+
+• La possibilità di scaricare l’ultima ricevuta disponibile; 
+• Dei link rapidi (Manuale Utente, Normativa, Recupero Credenziali). 
+
+ 
+
+ 
+   Fig.2.1.2: Menu 
+
+ 6 
+
+
+
+3. Inserimento Schedine 
+ 
+
+ 
+   Fig.3.1: Menu 
+
+ 
+ Per accedere alla funzionalità di invio delle schedine selezionare dalla barra superiore il 
+menù Inserimento (Fig.3.1). 
+
+ La funzionalità inserimento consente di compilare e trasmettere una schedina di un 
+soggetto alloggiato più gli eventuali familiari o altri componenti del gruppo. 
+ Nel caso di  
+
+• Ospite Singolo basterà compilare tutti i dati della schedina e procedere con l’invio; 
+
+• Capo Famiglia o Capo Gruppo sarà necessario inserire anche le informazioni relative agli 
+ospiti per poi poter procedere con l’invio. 
+
+I campi da compilare per un Ospite Singolo, un Capo Famiglia o un Capo Gruppo sono i seguenti 
+(Fig. 3.2): 
+
+• Tipo Alloggiato: indica la categoria dell’alloggiato, consente la scelta di una tra le seguenti 
+voci: 
+
+▪ Ospite Singolo;  
+
+▪ Capo Famiglia: alloggiato a cui fanno riferimento ulteriori familiari. Sarà necessario 
+indicare successivamente i dati dei familiari come illustrato di seguito; 
+
+▪ Capo Gruppo: alloggiato a cui fanno riferimento ulteriori componenti di un gruppo. 
+Sarà necessario indicare successivamente i dati degli altri componenti come 
+illustrato di seguito.  
+
+• Data di Arrivo: data di arrivo dell’alloggiato. L’applicativo permette soltanto 
+l’inserimento della data odierna o quella del giorno precedente, in quanto la legge 
+
+ 7 
+
+
+
+stabilisce che i dati debbano pervenire alla Questura entro le ventiquattro ore 
+
+dall’arrivo; nel caso di soggiorni non superiori alle ventiquattro ore entro le sei ore 
+successive all’arrivo; 
+
+• Permanenza: giorni di permanenza dichiarati all’arrivo (massimo 30 gg); 
+Cittadinanza: cittadinanza dell’alloggiato. Il sistema permette di scrivere direttamente il 
+nome dello Stato o agevola l’inserimento tramite la funzionalità di ricerca che parte in 
+automatico quando si inseriscono i primi due caratteri, in caso di corrispondenze verrà 
+
+mostrato l’elenco delle varie voci disponibili (Fig. 3.3). Per selezionare una nazione si dovrà 
+
+procedere facendo clic con il tasto sinistro del mouse sulla voce interessata, il sistema 
+riporterà la voce selezionata nella casella.  
+
+ 
+
+ 
+   Fig.3.2: Maschera di inserimento dati per un Ospite Singolo, un Capo Famiglia o un Capo Gruppo 
+
+ 
+
+ 8 
+
+
+
+ 
+   Fig.3.3: Maschera per la selezione della Cittadinanza 
+
+ 
+• Luogo di Nascita: Luogo di nascita dell’alloggiato. È possibile inserire il comune digitandolo 
+
+oppure selezionandolo dalla lista dei comuni italiani visualizzabile tramite la funzionalità 
+
+di ricerca che parte in automatico quando si inseriscono i primi due caratteri o lo stato in 
+caso di alloggiati nati all’estero (Fig. 3.4). Per selezionare un comune o lo stato si dovrà 
+procedere facendo clic con il tasto sinistro del mouse sulla voce interessata, il sistema 
+
+riporterà la voce selezionata nella casella.  
+ 
+
+ 
+   Fig.3.4: Maschera per l’inserimento del Luogo di Nascita. 
+
+ 
+N.B.: Nell’elenco a cascata per la scelta del luogo di nascita, saranno presenti anche i luoghi cessati 
+(rappresentati con carattere barrato). 
+
+ 9 
+
+
+
+ 
+
+• Cognome, Nome: cognome e nome dell’alloggiato.  
+• Data di Nascita: data di nascita dell’alloggiato. Giorno, mese ed anno sono digitabili 
+
+direttamente nell’apposito campo (inserire senza separatori ggmmaaaa o con il carattere 
+
+separatore “/” gg/mm/aaaa) o selezionando la seguente icona datario .  
+• Sesso: selezionare i valori suggeriti dal sistema: maschio e femmina. 
+• Luogo di Rilascio del Documento: Luogo di rilascio del documento dell’alloggiato. È 
+
+possibile inserire il comune digitandolo oppure selezionandolo dalla lista dei comuni 
+italiani visualizzabile tramite la funzionalità di ricerca che parte in automatico quando si 
+inseriscono i primi due caratteri o lo stato in caso di alloggiati nati all’estero (Fig. 3.4). Per 
+selezionare un comune o lo stato si dovrà procedere facendo clic con il tasto sinistro del 
+
+mouse sulla voce interessata, il sistema riporterà la voce selezionata nella casella.  
+• Tipo Documento: tipo di documento esibito dall’alloggiato per l’identificazione (es. 
+
+passaporto, carta di identità, ecc.). È possibile inserire il documento digitandolo oppure 
+
+selezionandolo dalla lista dei documenti visualizzabile tramite la funzionalità di ricerca che 
+parte in automatico quando si inseriscono i primi tre caratteri (Fig. 3.5). Per un documento 
+si dovrà procedere facendo clic con il tasto sinistro del mouse sulla voce interessata, il 
+sistema riporterà la voce selezionata nella casella.  
+
+• Numero Documento: Numero identificativo del documento esibito dall’alloggiato.  
+ 
+
+ 
+   Fig.3.5: Maschera per la Selezione del Tipo di Documento di Identificazione 
+
+ 10 
+
+
+
+ 
+
+ 
+
+ Terminata la fase di inserimento selezionare il tasto , accertandosi 
+preventivamente che tutti i campi della schedina siano correttamente compilati.  
+ In caso di errori di compilazione il sistema indicherà all’utente con un messaggio i campi 
+
+da correggere (Fig. 3.6).  
+  
+
+ 
+   Fig.3.6: Maschera di Inserimento – segnalazione errori. 
+
+ 
+ In caso di inserimento di una anagrafica riferita al tipo “Capo Famiglia” o “Capo Gruppo”, 
+sarà necessario aggiungere anche le schedine relative agli ulteriori ospiti. Pertanto, il sistema 
+
+provvederà a visualizzare un’ulteriore maschera per l’inserimento dei dati riferiti agli ospiti (Fig. 
+3.7).  
+ 
+
+ 11 
+
+
+
+ 
+   Fig.3.7: Maschera per l’Inserimento di un Ospite. 
+
+ 
+ L’inserimento dei dati delle schedine degli ospiti dovrà essere effettuato uno alla volta e 
+
+successivamente aggiunta al gruppo/famiglia. 
+
+Nel link “Elenco Componenti Gruppo o Famiglia” saranno riportati i dati identificativi del capo 
+gruppo/capo famiglia di riferimento e i dati delle schedine collegate al capo gruppo/capo famiglia 
+che si andranno ad aggiungere. 
+La scheda ospite contiene i seguenti campi: 
+
+• Permanenza: giorni di permanenza dichiarati all’arrivo (massimo 30 gg); 
+
+Cittadinanza: cittadinanza dell’alloggiato. Il sistema permette di scrivere direttamente il 
+
+nome dello Stato o agevola l’inserimento tramite la funzionalità di ricerca che parte in 
+automatico quando si inseriscono i primi due caratteri, in caso di corrispondenze verrà 
+mostrato l’elenco delle varie voci disponibili (Fig. 3.3). Per selezionare una nazione si dovrà 
+procedere facendo clic con il tasto sinistro del mouse sulla voce interessata, il sistema 
+riporterà la voce selezionata nella casella.  
+
+ 12 
+
+
+
+• Luogo di Nascita: Luogo di nascita dell’alloggiato. È possibile inserire il comune digitandolo 
+
+oppure selezionandolo dalla lista dei comuni italiani visualizzabile tramite la funzionalità 
+di ricerca che parte in automatico quando si inseriscono i primi due caratteri o lo stato in 
+caso di alloggiati nati all’estero (Fig. 3.4). Per selezionare un comune o lo stato si dovrà 
+procedere facendo clic con il tasto sinistro del mouse sulla voce interessata, il sistema 
+riporterà la voce selezionata nella casella.  
+
+N.B.: Nell’elenco a cascata per la scelta del luogo di nascita, saranno presenti anche i luoghi cessati 
+
+(rappresentati con carattere barrato). 
+
+• Cognome, Nome: cognome e nome dell’alloggiato; 
+• Data di Nascita: data di nascita dell’alloggiato. Giorno, mese ed anno sono digitabili 
+
+direttamente nell’apposito campo (inserire senza separatori ggmmaaaa o con il carattere 
+
+separatore “/” gg/mm/aaaa) o selezionando la seguente icona datario .  
+• Sesso: selezionare i valori suggeriti dal sistema: maschio e femmina. 
+ 
+
+ Terminata la compilazione della schedina si dovrà procedere a selezionare il pulsante  
+
+ per aggiungere/collegare l’ospite al gruppo/famiglia. Gli ospiti inseriti 
+saranno aggiunti all’elenco visualizzabile tramite il link Elenco Componenti Gruppo o Famiglia (Fig. 
+3.8) e riporteranno le informazioni principali (cognome, nome e data di nascita).  
+
+ 
+
+ 13 
+
+
+
+ 
+   Fig.3.8: Scheda riepilogativa della Famiglia/Gruppo. 
+
+ 
+
+ In caso di errore è possibile tramite il pulsante   eliminare l’ospite dall’elenco e, 
+successivamente procedere a reinserirlo correttamente. 
+ 
+
+ Terminata la fase di inserimenti di tutti gli ospiti si dovrà procedere a selezionare il pulsante 
+
+ (questo pulsante si attiverà dopo l’inserimento di almeno un ospite), 
+successivamente verrà mostrata la maschera di riepilogo seguente (Fig. 3.9) 
+
+ 
+
+ 
+   Fig.3.9: Riepilogo delle schedine compilate. 
+
+ 
+
+ 14 
+
+
+
+ Nella schermata presente in (Fig. 3.9) il sistema mostrerà il riepilogo di tutte le schedine da 
+
+inviare (sia nel caso di ospite singolo che gruppi o famiglie). 
+ Effettuati tutti i controlli necessari sui dati inseriti si dovrà procedere all’invio di tutte le 
+
+schedine tramite la selezione del pulsante . 
+ In caso di errori annullare la procedura di invio tramite la selezione del pulsante 
+
+, in questo caso il sistema eliminerà tutti i dati inseriti e permetterà di ripetere 
+dall’inizia tutte le fasi di inserimento delle schedine.  
+
+SI RACCOMANDA DI NON UTILIZZARE I PULSANTI “INDIETRO” E “AVANTI” DEL BROWSER PER 
+
+SPOSTARSI TRA LE PAGINE DEL SERVIZIO, MA ESCLUSIVAMENTE I PULSANTI MESSI A 
+DISPOSIZIONE DALLA PROCEDURA E PRECEDENTEMENTE ILLUSTRATI. 
+Alla fine di ogni invio il sistema mostrerà a video la seguente maschera di conferma (Fig. 3.10): 
+
+  
+
+Fig.3.10: Conferma invio. 
+
+Selezionando il pulsante “ok” verrà proposta la maschera “Analisi Invii” descritta in seguito. 
+
+  
+
+ 15 
+
+
+
+ 
+
+4. Invio File 
+ 
+
+ 
+   Fig.4.1: Menu 
+
+ 
+
+ Per accedere alla funzionalità di invio schedine tramite file selezionare dalla barra 
+superiore il menù “File” (Fig. 4.1). 
+ Consente all’utente di inviare un file precompilato in formato testo (estensione txt) 
+contenente i dati relativi a più soggetti alloggiati presso la struttura (per maggiori dettagli sulla 
+creazione del file consultare il paragrafo 12 di questo manuale). 
+
+ 
+ 
+
+ 
+   Fig.4.2: Maschera per l’Invio dei File Precompilati. 
+
+ 
+ 
+
+ 16 
+
+
+
+ Per inviare un file dal proprio dispositivo, selezionare il pulsante “Seleziona”, quindi 
+
+selezionare il file ed infine procedere a selezionare il pulsante “Elabora” per verificarne formato e 
+
+contenuto. Nella schermata successiva sarà mostrato l’esito dell’elaborazione (Fig. 4.3) e verrà 
+
+mostrato il numero di schedine corrette e/o errate. 
+
+ Procedere all’invio dei dati selezionando il pulsante “Prosegui” (Fig. 4.3). 
+
+ 
+
+ 
+
+ 
+   Fig.4.3: Maschera con le Informazioni di Corretta Elaborazione del File 
+
+ 
+ Nel caso in cui l’elaborazione del file abbia evidenziato errori il sistema mostrerà una 
+
+schermata (Fig. 4.4) che ricapitola il numero di schedine corrette e quelle scartate con riferimento 
+alla numera di riga del file dove si è verificato l’errore ed i motivi dell’esclusione. 
+ 
+
+ 17 
+
+
+
+ 
+Fig.4.4: Maschera con le Informazioni di Non Corretta Elaborazione del File 
+
+ 
+ Nel caso in cui almeno una delle schedine risultasse corretta, l’utente potrà decidere se 
+trasmettere le schede corrette (pulsante “Invia”) e successivamente correggere gli errori in quelle 
+
+rimanenti ritrasmettendo solo queste ultime, oppure se annullare del tutto l’inserimento 
+
+(pulsante “Annulla”), correggere gli errori e ritrasmettere l’intero file. 
+ 
+ 
+
+ 18 
+
+
+
+5. Scarica Ricevute 
+ 
+
+ 
+   Fig.5.1: Menu 
+
+  
+
+ Per accedere alla sezione ricevute selezionare dalla barra superiore il menù “Ricevute” 
+
+(Fig.5.1). 
+ La sezione “Ricevute” consente all’utente di scaricare i file che attestano il numero di 
+schedine correttamente trasmesse in un dato giorno. Come si evince dalla tabella di Fig. 5.2 sono 
+presenti solo i file relativi ai giorni in cui effettivamente la struttura ha effettuato trasmissioni; le 
+ricevute disponibili per il “download” sono quelle degli ultimi 30 giorni. Ogni riga della tabella 
+contiene la data di riferimento, il numero di schedine inviate, il numero di protocollo ed il pulsante 
+
+per il “download”. Il file scaricato è in formato pdf (portable document format). Le ricevute sono 
+
+firmate digitalmente con codice di controllo (Qr code) della Polizia di Stato, la struttura dovrà avere 
+cura di conservare i suddetti files. 
+ 
+
+ 
+   Fig.5.2: Pagina di Download dei File di Ricevuta in Formato pdf. 
+
+ 
+ 19 
+
+
+
+6. Analisi Invii 
+ 
+ Per accedere alla sezione analisi invii schedine selezionare dalla barra superiore il menù 
+“Analisi” (Fig.6.1). 
+ 
+
+ 
+   Fig.6.1: Menu 
+
+ La sezione “Analisi” consente all’utente di verificare lo storico delle schedine inviate nella 
+data odierna, sono quindi visualizzabili i nominativi inviati (Fig. 6.2), la visualizzazione può essere 
+
+ordinata per nominativo o per orario di invio. In questa sezione sarà sempre possibile effettuare 
+il riscontro delle schedine inviate. 
+ 
+
+ 
+   Fig.6.2: Riepilogo delle informazioni delle Schedine alloggiati trasmesse in data odierna. 
+
+ 
+
+ 
+
+ 20 
+
+
+
+7. Guide 
+ 
+
+ 
+   Fig.7.1: Menu 
+
+ 
+ Per accedere alla sezione guide selezionare dalla barra superiore il menù “Guide” (Fig.7.1). 
+
+ Nella sezione “Guide” è possibile visualizzare o fare il “download” dei seguenti manuali 
+
+ 
+• Manuale Utente. 
+• Manuale WebService. 
+
+ 
+ 
+
+ 21 
+
+
+
+8. Gestione Appartamenti 
+ 
+ Nei casi di gestori o proprietari di appartamenti, l’utente abilitato potrà gestire in 
+autonomia la lista dei propri appartamenti al fine di poter inviare le schedine degli alloggiati. 
+ Dopo aver effettuato la fase di autenticazione il sistema aggiunge tra le funzioni a 
+
+disposizione nel menù, presente nella barra superiore, la voce “Appartamenti” (Fig. 8.1) 
+ 
+
+ 
+
+ 
+   Fig.8.1: Menu 
+
+ 
+ Per procedere all’inserimento di un appartamento, l’utente dovrà selezionare la voce 
+
+Aggiungi, successivamente verrà proposta la seguente maschera: (Fig 8.2) 
+ 
+
+ 
+   Fig.8.2: Inserimento nuovo appartamento. 
+
+ 
+
+ 22 
+
+
+
+ Una volta inserite tutte le informazioni si procederà all’inserimento facendo clic sul 
+
+pulsante . 
+Si precisa che il campo comune può contenere solo luoghi ricadenti nella provincia della 
+Questura di appartenenza. 
+ 
+ Per procedere alla visualizzazione degli appartamenti inseriti, l’utente dovrà selezionare 
+la voce Elenco visibile dalla voce Appartamenti (Fig 8.2), successivamente verrà proposta la 
+
+seguente maschera:  
+
+ 
+   Fig.8.3: Elenco Appartamenti 
+
+  
+Dalla schermata Elenco è possibile (Fig. 8.3): 
+
+• fare clic su  per eliminare l’appartamento; 
+• aggiungere un nuovo appartamento; 
+• cercare un appartamento; 
+• effettuare il download dell’elenco appartamenti abilitati. 
+
+ 
+
+ 23 
+
+
+
+Una volta disabilitato l’appartamento non può essere riabilitato, ma dovrà essere reinserito 
+
+nuovamente. 
+ 
+
+Per procedere all’inserimento della schedina, l’utente potrà scegliere tra le due modalità 
+disponibili così come indicato in dettaglio nei paragrafi 3 e 4. 
+ Si ricorda che in entrambe le modalità di invio schedine si dovrà sempre selezionare 
+l’appartamento per il quale si procederà all’invio della/e schedina/e. 
+
+ Digitando il testo nel campo ricerca verrà visualizzato l’elenco degli appartamenti abilitati 
+
+corrispondenti. (Fig. 8.4)  
+ 
+
+ 
+   Fig.8.4: Selezione appartamento. 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+ 24 
+
+
+
+E’ disponibile anche l’invio di un file unico file (comprensivo dell’IDAppartamento). (Fig. 8.5)  
+
+ 
+
+ 
+Fig.8.5: Maschera per l’Invio dei File Precompilati – File Unico 
+
+ 
+Per inviare un file dal proprio dispositivo andrà selezionato prima il check “File Unico con 
+Appartamenti”, successivamente selezionare il pulsante “Seleziona”; a questo punto selezionare 
+
+il file ed infine procedere con il pulsante “Elabora”.  
+ 
+(per maggiori dettagli sulla creazione del file consultare il paragrafo 12.1 di questo manuale). 
+ 
+ 
+
+ 25 
+
+
+
+9. Modifica Password 
+  
+ Nella sezione in alto a destra della sezione “Pagina Iniziale” è possibile selezionare la voce 
+inerente alla propria utenza e successivamente selezionare la voce “Cambia Password” (Fig.9.1). 
+
+ 
+
+Fig.9.1: Cambia Password. 
+ 
+
+ La funzionalità “Cambia Password” consente all’utente di modificare la propria 
+password.  
+ 
+
+ 
+   Fig.9.2: Maschera di Modifica della Password. 
+
+ 26 
+
+
+
+ 
+
+Si potrà procedere inserendo le nuove credenziali rispettando i criteri mostrati a video (Fig.9.2). 
+ 
+
+ 27 
+
+
+
+10. Chiave web per utilizzo Web Service – WSKEY 
+ 
+ Nella sezione in alto a destra della “Pagina Iniziale” è possibile selezionare la voce inerente 
+alla propria utenza e successivamente selezionare la voce “Chiave Web Service” (Fig.10.1). 
+
+ 
+
+Fig.10.1: Chiave Web Service. 
+ 
+
+ Successivamente il sistema genera la chiave Web Service per poter utilizzare i servizi di 
+
+cooperazione applicativi per l’invio diretto tra il sistema Alloggiati e il sistema gestionale della 
+struttura ricettiva. (Fig.10.2). 
+N.B.: Per maggiori dettagli sull’utilizzo del servizio consultare il manuale relativo nella sezione Supporto 
+
+- Manuali del Portale. 
+ Da questa schermata è possibile per l’utente, selezionando il pulsante “Genera Nuovo 
+Codice” genererà un nuovo codice.  
+
+ 
+   Fig.10.2: Generazione WSKEY. 
+
+N.B.. E’ possibile generare solo un nuovo codice al giorno.  
+
+Ad ogni cambio password si dovrà generare un nuovo codice WSKEY. 
+ 
+ 
+
+  28 
+
+
+
+11. Recupero Credenziali di Accesso 
+ 
+
+Per accedere al “Recupero Credenziali di Accesso” del portale Alloggiati Web raggiungere 
+l’Home Page all’indirizzo https://alloggiatiweb.poliziadistato.it, successivamente selezionare il 
+menù SUPPORTO e selezionare la voce RECUPERA CREDENZIALI (Fig.11.1). 
+ 
+
+ 
+   Fig.11.1: Home-page portale. 
+
+ 
+Tramite questa funzionalità l’utente può recuperare: 
+
+• Codici di Accesso; 
+• Scheda Codici; 
+
+• PUK; 
+
+• Password. 
+Il recupero può avvenire esclusivamente se l’utente è in possesso di almeno due informazioni 
+tra quelle precedentemente elencate (Fig. 11.2). Nel dettaglio si può recuperare: 
+
+• CODICI DI ACCESSO: Se si è in possesso di “Password” e “PUK”; 
+• PASSWORD: Se si è in possesso di “Scheda Codici” e “PUK”; 
+
+• SCHEDA CODICI: Se si è in possesso di “Password” e “PUK”; 
+
+  29 
+
+
+
+• PUK: Se si è in possesso di “Password” e “Scheda Codici”. 
+
+ 
+
+ 
+   Fig.11.2: Home-page portale. 
+ 
+ 
+  
+
+  30 
+
+
+
+12. File tracciato record 
+ 
+Il file precompilato, con codifica UTF-8, deve contenere una riga per ogni alloggiato per un 
+
+massimo di 1000 righe.   
+
+Ciascuna riga deve essere costituita da 168 caratteri righe suddivisi nel modo seguente: 
+
+ 
+
+o 2 caratteri che indicano il tipo di alloggiato. Nella sezione Supporto Tecnico del 
+
+portale è disponibile la tabella dei codici associati agli alloggiati. 
+
+ 
+
+o 10 caratteri per la data di arrivo dell’alloggiato nel formato gg/mm/aaaa (es. 
+
+16/02/2005). La data di arrivo può essere quella odierna o quella relativa al giorno 
+
+precedente. 
+
+ 
+
+o 2 caratteri per il Numero giorni di permanenza 
+
+ 
+
+o 50 caratteri per il cognome dell’alloggiato. Il campo va completato con tanti spazi 
+
+bianchi quanti ne occorrono per arrivare a 50 caratteri (es. se l’alloggiato ha cognome 
+
+ROSSI,  è necessario inserire 45 spazi bianchi dopo il cognome per ottenere 50 
+
+caratteri). 
+
+ 
+
+o 30 caratteri per il nome dell’alloggiato. Il campo va completato con tanti spazi bianchi 
+
+quanti ne occorrono per arrivare a 30 caratteri (es. se l’alloggiato ha nome PAOLO,  
+
+è necessario inserire 25 spazi bianchi dopo il nome per ottenere 30 caratteri). 
+
+ 
+
+o 1 carattere per il sesso dell’alloggiato (1 per Maschio, 2 per Femmina). 
+
+ 
+
+o 10 caratteri per la data di nascita dell’alloggiato nel formato gg/mm/aaaa (es. 
+
+13/03/1973).  
+
+ 
+
+o 9 caratteri per la codifica del comune di nascita dell’alloggiato se nato in Italia. Nella 
+
+sezione Supporto Tecnico del portale è disponibile la tabella dei codici associati ai 
+
+comuni. Il campo va comunque completato con 9 spazi bianchi se l’alloggiato è nato 
+
+all’estero. 
+
+ 
+
+  31 
+
+
+
+o 2 caratteri per la provincia di nascita dell’alloggiato se nato in Italia. La codifica 
+
+adottata è quella delle targhe automobilistiche eccetto per Roma = RM. Nella tabella 
+
+dei comuni del punto precedente si trovano anche le sigle delle province italiane. Il 
+
+campo va comunque completato con 2 spazi bianchi se l’alloggiato è nato all’estero. 
+
+ 
+
+o 9 caratteri per la codifica dello stato di nascita dell’alloggiato. Nella sezione Supporto 
+
+Tecnico del portale è disponibile la tabella dei codici associati agli stati. Il campo va 
+
+completato sia se il cittadino è nato in Italia (con il codice associato all’Italia) sia se è 
+
+nato all’estero (con il codice associato allo stato di nascita). 
+
+ 
+
+o 9 caratteri per la codifica dello stato di cittadinanza dell’alloggiato. La tabella dei 
+
+codici è la stessa del punto precedente. Il campo va completato sia se il cittadino ha 
+
+cittadinanza italiana sia se ha cittadinanza estera. 
+
+ 
+
+I 134 caratteri relativi ai 11 campi suddetti vanno obbligatoriamente inseriti sia per alloggiati 
+
+che risultano Ospiti Singoli, Capo Famiglia o Capo Gruppo sia per quelli che risultano 
+
+Familiari o Membri di un Gruppo. I seguenti campi (3 campi per un totale di 34 caratteri), 
+
+invece, vanno inseriti solo per i primi tre tipi di alloggiato suddetti, mentre per familiari e 
+
+membri di un gruppo va inserito un pari numero (34) di spazi bianchi in modo da completare 
+
+il numero di caratteri totale per ogni alloggiato (168). 
+
+ 
+
+o 5 caratteri per la codifica del tipo di documento di identità dell’alloggiato (es. IDENT 
+
+è il codice relativo alla Carta di Identità). Nella sezione Supporto Tecnico del portale 
+
+è disponibile la tabella dei codici associati ai documenti di identità. 
+
+ 
+
+o 20 caratteri che indicano il numero del documento di identità. Il campo va completato 
+
+con tanti spazi bianchi quanti ne occorrono per arrivare a 20 caratteri (es. se il numero 
+
+del documento è: AB123CD  è necessario inserire 13 spazi bianchi dopo il numero 
+
+per ottenere 20 caratteri). 
+
+ 
+
+o 9 caratteri per la codifica della località di rilascio del documento. Se il documento è 
+
+stato rilasciato in Italia allora si inserirà il codice del Comune che lo ha rilasciato (vedi 
+
+tabella dei codici dei Comuni), altrimenti si inserirà il codice dello Stato che lo ha 
+
+rilasciato (vedi tabella dei codici degli Stati). 
+
+  32 
+
+
+
+ 
+
+Quando si inserisce nel file un Capo Famiglia/Gruppo con i relativi 
+
+Familiari/Componenti, questi ultimi vanno sempre riportati nelle righe 
+
+immediatamente successive al relativo Capo Famiglia/Gruppo.  
+
+ 
+
+Al termine di ciascuna riga di dati corrispondente ad un alloggiato è necessario inserire i 2 
+
+caratteri di ritorno a capo (codice ASCII 13) e di avanzamento riga (codice ASCII 10).  
+
+Solo per l’ultima riga, ovvero per l’ultimo alloggiato dell’elenco, non vanno aggiunti 
+
+tali caratteri. 
+
+ 
+
+Di seguito uno schema riepilogativo per la corretta generazione del file testuale   
+
+  33 
+
+
+
+Tracciato Record  
+ 
+
+Totale Tipo Alloggiato Tipo Alloggiato 
+Campo DA A Vincoli 
+
+Caratteri (16-17-18) (19-20) 
+
+Codice  Tabella Tipo 
+Tipo Alloggiato 0 1 2 Obbligatorio Obbligatorio 
+
+Alloggiati 
+Data Arrivo 2 11 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+
+Numero Giorni di 
+12 13 2 Obbligatorio Obbligatorio Massimo 30 gg 
+
+Permanenza 
+Cognome 14 63 50 Obbligatorio Obbligatorio  
+
+Nome 64 93 30 Obbligatorio Obbligatorio  
+Sesso 94 94 1 Obbligatorio Obbligatorio 1 (M) -  2 (F) 
+
+Data Nascita 95 104 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+Obbligatorio Obbligatorio 
+
+Comune Nascita 105 113 9 Codice Tabella Comuni 
+Se Stato Nascita Italia Se Stato Italia 
+
+Obbligatorio Obbligatorio 
+Provincia Nascita 114 115 2 Sigla Provincia 
+
+Se Stato Nascita Italia Se Stato Italia 
+Stato Nascita 116 124 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+Cittadinanza 125 133 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+
+Tipo Documento 134 138 5 Obbligatorio Riempire con Blank Codice Tabella Documenti 
+Numero Documento 139 158 20 Obbligatorio Riempire con Blank  
+
+Luogo Rilascio Obbligatorio Codice Tabella Stati o 
+159 167 9 Riempire con Blank 
+
+Documento (Stato o Comune) Comuni 
+
+TOTALE CARATTERI DATI ALLOGGIATO 168    
+
+Aggiunta Caratteri di  ( CR + LF ) Tranne l'ultimo 2    
+
+TOTALE CARATTERI 
+    170    
+
+RIGA 
+ 
+ 
+Nota Bene:  L’ aggiunta di caratteri (CR + LF) non deve essere eseguita per l’ ultimo alloggiato  ( riga ). 
+ 
+ 
+ 
+ 
+
+  34 
+
+
+
+ 
+
+Tracciato Record File Unico – Gestione Appartamenti 
+ 
+
+Il tracciato record per il File Unico contiene come ultima informazione ad ogni riga l’IDAPPARTAMENTO per un totale di 6 caratteri. 
+ 
+
+Totale Tipo Alloggiato Tipo Alloggiato 
+Campo DA A Vincoli 
+
+Caratteri (16-17-18) (19-20) 
+
+Codice  Tabella Tipo 
+Tipo Alloggiato 0 1 2 Obbligatorio Obbligatorio 
+
+Alloggiati 
+Data Arrivo 2 11 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+
+Numero Giorni di 
+12 13 2 Obbligatorio Obbligatorio Massimo 30 gg 
+
+Permanenza 
+Cognome 14 63 50 Obbligatorio Obbligatorio  
+
+Nome 64 93 30 Obbligatorio Obbligatorio  
+Sesso 94 94 1 Obbligatorio Obbligatorio 1 (M) -  2 (F) 
+
+Data Nascita 95 104 10 Obbligatorio Obbligatorio gg/mm/aaaa 
+Obbligatorio Obbligatorio 
+
+Comune Nascita 105 113 9 Codice Tabella Comuni 
+Se Stato Nascita Italia Se Stato Italia 
+
+Obbligatorio Obbligatorio 
+Provincia Nascita 114 115 2 Sigla Provincia 
+
+Se Stato Nascita Italia Se Stato Italia 
+Stato Nascita 116 124 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+Cittadinanza 125 133 9 Obbligatorio Obbligatorio Codice Tabella Stati 
+
+Tipo Documento 134 138 5 Obbligatorio Riempire con Blank Codice Tabella Documenti 
+Numero Documento 139 158 20 Obbligatorio Riempire con Blank  
+
+Luogo Rilascio Obbligatorio Codice Tabella Stati o 
+159 167 9 Riempire con Blank 
+
+Documento (Stato o Comune) Comuni 
+ID presente nell’elenco 
+
+IDAppartamento 168 173 6 Obbligatorio Obbligatorio appartamenti (non 
+disabilitati) 
+
+TOTALE CARATTERI DATI ALLOGGIATO 174    
+
+Aggiunta Caratteri di  ( CR + LF ) Tranne l'ultimo 2    
+
+TOTALE CARATTERI 
+    176    
+
+RIGA 
+ 
+Nota Bene:  L’ aggiunta di caratteri (CR + LF) non deve essere eseguita per l’ ultimo alloggiato  ( riga ). 
+
+  35

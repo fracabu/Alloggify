@@ -123,7 +123,7 @@ export const FAQ: React.FC = () => {
                     </p>
                     <a
                         href="mailto:support@alloggify.com"
-                        className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                        className="inline-block px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors shadow-md hover:shadow-lg"
                     >
                         Contatta il Supporto
                     </a>

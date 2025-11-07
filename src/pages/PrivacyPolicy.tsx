@@ -25,7 +25,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 py-16">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-6">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-full mb-6">
                             <Shield className="h-8 w-8 text-white" />
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -53,7 +53,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                                 { icon: UserCheck, title: 'Controllo Totale', desc: 'Puoi eliminare i tuoi dati in qualsiasi momento' }
                             ].map((item, idx) => (
                                 <div key={idx} className="text-center">
-                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-indigo-100 rounded-lg mb-3">
+                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-100 rounded-lg mb-3">
                                         <item.icon className="h-6 w-6 text-indigo-600" />
                                     </div>
                                     <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
@@ -192,7 +192,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                     <div className="mt-12 text-center">
                         <Link
                             to="/signup"
-                            className="inline-block px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl"
+                            className="inline-block px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl"
                         >
                             Crea Account Gratuito
                         </Link>

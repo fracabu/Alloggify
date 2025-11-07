@@ -299,7 +299,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                         <button
                             onClick={handleLogin}
                             disabled={isLoading || !utente || !password || !wskey}
-                            className="flex-1 text-xs px-2 py-1.5 bg-primary-500 text-white rounded hover:bg-primary-600 disabled:bg-indigo-300 disabled:cursor-not-allowed"
+                            className="flex-1 text-xs px-2 py-1.5 bg-primary-500 text-white rounded hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Connessione...' : isAuthenticated ? 'Riconnetti' : 'Connetti'}
                         </button>

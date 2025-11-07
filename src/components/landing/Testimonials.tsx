@@ -140,7 +140,7 @@ export const Testimonials: React.FC = () => {
                                         onClick={() => setActiveIndex(index)}
                                         className={`h-2 rounded-full transition-all ${
                                             index === activeIndex
-                                                ? 'w-8 bg-indigo-600'
+                                                ? 'w-8 bg-primary-500'
                                                 : 'w-2 bg-gray-300 hover:bg-gray-400'
                                         }`}
                                         aria-label={`Vai alla testimonianza ${index + 1}`}
