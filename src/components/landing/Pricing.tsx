@@ -105,7 +105,7 @@ export const Pricing: React.FC = () => {
                             onClick={() => setBillingPeriod('monthly')}
                             className={`px-6 py-2 rounded-full font-medium transition-all ${
                                 billingPeriod === 'monthly'
-                                    ? 'bg-indigo-600 text-white shadow-sm'
+                                    ? 'bg-primary-500 text-white shadow-sm'
                                     : 'text-gray-600 hover:text-gray-900'
                             }`}
                         >
@@ -115,7 +115,7 @@ export const Pricing: React.FC = () => {
                             onClick={() => setBillingPeriod('annual')}
                             className={`px-6 py-2 rounded-full font-medium transition-all ${
                                 billingPeriod === 'annual'
-                                    ? 'bg-indigo-600 text-white shadow-sm'
+                                    ? 'bg-primary-500 text-white shadow-sm'
                                     : 'text-gray-600 hover:text-gray-900'
                             }`}
                         >
@@ -133,13 +133,13 @@ export const Pricing: React.FC = () => {
                         <div
                             key={index}
                             className={`relative bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all ${
-                                plan.popular ? 'ring-2 ring-indigo-600 scale-105' : ''
+                                plan.popular ? 'ring-2 ring-primary-500 scale-105' : ''
                             }`}
                         >
                             {/* Popular Badge */}
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1 shadow-lg">
+                                    <div className="bg-gradient-to-r from-primary-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1 shadow-lg">
                                         <Zap className="h-4 w-4" />
                                         Più Popolare
                                     </div>
@@ -192,7 +192,7 @@ export const Pricing: React.FC = () => {
                                     to={plan.ctaLink}
                                     className={`block w-full text-center px-6 py-3 rounded-lg font-semibold transition-all ${
                                         plan.popular
-                                            ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-lg'
+                                            ? 'bg-primary-500 text-white hover:bg-primary-600 shadow-md hover:shadow-lg'
                                             : plan.enterprise
                                             ? 'bg-gray-900 text-white hover:bg-gray-800'
                                             : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
@@ -209,11 +209,11 @@ export const Pricing: React.FC = () => {
                 <div className="text-center mt-12">
                     <p className="text-gray-600">
                         Hai domande sul piano giusto per te?{' '}
-                        <a href="#faq" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+                        <a href="#faq" className="text-primary-500 hover:text-primary-600 font-semibold">
                             Consulta le FAQ
                         </a>
                         {' '}o{' '}
-                        <a href="mailto:support@alloggify.com" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+                        <a href="mailto:support@alloggify.com" className="text-primary-500 hover:text-primary-600 font-semibold">
                             contattaci
                         </a>
                     </p>

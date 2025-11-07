@@ -307,7 +307,7 @@ export const AIChatWidget: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50 group"
+          className="fixed bottom-6 right-6 bg-primary-500 hover:bg-primary-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50 group"
           aria-label="Apri chat assistente AI"
         >
           <MessageCircle className="w-6 h-6" />
@@ -323,7 +323,7 @@ export const AIChatWidget: React.FC = () => {
       {isOpen && (
         <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-t-lg flex items-center justify-between">
+          <div className="bg-gradient-to-r from-primary-500 to-purple-600 text-white p-4 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2 rounded-lg">
                 <MessageCircle className="w-5 h-5" />
@@ -361,7 +361,7 @@ export const AIChatWidget: React.FC = () => {
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-indigo-600 text-white'
+                      ? 'bg-primary-500 text-white'
                       : 'bg-white text-gray-800 shadow-sm border border-gray-200'
                   }`}
                 >
@@ -424,7 +424,7 @@ export const AIChatWidget: React.FC = () => {
                   <button
                     key={index}
                     onClick={() => handleSend(question)}
-                    className="text-xs bg-white hover:bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 rounded-full transition-colors"
+                    className="text-xs bg-white hover:bg-indigo-50 text-primary-600 border border-indigo-200 px-3 py-1.5 rounded-full transition-colors"
                   >
                     {question}
                   </button>
@@ -449,7 +449,7 @@ export const AIChatWidget: React.FC = () => {
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
+                className="bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
                 aria-label="Invia messaggio"
               >
                 <Send className="w-5 h-5" />

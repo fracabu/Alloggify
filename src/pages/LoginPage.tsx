@@ -55,7 +55,7 @@ export const LoginPage: React.FC = () => {
                 {/* Logo/Brand */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-block">
-                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                             Alloggify
                         </h1>
                     </Link>
@@ -83,7 +83,7 @@ export const LoginPage: React.FC = () => {
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="nome@esempio.it"
                                 disabled={loading}
                             />
@@ -97,7 +97,7 @@ export const LoginPage: React.FC = () => {
                                 </label>
                                 <Link
                                     to="/forgot-password"
-                                    className="text-sm text-indigo-600 hover:text-indigo-700"
+                                    className="text-sm text-primary-500 hover:text-primary-600"
                                 >
                                     Password dimenticata?
                                 </Link>
@@ -107,7 +107,7 @@ export const LoginPage: React.FC = () => {
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
                             />
@@ -118,7 +118,7 @@ export const LoginPage: React.FC = () => {
                             <input
                                 type="checkbox"
                                 id="remember"
-                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300 rounded"
                             />
                             <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
                                 Ricordami
@@ -129,7 +129,7 @@ export const LoginPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all"
+                            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all"
                         >
                             {loading ? (
                                 <>
@@ -185,7 +185,7 @@ export const LoginPage: React.FC = () => {
                     {/* Signup Link */}
                     <p className="mt-8 text-center text-sm text-gray-600">
                         Non hai un account?{' '}
-                        <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-700">
+                        <Link to="/signup" className="font-semibold text-primary-500 hover:text-primary-600">
                             Registrati gratuitamente
                         </Link>
                     </p>

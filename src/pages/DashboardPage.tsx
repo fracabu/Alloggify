@@ -240,7 +240,7 @@ export const DashboardPage: React.FC = () => {
                                     <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
                                 </svg>
                             </div>
-                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                                 CheckInly
                             </h1>
                         </Link>
@@ -257,7 +257,7 @@ export const DashboardPage: React.FC = () => {
                                     </p>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <User className="h-5 w-5 text-indigo-600" />
+                                    <User className="h-5 w-5 text-primary-500" />
                                 </div>
                             </div>
 
@@ -295,7 +295,7 @@ export const DashboardPage: React.FC = () => {
                             <button
                                 onClick={triggerFileUpload}
                                 disabled={isLoading}
-                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all duration-200"
+                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all duration-200"
                             >
                                 {isLoading ? (
                                     <>

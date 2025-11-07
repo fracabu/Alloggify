@@ -9,17 +9,27 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Airbnb-inspired color palette
         primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+          50: '#fff5f7',
+          100: '#ffe4e8',
+          200: '#ffcdd6',
+          300: '#ffaab8',
+          400: '#ff7a91',
+          500: '#FF385C', // Main Airbnb red
+          600: '#e31c5f',
+          700: '#c13584',
+          800: '#a41063',
+          900: '#8b0a50',
+        },
+        dark: {
+          DEFAULT: '#222222',
+          light: '#484848',
+        },
+        gray: {
+          light: '#717171',
+          lighter: '#B0B0B0',
+          lightest: '#F7F7F7',
         },
       },
     },

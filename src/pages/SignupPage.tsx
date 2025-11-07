@@ -94,7 +94,7 @@ export const SignupPage: React.FC = () => {
                 {/* Logo/Brand */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-block">
-                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                             Alloggify
                         </h1>
                     </Link>
@@ -123,7 +123,7 @@ export const SignupPage: React.FC = () => {
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="Mario Rossi"
                                 disabled={loading}
                             />
@@ -140,7 +140,7 @@ export const SignupPage: React.FC = () => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="nome@esempio.it"
                                 disabled={loading}
                             />
@@ -157,7 +157,7 @@ export const SignupPage: React.FC = () => {
                                 name="companyName"
                                 value={formData.companyName}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="B&B La Terrazza"
                                 disabled={loading}
                             />
@@ -174,7 +174,7 @@ export const SignupPage: React.FC = () => {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
                             />
@@ -212,7 +212,7 @@ export const SignupPage: React.FC = () => {
                                 name="confirmPassword"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
                             />
@@ -241,15 +241,15 @@ export const SignupPage: React.FC = () => {
                                 name="acceptTerms"
                                 checked={formData.acceptTerms}
                                 onChange={handleChange}
-                                className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                className="mt-1 h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300 rounded"
                             />
                             <label htmlFor="acceptTerms" className="ml-2 block text-sm text-gray-700">
                                 Accetto i{' '}
-                                <Link to="/terms" target="_blank" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                                <Link to="/terms" target="_blank" className="text-primary-500 hover:text-primary-600 font-medium">
                                     Termini di Servizio
                                 </Link>
                                 {' '}e la{' '}
-                                <Link to="/privacy" target="_blank" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                                <Link to="/privacy" target="_blank" className="text-primary-500 hover:text-primary-600 font-medium">
                                     Privacy Policy
                                 </Link>
                             </label>
@@ -259,7 +259,7 @@ export const SignupPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all mt-6"
+                            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-indigo-300 disabled:cursor-not-allowed transition-all mt-6"
                         >
                             {loading ? (
                                 <>
@@ -278,7 +278,7 @@ export const SignupPage: React.FC = () => {
                     {/* Login Link */}
                     <p className="mt-6 text-center text-sm text-gray-600">
                         Hai già un account?{' '}
-                        <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700">
+                        <Link to="/login" className="font-semibold text-primary-500 hover:text-primary-600">
                             Accedi
                         </Link>
                     </p>

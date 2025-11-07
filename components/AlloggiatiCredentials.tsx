@@ -171,7 +171,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                 <h3 className="font-semibold text-base text-gray-700">API Alloggiati Web</h3>
                 <button
                     onClick={() => setShowCredentials(!showCredentials)}
-                    className="text-xs text-indigo-600 hover:text-indigo-800"
+                    className="text-xs text-primary-500 hover:text-indigo-800"
                 >
                     {showCredentials ? '▼ Nascondi' : '▶ Mostra'}
                 </button>
@@ -196,7 +196,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                                 onChange={(e) => setRicevutaDate(e.target.value)}
                                 max={new Date(Date.now() - 86400000).toISOString().split('T')[0]}
                                 min={new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]}
-                                className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                                className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500"
                             />
                             <button
                                 onClick={handleDownloadRicevuta}
@@ -247,7 +247,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                             value={utente}
                             onChange={(e) => setUtente(e.target.value)}
                             placeholder="Il tuo username"
-                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500"
                             disabled={isLoading}
                         />
                     </div>
@@ -261,7 +261,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="La tua password"
-                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500"
                             disabled={isLoading}
                         />
                     </div>
@@ -275,7 +275,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                             value={wskey}
                             onChange={(e) => setWskey(e.target.value)}
                             placeholder="Chiave Web Service"
-                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500"
                             disabled={isLoading}
                         />
                         <p className="mt-1 text-xs text-gray-500">
@@ -299,7 +299,7 @@ export const AlloggiatiCredentials: React.FC = () => {
                         <button
                             onClick={handleLogin}
                             disabled={isLoading || !utente || !password || !wskey}
-                            className="flex-1 text-xs px-2 py-1.5 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-indigo-300 disabled:cursor-not-allowed"
+                            className="flex-1 text-xs px-2 py-1.5 bg-primary-500 text-white rounded hover:bg-primary-600 disabled:bg-indigo-300 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Connessione...' : isAuthenticated ? 'Riconnetti' : 'Connetti'}
                         </button>

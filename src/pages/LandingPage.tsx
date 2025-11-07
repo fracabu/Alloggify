@@ -69,7 +69,7 @@ export const LandingPage: React.FC = () => {
                                     <rect x="64" y="58" width="8" height="8" fill="white" opacity="0.9" rx="1" />
                                 </svg>
                             </div>
-                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                                 CheckInly
                             </h1>
                         </Link>
@@ -100,7 +100,7 @@ export const LandingPage: React.FC = () => {
                                             <p className="text-xs text-gray-500 capitalize">{user.subscriptionPlan}</p>
                                         </div>
                                         <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                            <User className="h-5 w-5 text-indigo-600" />
+                                            <User className="h-5 w-5 text-primary-500" />
                                         </div>
                                     </button>
 
@@ -139,7 +139,7 @@ export const LandingPage: React.FC = () => {
                                     </Link>
                                     <Link
                                         to="/signup"
-                                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm hover:shadow-md"
+                                        className="px-4 py-2 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors shadow-sm hover:shadow-md"
                                     >
                                         Inizia Gratis
                                     </Link>
@@ -177,7 +177,7 @@ export const LandingPage: React.FC = () => {
                                             <div className="px-4 py-3 bg-gray-50 rounded-lg">
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                                                        <User className="h-6 w-6 text-indigo-600" />
+                                                        <User className="h-6 w-6 text-primary-500" />
                                                     </div>
                                                     <div>
                                                         <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
@@ -188,7 +188,7 @@ export const LandingPage: React.FC = () => {
                                             <Link
                                                 to="/dashboard"
                                                 onClick={handleNavClick}
-                                                className="flex items-center justify-center gap-2 px-4 py-2 text-center bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+                                                className="flex items-center justify-center gap-2 px-4 py-2 text-center bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors shadow-sm"
                                             >
                                                 <LayoutDashboard className="h-4 w-4" />
                                                 Dashboard
@@ -217,7 +217,7 @@ export const LandingPage: React.FC = () => {
                                             <Link
                                                 to="/signup"
                                                 onClick={handleNavClick}
-                                                className="px-4 py-2 text-center bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+                                                className="px-4 py-2 text-center bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors shadow-sm"
                                             >
                                                 Inizia Gratis
                                             </Link>
@@ -236,7 +236,7 @@ export const LandingPage: React.FC = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         {/* Badge */}
                         <div className="mb-6 flex justify-center">
-                            <span className="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold">
+                            <span className="inline-block px-4 py-2 bg-indigo-100 text-primary-600 rounded-full text-sm font-semibold">
                                 🆕 Nuovo: AI Assistant + Automazione Completa
                             </span>
                         </div>
@@ -244,7 +244,7 @@ export const LandingPage: React.FC = () => {
                         {/* Main Headline */}
                         <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
                             Compila Alloggiati Web in{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
                                 30 Secondi
                             </span>
                             ,<br className="hidden md:block" /> Non 30 Minuti
@@ -259,13 +259,13 @@ export const LandingPage: React.FC = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                             <Link
                                 to="/signup"
-                                className="px-8 py-4 bg-indigo-600 text-white rounded-lg font-semibold text-lg hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                                className="px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold text-lg hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                             >
                                 Inizia Gratis
                             </Link>
                             <a
                                 href="#pricing"
-                                className="px-8 py-4 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold text-lg hover:bg-indigo-50 transition-all"
+                                className="px-8 py-4 border-2 border-primary-500 text-primary-500 rounded-lg font-semibold text-lg hover:bg-indigo-50 transition-all"
                             >
                                 Vedi Prezzi
                             </a>
@@ -331,8 +331,8 @@ export const LandingPage: React.FC = () => {
                                 key={idx}
                                 className="group p-8 bg-gray-50 rounded-xl hover:bg-white hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-indigo-100"
                             >
-                                <div className="mb-4 inline-block p-3 bg-indigo-100 rounded-lg group-hover:bg-indigo-600 transition-colors">
-                                    <feature.icon className="h-8 w-8 text-indigo-600 group-hover:text-white transition-colors" />
+                                <div className="mb-4 inline-block p-3 bg-indigo-100 rounded-lg group-hover:bg-primary-500 transition-colors">
+                                    <feature.icon className="h-8 w-8 text-primary-500 group-hover:text-white transition-colors" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
                                 <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
@@ -377,7 +377,7 @@ export const LandingPage: React.FC = () => {
                                 <div key={idx} className="relative">
                                     <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-shadow h-full">
                                         <div className="text-6xl mb-4 text-center">{step.emoji}</div>
-                                        <div className="absolute top-4 right-4 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold">
+                                        <div className="absolute top-4 right-4 w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold">
                                             {step.step}
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{step.title}</h3>
@@ -409,7 +409,7 @@ export const LandingPage: React.FC = () => {
             <FAQ />
 
             {/* Final CTA Section */}
-            <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
+            <section className="py-20 bg-gradient-to-r from-primary-500 to-purple-600">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-3xl mx-auto text-white">
                         <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -420,7 +420,7 @@ export const LandingPage: React.FC = () => {
                         </p>
                         <Link
                             to="/signup"
-                            className="inline-block px-8 py-4 bg-white text-indigo-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
+                            className="inline-block px-8 py-4 bg-white text-primary-500 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl"
                         >
                             Crea Account Gratuito
                         </Link>
