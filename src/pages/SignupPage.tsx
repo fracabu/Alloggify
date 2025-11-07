@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
+import { UserPlusIcon, ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
 export const SignupPage: React.FC = () => {
     const navigate = useNavigate();
@@ -107,7 +107,7 @@ export const SignupPage: React.FC = () => {
                         {/* Error Message */}
                         {error && (
                             <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                <ExclamationCircleIcon className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
                                 <span className="text-sm text-red-700">{error}</span>
                             </div>
                         )}
@@ -220,12 +220,12 @@ export const SignupPage: React.FC = () => {
                                 <div className="mt-2 flex items-center gap-2 text-xs">
                                     {formData.password === formData.confirmPassword ? (
                                         <>
-                                            <CheckCircle className="h-4 w-4 text-green-600" />
+                                            <CheckCircleIcon className="h-4 w-4 text-green-600" />
                                             <span className="text-green-600">Le password corrispondono</span>
                                         </>
                                     ) : (
                                         <>
-                                            <AlertCircle className="h-4 w-4 text-red-600" />
+                                            <ExclamationCircleIcon className="h-4 w-4 text-red-600" />
                                             <span className="text-red-600">Le password non corrispondono</span>
                                         </>
                                     )}
@@ -268,7 +268,7 @@ export const SignupPage: React.FC = () => {
                                 </>
                             ) : (
                                 <>
-                                    <UserPlus className="h-5 w-5" />
+                                    <UserPlusIcon className="h-5 w-5" />
                                     Crea Account Gratuito
                                 </>
                             )}

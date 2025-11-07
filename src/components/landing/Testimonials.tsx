@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/24/solid';
+import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 
 interface Testimonial {
     name: string;
@@ -86,7 +87,7 @@ export const Testimonials: React.FC = () => {
                     <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12 shadow-xl">
                         {/* Quote Icon */}
                         <div className="absolute top-8 left-8 opacity-20">
-                            <Quote className="h-16 w-16 text-indigo-600" />
+                            <ChatBubbleLeftIcon className="h-16 w-16 text-indigo-600" />
                         </div>
 
                         {/* Content */}
@@ -94,7 +95,7 @@ export const Testimonials: React.FC = () => {
                             {/* Stars */}
                             <div className="flex gap-1 mb-6 justify-center">
                                 {[...Array(currentTestimonial.rating)].map((_, i) => (
-                                    <Star key={i} className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+                                    <StarIcon key={i} className="h-6 w-6 fill-yellow-400 text-yellow-400" />
                                 ))}
                             </div>
 
@@ -128,7 +129,7 @@ export const Testimonials: React.FC = () => {
                                 className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all hover:bg-gray-50"
                                 aria-label="Testimonianza precedente"
                             >
-                                <ChevronLeft className="h-6 w-6 text-gray-700" />
+                                <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
                             </button>
 
                             {/* Dots Indicator */}
@@ -152,7 +153,7 @@ export const Testimonials: React.FC = () => {
                                 className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all hover:bg-gray-50"
                                 aria-label="Testimonianza successiva"
                             >
-                                <ChevronRight className="h-6 w-6 text-gray-700" />
+                                <ChevronRightIcon className="h-6 w-6 text-gray-700" />
                             </button>
                         </div>
                     </div>

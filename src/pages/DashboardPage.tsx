@@ -11,7 +11,7 @@ import { AlloggiatiCredentials } from '../../components/AlloggiatiCredentials';
 import { alloggiatiApi } from '../../services/alloggiatiApiService';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { AIChatWidget } from '../components/AIChatWidget';
-import { LogOut, User, BarChart3 } from 'lucide-react';
+import { ArrowRightOnRectangleIcon, UserIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 
 const initialDocumentData: DocumentData = {
     tipo: 'Ospite Singolo',
@@ -257,7 +257,7 @@ export const DashboardPage: React.FC = () => {
                                     </p>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <User className="h-5 w-5 text-primary-500" />
+                                    <UserIconclassName="h-5 w-5 text-primary-500" />
                                 </div>
                             </div>
 
@@ -266,7 +266,7 @@ export const DashboardPage: React.FC = () => {
                                 onClick={logout}
                                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
                             >
-                                <LogOut className="h-4 w-4" />
+                                <ArrowRightOnRectangleIcon className="h-4 w-4" />
                                 <span className="hidden sm:inline">Esci</span>
                             </button>
                         </div>

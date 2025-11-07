@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Zap } from 'lucide-react';
+import { CheckIcon, BoltIcon } from '@heroicons/react/24/outline';
 
 export const Pricing: React.FC = () => {
     const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
@@ -140,7 +140,7 @@ export const Pricing: React.FC = () => {
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                                     <div className="bg-gradient-to-r from-primary-500 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-1 shadow-lg">
-                                        <Zap className="h-4 w-4" />
+                                        <BoltIcon className="h-4 w-4" />
                                         Più Popolare
                                     </div>
                                 </div>
@@ -175,7 +175,7 @@ export const Pricing: React.FC = () => {
                                 <ul className="space-y-3 mb-8">
                                     {plan.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-start gap-3">
-                                            <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                            <CheckIcon className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
                                             <span className="text-sm text-gray-700">{feature}</span>
                                         </li>
                                     ))}

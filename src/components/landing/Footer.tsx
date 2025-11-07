@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { EnvelopeIcon, MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 
 export const Footer: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -127,7 +127,7 @@ export const Footer: React.FC = () => {
                         {/* Contact Info */}
                         <div className="space-y-2">
                             <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <Mail className="h-4 w-4" />
+                                <EnvelopeIcon className="h-4 w-4" />
                                 <a href="mailto:support@alloggify.com" className="hover:text-white">
                                     support@alloggify.com
                                 </a>

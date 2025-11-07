@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface FAQItem {
     question: string;
@@ -92,7 +92,7 @@ export const FAQ: React.FC = () => {
                                     <span className="font-semibold text-gray-900 pr-4">
                                         {faq.question}
                                     </span>
-                                    <ChevronDown
+                                    <ChevronDownIcon
                                         className={`h-5 w-5 text-gray-500 flex-shrink-0 transition-transform ${
                                             openIndex === index ? 'transform rotate-180' : ''
                                         }`}

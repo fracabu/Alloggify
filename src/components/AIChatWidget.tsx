@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, RotateCcw } from 'lucide-react';
+import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -310,7 +310,7 @@ export const AIChatWidget: React.FC = () => {
           className="fixed bottom-6 right-6 bg-primary-500 hover:bg-primary-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110 z-50 group"
           aria-label="Apri chat assistente AI"
         >
-          <MessageCircle className="w-6 h-6" />
+          <ChatBubbleLeftRightIcon className="w-6 h-6" />
           <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block">
             <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap">
               Hai bisogno di aiuto?
@@ -326,7 +326,7 @@ export const AIChatWidget: React.FC = () => {
           <div className="bg-gradient-to-r from-primary-500 to-purple-600 text-white p-4 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-white/20 p-2 rounded-lg">
-                <MessageCircle className="w-5 h-5" />
+                <ChatBubbleLeftRightIcon className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-semibold text-base">Assistente AI Alloggify</h3>
@@ -339,14 +339,14 @@ export const AIChatWidget: React.FC = () => {
                 className="hover:bg-white/10 p-2 rounded transition-colors"
                 title="Nuova conversazione"
               >
-                <RotateCcw className="w-4 h-4" />
+                <ArrowPathIcon className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="hover:bg-white/10 p-2 rounded transition-colors"
                 aria-label="Chiudi chat"
               >
-                <X className="w-5 h-5" />
+                <XMarkIconclassName="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -405,7 +405,7 @@ export const AIChatWidget: React.FC = () => {
               <div className="flex justify-start">
                 <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
                   <div className="flex items-center gap-2 text-gray-600">
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <ArrowPathIcon className="w-4 h-4 animate-spin" />
                     <span className="text-sm">L'assistente sta scrivendo...</span>
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export const AIChatWidget: React.FC = () => {
                 className="bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
                 aria-label="Invia messaggio"
               >
-                <Send className="w-5 h-5" />
+                <PaperAirplaneIcon className="w-5 h-5" />
               </button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { LogIn, AlertCircle } from 'lucide-react';
+import { ArrowRightOnRectangleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -68,7 +68,7 @@ export const LoginPage: React.FC = () => {
                         {/* Error Message */}
                         {error && (
                             <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                                <ExclamationCircleIcon className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
                                 <span className="text-sm text-red-700">{error}</span>
                             </div>
                         )}
@@ -138,7 +138,7 @@ export const LoginPage: React.FC = () => {
                                 </>
                             ) : (
                                 <>
-                                    <LogIn className="h-5 w-5" />
+                                    <ArrowRightOnRectangleIcon className="h-5 w-5" />
                                     Accedi
                                 </>
                             )}

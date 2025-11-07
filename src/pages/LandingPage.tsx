@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, Zap, Shield, BarChart, Globe, DollarSign, MessageCircle, Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { SparklesIcon, BoltIcon, ShieldCheckIcon, ChartBarIcon, GlobeAltIcon, CurrencyDollarIcon, ChatBubbleLeftRightIcon, Bars3Icon, XMarkIcon, UserIcon, ArrowRightOnRectangleIcon, Squares2X2Icon } from '@heroicons/react/24/outline';
 import { Pricing } from '../components/landing/Pricing';
 import { Testimonials } from '../components/landing/Testimonials';
 import { FAQ } from '../components/landing/FAQ';
@@ -100,7 +100,7 @@ export const LandingPage: React.FC = () => {
                                             <p className="text-xs text-gray-500 capitalize">{user.subscriptionPlan}</p>
                                         </div>
                                         <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                            <User className="h-5 w-5 text-primary-500" />
+                                            <UserIcon className="h-5 w-5 text-primary-500" />
                                         </div>
                                     </button>
 
@@ -112,7 +112,7 @@ export const LandingPage: React.FC = () => {
                                                 onClick={() => setUserMenuOpen(false)}
                                                 className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                                             >
-                                                <LayoutDashboard className="h-4 w-4" />
+                                                <Squares2X2Icon className="h-4 w-4" />
                                                 Dashboard
                                             </Link>
                                             <button
@@ -123,7 +123,7 @@ export const LandingPage: React.FC = () => {
                                                 }}
                                                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                                             >
-                                                <LogOut className="h-4 w-4" />
+                                                <ArrowRightOnRectangleIcon className="h-4 w-4" />
                                                 Esci
                                             </button>
                                         </div>
@@ -153,7 +153,7 @@ export const LandingPage: React.FC = () => {
                             className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
                             aria-label="Toggle menu"
                         >
-                            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {mobileMenuOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
                         </button>
                     </div>
 
@@ -177,7 +177,7 @@ export const LandingPage: React.FC = () => {
                                             <div className="px-4 py-3 bg-gray-50 rounded-lg">
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                                                        <User className="h-6 w-6 text-primary-500" />
+                                                        <UserIcon className="h-6 w-6 text-primary-500" />
                                                     </div>
                                                     <div>
                                                         <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
@@ -190,7 +190,7 @@ export const LandingPage: React.FC = () => {
                                                 onClick={handleNavClick}
                                                 className="flex items-center justify-center gap-2 px-4 py-2 text-center bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-colors shadow-sm"
                                             >
-                                                <LayoutDashboard className="h-4 w-4" />
+                                                <Squares2X2Icon className="h-4 w-4" />
                                                 Dashboard
                                             </Link>
                                             <button
@@ -201,7 +201,7 @@ export const LandingPage: React.FC = () => {
                                                 }}
                                                 className="flex items-center justify-center gap-2 px-4 py-2 text-center text-red-600 hover:text-red-700 font-medium transition-colors border border-red-300 rounded-lg"
                                             >
-                                                <LogOut className="h-4 w-4" />
+                                                <ArrowRightOnRectangleIcon className="h-4 w-4" />
                                                 Esci
                                             </button>
                                         </>
@@ -292,37 +292,37 @@ export const LandingPage: React.FC = () => {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                         {[
                             {
-                                icon: Sparkles,
+                                icon: SparklesIcon,
                                 title: 'OCR Intelligente',
                                 desc: 'Scansiona documenti in 1 secondo con AI Gemini 2.5 Flash. Accuratezza 99.2%'
                             },
                             {
-                                icon: Zap,
+                                icon: BoltIcon,
                                 title: 'Compilazione Automatica',
                                 desc: 'Extension Chrome riempie il form istantaneamente. Da 20 minuti a 30 secondi.'
                             },
                             {
-                                icon: MessageCircle,
+                                icon: ChatBubbleLeftRightIcon,
                                 title: 'AI Assistant Esperto',
                                 desc: 'Supporto 24/7 su Alloggiati Web, normativa D.Lgs 286/98, casi complessi. Chat intelligente sempre disponibile.'
                             },
                             {
-                                icon: Shield,
+                                icon: ShieldCheckIcon,
                                 title: 'GDPR Compliant',
                                 desc: 'Dati criptati, no salvataggio permanente. Server italiani, privacy garantita.'
                             },
                             {
-                                icon: BarChart,
+                                icon: ChartBarIcon,
                                 title: 'Dashboard Avanzato',
                                 desc: 'Statistiche dettagliate, cronologia completa, esportazione dati Excel/CSV.'
                             },
                             {
-                                icon: Globe,
+                                icon: GlobeAltIcon,
                                 title: 'Supporto Internazionale',
                                 desc: 'Documenti EU ed extra-EU supportati. Carte d\'identità, passaporti, patenti.'
                             },
                             {
-                                icon: DollarSign,
+                                icon: CurrencyDollarIcon,
                                 title: 'Risparmio Garantito',
                                 desc: 'ROI 500%+ rispetto a processo manuale. Recupera l\'investimento in 1 mese.'
                             }
