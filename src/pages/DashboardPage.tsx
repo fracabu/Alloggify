@@ -256,8 +256,8 @@ export const DashboardPage: React.FC = () => {
                                         <span className="ml-1">{user?.scanCount}/{user?.monthlyScanLimit} scansioni</span>
                                     </p>
                                 </div>
-                                <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                    <UserIconclassName="h-5 w-5 text-primary-500" />
+                                <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
+                                    <UserIcon className="h-5 w-5 text-primary-500" />
                                 </div>
                             </div>
 
