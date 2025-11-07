@@ -30,9 +30,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
 
     // Check for existing session on mount
+    // Using sessionStorage to auto-logout when browser/tab closes
     useEffect(() => {
-        const storedUser = localStorage.getItem('alloggify_user');
-        const token = localStorage.getItem('alloggify_token');
+        const storedUser = sessionStorage.getItem('alloggify_user');
+        const token = sessionStorage.getItem('alloggify_token');
 
         if (storedUser && token) {
             setUser(JSON.parse(storedUser));
@@ -59,8 +60,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         const mockToken = `mock_jwt_token_${Date.now()}`;
 
-        localStorage.setItem('alloggify_user', JSON.stringify(mockUser));
-        localStorage.setItem('alloggify_token', mockToken);
+        // Using sessionStorage to auto-logout when browser/tab closes
+        sessionStorage.setItem('alloggify_user', JSON.stringify(mockUser));
+        sessionStorage.setItem('alloggify_token', mockToken);
 
         setUser(mockUser);
         setLoading(false);
@@ -91,16 +93,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         const mockToken = `mock_jwt_token_${Date.now()}`;
 
-        localStorage.setItem('alloggify_user', JSON.stringify(mockUser));
-        localStorage.setItem('alloggify_token', mockToken);
+        // Using sessionStorage to auto-logout when browser/tab closes
+        sessionStorage.setItem('alloggify_user', JSON.stringify(mockUser));
+        sessionStorage.setItem('alloggify_token', mockToken);
 
         setUser(mockUser);
         setLoading(false);
     };
 
     const logout = (): void => {
-        localStorage.removeItem('alloggify_user');
-        localStorage.removeItem('alloggify_token');
+        sessionStorage.removeItem('alloggify_user');
+        sessionStorage.removeItem('alloggify_token');
         setUser(null);
     };
 

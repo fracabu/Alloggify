@@ -79,7 +79,7 @@ export const DashboardPage: React.FC = () => {
                 luogoRilascioDocumento: extractedData.issuingPlace || ''
             };
 
-            console.log('📝 Dati OCR estratti:', updatedData);
+            // Security: Removed console.log with personal data
             setDocumentData(updatedData);
             setOcrSuccess('Document processed successfully! Please review the data below.');
             setTimeout(() => setOcrSuccess(null), 5000);
@@ -102,7 +102,7 @@ export const DashboardPage: React.FC = () => {
 
     const handleExportForExtension = () => {
         try {
-            console.log('📤 EXPORT - Dati da esportare:', documentData);
+            // Security: Removed console.log with personal data
             localStorage.setItem('alloggifyData', JSON.stringify(documentData));
             localStorage.setItem('alloggifyDataTimestamp', Date.now().toString());
             console.log('✅ EXPORT - Dati salvati in localStorage');
@@ -145,7 +145,7 @@ export const DashboardPage: React.FC = () => {
                 throw new Error('Token scaduto o non valido. Effettua nuovamente il login nella sezione API.');
             }
 
-            console.log('🧪 Test validazione schedina...');
+            // Security: Removed console.log with personal data
             const testResult = await alloggiatiApi.testSchedina(documentData);
 
             if (testResult.success) {
@@ -184,15 +184,14 @@ export const DashboardPage: React.FC = () => {
                 throw new Error('Token scaduto o non valido. Effettua nuovamente il login nella sezione API.');
             }
 
-            console.log('🧪 Test validazione schedina...');
+            // Security: Removed console.log with personal data
             const testResult = await alloggiatiApi.testSchedina(documentData);
 
             if (!testResult.success) {
                 throw new Error(`Validazione fallita: ${testResult.message}`);
             }
 
-            console.log('✅ Validazione OK, invio schedina...');
-
+            // Validation OK, sending schedina...
             const sendResult = await alloggiatiApi.sendSchedina(documentData);
 
             if (sendResult.success) {
@@ -218,9 +217,9 @@ export const DashboardPage: React.FC = () => {
     const minDate = yesterday.toISOString().split('T')[0];
 
     return (
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen flex flex-col font-sans">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 h-screen flex flex-col font-sans overflow-hidden">
             {/* Dashboard Navbar */}
-            <nav className="bg-white shadow-md border-b border-gray-200">
+            <nav className="bg-white shadow-md border-b border-gray-200 flex-shrink-0">
                 <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo */}
@@ -276,10 +275,10 @@ export const DashboardPage: React.FC = () => {
             </nav>
 
             {/* Main Content */}
-            <main className="flex-1 max-w-screen-2xl mx-auto w-full py-6 px-4 sm:px-6 lg:px-8">
+            <main className="flex-1 max-w-screen-2xl mx-auto w-full py-6 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 <div className="flex flex-col lg:flex-row lg:gap-6 h-full">
                     {/* Sidebar */}
-                    <aside className="w-full lg:w-80 lg:flex-shrink-0 mb-6 lg:mb-0 space-y-3">
+                    <aside className="w-full lg:w-80 lg:flex-shrink-0 mb-6 lg:mb-0 space-y-3 lg:overflow-y-auto lg:max-h-full">
                         <div className="p-4 bg-white shadow-md rounded-lg border border-gray-200">
                             <div className="flex items-center gap-2 mb-3">
                                 <span className="text-2xl">📄</span>
@@ -329,44 +328,46 @@ export const DashboardPage: React.FC = () => {
                     </aside>
 
                     {/* Main Form */}
-                    <section className="flex-1 bg-white p-6 shadow-md rounded-lg border border-gray-200 overflow-auto hide-scrollbar main-content-area">
-                        <div className="flex items-center gap-2 mb-4">
+                    <section className="flex-1 bg-white shadow-md rounded-lg border border-gray-200 overflow-hidden flex flex-col">
+                        <div className="flex items-center gap-2 p-6 pb-4 flex-shrink-0">
                             <span className="text-2xl">✍️</span>
                             <h1 className="text-xl font-semibold text-gray-800">Inserimento Dati Alloggiato</h1>
                         </div>
-                        <hr className="mb-6 border-t-2 border-dashed border-gray-300" />
+                        <hr className="mx-6 border-t-2 border-dashed border-gray-300 flex-shrink-0" />
+                        
+                        <div className="flex-1 overflow-y-auto px-6 py-6">
+                            <MainForm
+                                data={documentData}
+                                onDataChange={handleDataChange}
+                                onExport={handleExportForExtension}
+                                onSendApi={handleSendViaApi}
+                                onTestApi={handleTestApi}
+                                onReset={handleResetForm}
+                                minDate={minDate}
+                                maxDate={maxDate}
+                                apiSendLoading={apiSendLoading}
+                                apiTestLoading={apiTestLoading}
+                            />
 
-                        <MainForm
-                            data={documentData}
-                            onDataChange={handleDataChange}
-                            onExport={handleExportForExtension}
-                            onSendApi={handleSendViaApi}
-                            onTestApi={handleTestApi}
-                            onReset={handleResetForm}
-                            minDate={minDate}
-                            maxDate={maxDate}
-                            apiSendLoading={apiSendLoading}
-                            apiTestLoading={apiTestLoading}
-                        />
-
-                        {exportSuccess && (
-                            <div className="mt-4 flex items-center text-sm text-purple-700 bg-purple-50 p-3 rounded-lg border border-purple-200">
-                                <SuccessIcon className="h-5 w-5 mr-2 text-purple-600"/>
-                                <span>{exportSuccess}</span>
-                            </div>
-                        )}
-                        {apiTestSuccess && (
-                            <div className="mt-4 flex items-center text-sm text-blue-700 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                                <SuccessIcon className="h-5 w-5 mr-2 text-blue-600"/>
-                                <span>{apiTestSuccess}</span>
-                            </div>
-                        )}
-                        {apiSendSuccess && (
-                            <div className="mt-4 flex items-center text-sm text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
-                                <SuccessIcon className="h-5 w-5 mr-2 text-green-600"/>
-                                <span>{apiSendSuccess}</span>
-                            </div>
-                        )}
+                            {exportSuccess && (
+                                <div className="mt-4 flex items-center text-sm text-purple-700 bg-purple-50 p-3 rounded-lg border border-purple-200">
+                                    <SuccessIcon className="h-5 w-5 mr-2 text-purple-600"/>
+                                    <span>{exportSuccess}</span>
+                                </div>
+                            )}
+                            {apiTestSuccess && (
+                                <div className="mt-4 flex items-center text-sm text-blue-700 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                    <SuccessIcon className="h-5 w-5 mr-2 text-blue-600"/>
+                                    <span>{apiTestSuccess}</span>
+                                </div>
+                            )}
+                            {apiSendSuccess && (
+                                <div className="mt-4 flex items-center text-sm text-green-700 bg-green-50 p-3 rounded-lg border border-green-200">
+                                    <SuccessIcon className="h-5 w-5 mr-2 text-green-600"/>
+                                    <span>{apiSendSuccess}</span>
+                                </div>
+                            )}
+                        </div>
                     </section>
                 </div>
             </main>

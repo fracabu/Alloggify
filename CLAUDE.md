@@ -31,12 +31,17 @@ The project is planned to evolve into a full SaaS platform with:
 
 **See `SAAS_PLAN.md` for complete roadmap, financial projections, and technical architecture.**
 
-### Current Architecture (Hybrid System)
+### Current Architecture (SaaS Platform)
 
-1. **React Web App**: Vite-based React application for document scanning and data extraction
-2. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
-3. **Express Backend**: SOAP API proxy for direct submission with WSKEY authentication (Method B)
-4. **AI Chat Assistant**: Gemini 2.5 Flash-powered assistant for hospitality support (integrated in dashboard)
+1. **React Web App**: Vite + React 19 + React Router application with:
+   - Landing page with pricing, testimonials, FAQ
+   - Authentication system (login/signup)
+   - Protected dashboard for document scanning
+   - Responsive UI with Tailwind CSS
+2. **Authentication Layer**: React Context-based auth with localStorage (mock implementation, ready for backend API)
+3. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
+4. **Express Backend**: SOAP API proxy for direct submission with WSKEY authentication (Method B)
+5. **AI Chat Assistant**: Gemini 2.5 Flash-powered assistant for hospitality support (integrated in dashboard)
 
 ## Common Development Commands
 
@@ -47,7 +52,7 @@ npm install
 # Install server dependencies
 cd server && npm install
 
-# Run FRONTEND development server (starts on port 5173)
+# Run FRONTEND development server (starts on port 3000)
 npm run dev
 
 # Run BACKEND server (starts on port 3001)
@@ -74,7 +79,7 @@ npm run dev
 cd server && npm start
 ```
 
-The frontend runs on `http://localhost:5173` and the backend API runs on `http://localhost:3001`.
+The frontend runs on `http://localhost:3000` and the backend API runs on `http://localhost:3001`.
 
 ## Environment Setup
 
@@ -109,50 +114,113 @@ The app includes an `ApiKeyGuide` component that allows users to set their Gemin
 
 ```
 Alloggify/
-├── components/           # React components
-│   ├── MainForm.tsx     # Main form with 3 fieldsets (Dati Schedina, Anagrafici, Documento)
-│   ├── Header.tsx       # Application header
-│   ├── ApiKeyGuide.tsx  # UI component for setting Gemini API key
-│   ├── ConfirmationModal.tsx
-│   ├── Logo.tsx
-│   ├── Sidebar.tsx
-│   └── icons/           # Icon components
-├── services/
-│   └── geminiService.ts # Gemini 2.5 Flash API integration
-├── utils/
-│   └── fileUtils.ts     # File handling utilities (fileToBase64)
-├── server/              # Backend Express server
-│   ├── index.js         # Express app entry point
-│   ├── routes/          # API route handlers
-│   │   ├── auth.js      # Token generation endpoint
-│   │   ├── test.js      # Test schedina (validation)
-│   │   ├── send.js      # Send schedina to Alloggiati Web
-│   │   └── ricevuta.js  # Download receipt PDF
+├── src/
+│   ├── pages/              # React pages (routing)
+│   │   ├── LandingPage.tsx      # Public landing page with pricing
+│   │   ├── LoginPage.tsx        # Login form
+│   │   ├── SignupPage.tsx       # Registration form
+│   │   ├── DashboardPage.tsx    # Protected dashboard (main app)
+│   │   ├── PrivacyPolicy.tsx    # Legal page
+│   │   └── TermsOfService.tsx   # Legal page
+│   ├── components/
+│   │   ├── MainForm.tsx         # Main form (Dati Schedina, Anagrafici, Documento)
+│   │   ├── AlloggiatiCredentials.tsx  # SOAP API credentials panel
+│   │   ├── ConfirmationModal.tsx      # Confirmation dialog
+│   │   ├── AIChatWidget.tsx           # AI assistant chat UI
+│   │   ├── SEOHead.tsx                # SEO meta tags
+│   │   ├── ProtectedRoute.tsx         # Auth route guard
+│   │   ├── landing/                   # Landing page sections
+│   │   │   ├── Pricing.tsx
+│   │   │   ├── Testimonials.tsx
+│   │   │   ├── FAQ.tsx
+│   │   │   └── Footer.tsx
+│   │   ├── ui/                        # Reusable UI components
+│   │   │   ├── Button.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   └── Alert.tsx
+│   │   └── icons/                     # Icon components
+│   ├── context/
+│   │   └── AuthContext.tsx      # Authentication state management
+│   ├── hooks/
+│   │   └── useAuth.tsx          # Authentication hook
+│   ├── services/
+│   │   ├── geminiService.ts     # Gemini 2.5 Flash API integration
+│   │   └── alloggiatiApiService.ts  # SOAP API client wrapper
+│   └── utils/
+│       └── fileUtils.ts         # File handling utilities (fileToBase64)
+├── server/                      # Backend Express server
+│   ├── index.js                 # Express app entry point
+│   ├── routes/                  # API route handlers
+│   │   ├── auth.js              # WSKEY authentication + token generation
+│   │   ├── test.js              # Test schedina (validation)
+│   │   ├── send.js              # Send schedina to Alloggiati Web
+│   │   ├── ricevuta.js          # Download receipt PDF
+│   │   ├── chat.js              # AI assistant endpoint
+│   │   └── tabelle.js           # Download reference tables (CSV)
 │   ├── utils/
-│   │   └── soap.js      # SOAP client utilities for Alloggiati Web API
-│   └── package.json     # Server dependencies
-├── chrome-extension/    # Chrome extension files
-│   ├── manifest.json    # Extension manifest (v3)
-│   ├── content.js       # Content script for Alloggiati Web
-│   ├── background.js    # Service worker
-│   ├── popup.html/js    # Extension popup UI
-│   ├── alloggify-bridge.js  # Bridge script for localhost
-│   └── icons/           # Extension icons
-├── App.tsx              # Main application component
-├── index.tsx            # React entry point
-├── types.ts             # TypeScript interfaces
-├── vite.config.ts       # Vite configuration
-└── .env.local           # Environment variables (GEMINI_API_KEY)
+│   │   └── soap.js              # SOAP client utilities for Alloggiati Web API
+│   └── package.json             # Server dependencies
+├── chrome-extension/            # Chrome extension files
+│   ├── manifest.json            # Extension manifest (v3)
+│   ├── content.js               # Content script for Alloggiati Web
+│   ├── background.js            # Service worker
+│   ├── popup.html/js            # Extension popup UI
+│   ├── alloggify-bridge.js      # Bridge script for localhost
+│   └── icons/                   # Extension icons
+├── App.tsx                      # React Router setup + route definitions
+├── index.tsx                    # React entry point
+├── types.ts                     # TypeScript interfaces
+├── vite.config.ts               # Vite configuration
+└── .env.local                   # Environment variables (GEMINI_API_KEY)
 ```
 
 ## Architecture
+
+### Routing & Authentication System
+
+The application uses **React Router v7** with protected routes:
+
+**Public Routes** (accessible without login):
+- `/` - Landing page (pricing, features, testimonials)
+- `/login` - Login page
+- `/signup` - Signup page
+- `/privacy` - Privacy policy
+- `/terms` - Terms of service
+
+**Protected Routes** (require authentication):
+- `/dashboard` - Redirects to `/dashboard/scan`
+- `/dashboard/scan` - Main document scanning interface (DashboardPage)
+
+**Authentication Flow**:
+```
+index.tsx → App.tsx (Router + AuthProvider wrapper)
+  ↓
+AuthContext provides: { user, login, signup, logout, isAuthenticated }
+  ↓
+ProtectedRoute component checks isAuthenticated
+  ↓
+If authenticated: Render dashboard
+If not: Redirect to /login
+```
+
+**Current Auth Implementation**:
+- **Storage**: localStorage (`alloggify_user`, `alloggify_token`)
+- **State Management**: React Context API (AuthContext)
+- **Mock Backend**: Login/signup simulate API calls with setTimeout
+- **User Model**: { id, email, fullName, companyName, subscriptionPlan, scanCount, monthlyScanLimit }
+- **Future**: Ready to connect to real backend API (see `AuthContext.tsx` TODO comments)
+
+**Auto-redirect Logic**:
+- Authenticated users visiting `/login` or `/signup` → redirect to `/dashboard`
+- Unauthenticated users visiting `/dashboard/*` → redirect to `/login`
 
 ### Web Application Flow
 
 1. **Entry Point**: `index.tsx` → `App.tsx`
 
 2. **Common Document Processing Pipeline** (Both Methods):
-   - User uploads image → `App.tsx` (handleFileChange)
+   - User uploads image → `DashboardPage.tsx` (handleFileChange)
    - Image converted to base64 → `utils/fileUtils.ts` (fileToBase64)
    - Gemini API extracts document data → `services/geminiService.ts` (extractDocumentInfo)
    - Data populates form → `components/MainForm.tsx`
@@ -162,7 +230,7 @@ Alloggify/
    ```
    User clicks "Esporta per Estensione"
    ↓
-   App.tsx saves data to localStorage (alloggifyData)
+   DashboardPage.tsx saves data to localStorage (alloggifyData)
    ↓
    Custom event "alloggifyDataExported" dispatched
    ↓
@@ -225,11 +293,18 @@ Alloggify/
 
 ### Key Components
 
-- **App.tsx**: Main application logic, state management, file upload handling
+- **App.tsx**: React Router setup, route definitions, AuthProvider wrapper
+- **DashboardPage.tsx**: Main dashboard - document upload, OCR processing, form management, SOAP API integration
+- **LandingPage.tsx**: Public landing page with pricing tiers, features, testimonials, FAQ
+- **LoginPage.tsx / SignupPage.tsx**: Authentication pages
 - **MainForm.tsx**: Form UI with three fieldsets (Dati Schedina, Dati Anagrafici, Documento)
+- **AlloggiatiCredentials.tsx**: SOAP API credentials management panel
+- **AIChatWidget.tsx**: Floating AI assistant chat widget (Gemini 2.5 Flash)
+- **ProtectedRoute.tsx**: Route guard for authenticated pages
+- **AuthContext.tsx**: Authentication state management (Context API)
 - **geminiService.ts**: Gemini 2.5 Flash API integration with structured JSON schema output
-- **types.ts**: TypeScript interfaces (DocumentData, ExtractedInfo)
-- **ApiKeyGuide.tsx**: Allows users to input their Gemini API key via UI (stored in localStorage)
+- **alloggiatiApiService.ts**: Frontend service for SOAP API calls
+- **types.ts**: TypeScript interfaces (DocumentData, ExtractedInfo, User)
 
 ### Chrome Extension Flow
 
@@ -260,7 +335,7 @@ The `server/` directory contains an Express.js backend that provides SOAP API in
 
 **Architecture**:
 - **Port**: 3001 (default, configurable via PORT env var)
-- **CORS**: Configured for localhost:5173 (Vite dev) and Vercel production/preview deployments
+- **CORS**: Configured for localhost:3000 (Vite dev) and Vercel production/preview deployments
 - **Purpose**: Proxies requests to Alloggiati Web SOAP API (avoids CORS issues in browser)
 - **Authentication**: WSKEY-based token generation for API access
 
@@ -269,6 +344,8 @@ The `server/` directory contains an Express.js backend that provides SOAP API in
 - `POST /api/alloggiati/test` - Validate schedina data before submission (requires token)
 - `POST /api/alloggiati/send` - Send schedina to Alloggiati Web (requires token)
 - `POST /api/alloggiati/ricevuta` - Download receipt PDF (requires token + date range)
+- `GET /api/alloggiati/tabelle` - Download reference tables (Luoghi, Tipi Documento, Tipi Alloggiato) as CSV
+- `POST /api/ai/chat` - AI assistant chat endpoint (Gemini 2.5 Flash)
 
 **Key Files**:
 - `server/index.js` - Express app setup, middleware, route registration
@@ -277,6 +354,8 @@ The `server/` directory contains an Express.js backend that provides SOAP API in
 - `server/routes/test.js` - Schedina validation endpoint
 - `server/routes/send.js` - Schedina submission endpoint
 - `server/routes/ricevuta.js` - Receipt download endpoint
+- `server/routes/tabelle.js` - Reference tables download (CSV format)
+- `server/routes/chat.js` - AI assistant backend endpoint
 
 **WSKEY Role & Authentication Flow**:
 
@@ -410,6 +489,8 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
   - `geminiApiKey`: User's Gemini API key (optional, UI-configurable)
   - `alloggifyToken`: SOAP API authentication token (temporary, expires after session)
   - `alloggifyCredentials`: JSON object with { utente, password, wskey } for SOAP API
+  - `alloggify_user`: Mock user object (SaaS authentication)
+  - `alloggify_token`: Mock auth token (SaaS authentication)
 - **Custom Events**: `alloggifyDataExported` event is dispatched on window when data is exported (for extension bridge)
 - **WSKEY Technical Details**:
   - **Format**: Base64-encoded string, typically 88 characters ending with `==`
@@ -425,3 +506,35 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
   - **Expiry**: Typically 30-60 minutes of inactivity
   - **Refresh**: Automatic re-authentication when 401/403 errors occur
   - **Storage**: localStorage.alloggifyToken (cleared on logout or expiry)
+
+## Development Workflow Notes
+
+### Making Changes to Authentication
+- **Frontend**: Edit `src/context/AuthContext.tsx` for auth logic
+- **Protected Routes**: Use `<ProtectedRoute>` wrapper in `App.tsx`
+- **Backend Integration**: Look for `TODO` comments in AuthContext - replace mock API calls with real endpoints
+- **Testing Auth**: Currently uses mock users - login with any email/password
+
+### Adding New Pages
+1. Create page component in `src/pages/`
+2. Add route in `App.tsx` (public or protected)
+3. Update navigation links in `LandingPage.tsx` or dashboard header
+4. Use existing UI components from `src/components/ui/`
+
+### Modifying Document Processing
+- **OCR Logic**: `src/services/geminiService.ts` - contains Gemini prompt and response parsing
+- **Form Fields**: `components/MainForm.tsx` - three fieldsets structure
+- **Data Model**: `types.ts` - DocumentData interface
+- **Validation**: Happens client-side in MainForm + server-side via SOAP test endpoint
+
+### Working with SOAP API
+- **Backend Routes**: `server/routes/*.js` - each endpoint handles specific SOAP operation
+- **SOAP XML Building**: `server/utils/soap.js` - helper functions for XML construction
+- **Testing SOAP Calls**: Use tools like Postman/Insomnia or test via frontend panel
+- **Error Handling**: SOAP errors parsed in backend and returned as JSON to frontend
+
+### Chrome Extension Development
+- **Content Script**: `chrome-extension/content.js` - runs on Alloggiati Web portal
+- **Testing**: Load unpacked extension, make changes, click "Reload" in chrome://extensions
+- **Debugging**: Open DevTools on portal page, check Console for errors
+- **Data Format**: Extension expects `alloggifyData` in localStorage with specific DocumentData structure

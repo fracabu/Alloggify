@@ -386,8 +386,8 @@ export class AlloggiatiApiService {
         
         record += pad(codiceLuogoRilascio, 9);
 
+        // Security: Removed console.log with personal data (CSV record contains sensitive information)
         console.log('[CSV] Generated record length:', record.length, 'chars');
-        console.log('[CSV] Record:', record);
 
         return record; // Total: 168 characters
     }
