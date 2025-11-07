@@ -28,7 +28,7 @@ const InputField: React.FC<{
 }> =
     ({ id, label, value, onChange, type = 'text', placeholder, className = '', min, max }) => (
     <div className={className}>
-        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
+        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-0.5">{label}</label>
         <input
             type={type}
             id={id}
@@ -46,7 +46,7 @@ const InputField: React.FC<{
 const SelectField: React.FC<{ id: keyof DocumentData; label: string; value: string; onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; children: React.ReactNode; className?: string }> =
     ({ id, label, value, onChange, children, className = '' }) => (
     <div className={className}>
-        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
+        <label htmlFor={id} className="block text-xs font-medium text-gray-600 mb-0.5">{label}</label>
         <select
             id={id}
             name={id}
@@ -73,12 +73,12 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
     };
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
-            <fieldset className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
+            <fieldset className="p-2 bg-gray-50 rounded-lg border border-gray-200">
                 <legend className="text-sm font-semibold text-gray-800 mb-2 px-2">
                     📋 Dati Schedina
                 </legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <SelectField id="tipo" label="Tipo Alloggiato" value={data.tipo} onChange={handleChange}>
                         <option>Ospite Singolo</option>
                         <option>Capo Famiglia</option>
@@ -94,11 +94,11 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <fieldset className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <fieldset className="p-2 bg-gray-50 rounded-lg border border-gray-200">
                 <legend className="text-sm font-semibold text-gray-800 mb-2 px-2">
                     👤 Dati Anagrafici
                 </legend>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
                     <InputField id="cognome" label="Cognome" value={data.cognome} onChange={handleChange} />
                     <InputField id="nome" label="Nome" value={data.nome} onChange={handleChange} />
                     <SelectField id="sesso" label="Sesso" value={data.sesso} onChange={handleChange}>
@@ -107,17 +107,17 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                         <option value="Femmina">Femmina</option>
                     </SelectField>
                     <InputField id="dataNascita" label="Data di Nascita" value={data.dataNascita} onChange={handleChange} type="date" />
-                    <InputField id="luogoNascita" label="Luogo di Nascita (Comune)" placeholder="Es: MILANO" value={data.luogoNascita} onChange={handleChange} className="sm:col-span-2" />
+                    <InputField id="luogoNascita" label="Luogo di Nascita (Comune)" placeholder="Es: MILANO" value={data.luogoNascita} onChange={handleChange} />
                     <InputField id="statoNascita" label="Stato di Nascita" placeholder="Es: ITALIA" value={data.statoNascita} onChange={handleChange} />
                     <InputField id="cittadinanza" label="Cittadinanza" placeholder="Es: ITALIA" value={data.cittadinanza} onChange={handleChange} />
                 </div>
             </fieldset>
 
-            <fieldset className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <fieldset className="p-2 bg-gray-50 rounded-lg border border-gray-200">
                 <legend className="text-sm font-semibold text-gray-800 mb-2 px-2">
                     🪪 Documento di Identità
                 </legend>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <SelectField id="tipoDocumento" label="Tipo Documento" value={data.tipoDocumento} onChange={handleChange}>
                         <option value="">Seleziona tipo...</option>
                         <option value="CARTA DI IDENTITA'">CARTA DI IDENTITA'</option>
@@ -136,7 +136,7 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                 </div>
             </fieldset>
 
-            <div className="flex justify-end items-center gap-3 pt-2 border-t border-gray-200">
+            <div className="flex justify-end items-center gap-2 pt-1.5 border-t border-gray-200">
                 <button
                     type="button"
                     onClick={onReset}
