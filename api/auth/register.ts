@@ -118,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     try {
       await resend.emails.send({
-        from: 'CheckInly <noreply@checkinly.com>', // Change this to your verified domain
+        from: 'CheckInly <onboarding@resend.dev>', // Using Resend's test domain (free tier)
         to: email,
         subject: '✅ Verifica il tuo account CheckInly',
         html: `
