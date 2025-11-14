@@ -3,15 +3,10 @@
  * Runs schema.sql to create all tables
  */
 
-import { config } from 'dotenv';
-import { sql } from '@vercel/postgres';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const { config } = require('dotenv');
+const { sql } = require('@vercel/postgres');
+const fs = require('fs');
+const path = require('path');
 
 // Load environment variables from .env.local
 config({ path: path.join(__dirname, '..', '.env.local') });
