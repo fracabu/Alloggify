@@ -8,6 +8,7 @@ import { LandingPage } from './src/pages/LandingPage';
 import { LoginPage } from './src/pages/LoginPage';
 import { SignupPage } from './src/pages/SignupPage';
 import { DashboardPage } from './src/pages/DashboardPage';
+import { VerifyEmailPage } from './src/pages/VerifyEmailPage';
 import { PrivacyPolicyPage } from './src/pages/PrivacyPolicy';
 import { TermsOfServicePage } from './src/pages/TermsOfService';
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/verify" element={<VerifyEmailPage />} />
 
                     {/* Protected Routes */}
                     <Route
