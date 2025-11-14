@@ -88,9 +88,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ? `${systemPrompt}\n\n${conversationHistory ? `Previous conversation:\n${conversationHistory}\n` : ''}User: ${lastMessage.content}`
             : `${conversationHistory ? `Previous conversation:\n${conversationHistory}\n` : ''}User: ${lastMessage.content}`;
 
-        // Call Gemini API (using 1.5 Flash for stability)
+        // Call Gemini API (using 2.5 Flash)
         const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-2.5-flash',
             contents: {
                 parts: [{ text: fullPrompt }]
             }
