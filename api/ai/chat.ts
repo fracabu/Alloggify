@@ -3,7 +3,8 @@
  * Gemini 2.5 Flash-powered AI assistant for Alloggify
  */
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 // Vercel serverless function configuration
 export const config = {
@@ -17,7 +18,7 @@ if (!apiKey) {
     console.warn('⚠️  GEMINI_API_KEY not found in environment variables. AI Chat will not work.');
 }
 
-const genAI = new GoogleGenerativeAI(apiKey);
+const ai = new GoogleGenAI({ apiKey });
 
 /**
  * POST /api/ai/chat
@@ -34,11 +35,10 @@ const genAI = new GoogleGenerativeAI(apiKey);
  *
  * Response:
  * {
- *   "response": "AI response text",
- *   "usage": { "inputTokens": 100, "outputTokens": 200 }
+ *   "response": "AI response text"
  * }
  */
-export default async function handler(req: any, res: any) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Only allow POST requests
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -62,26 +62,6 @@ export default async function handler(req: any, res: any) {
             });
         }
 
-        // Initialize model (Gemini 2.5 Flash - latest model)
-        const model = genAI.getGenerativeModel({
-            model: 'gemini-2.5-flash',
-            systemInstruction: systemPrompt || ''
-        });
-
-        // Build conversation history (exclude last message and filter out initial assistant messages)
-        let history = messages.slice(0, -1);
-
-        // Remove leading assistant messages (welcome message)
-        while (history.length > 0 && history[0].role === 'assistant') {
-            history = history.slice(1);
-        }
-
-        // Map to Gemini format
-        history = history.map((msg: any) => ({
-            role: msg.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: msg.content }]
-        }));
-
         // Get the last user message
         const lastMessage = messages[messages.length - 1];
         if (lastMessage.role !== 'user') {
@@ -91,50 +71,47 @@ export default async function handler(req: any, res: any) {
             });
         }
 
-        // Start chat with history
-        const chat = model.startChat({
-            history: history,
-            generationConfig: {
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-                maxOutputTokens: 2048,
+        console.log(`[AI Chat] Sending message to Gemini API: "${lastMessage.content.substring(0, 50)}..."`);
+
+        // Build conversation history for context
+        let conversationHistory = '';
+        messages.slice(0, -1).forEach((msg: any) => {
+            if (msg.role === 'user') {
+                conversationHistory += `User: ${msg.content}\n`;
+            } else if (msg.role === 'assistant') {
+                conversationHistory += `Assistant: ${msg.content}\n`;
             }
         });
 
-        // Send message and get response with timeout
-        console.log(`[AI Chat] Sending message to Gemini API: "${lastMessage.content.substring(0, 50)}..."`);
+        // Build full prompt with system instruction and history
+        const fullPrompt = systemPrompt
+            ? `${systemPrompt}\n\n${conversationHistory ? `Previous conversation:\n${conversationHistory}\n` : ''}User: ${lastMessage.content}`
+            : `${conversationHistory ? `Previous conversation:\n${conversationHistory}\n` : ''}User: ${lastMessage.content}`;
 
-        const result = await Promise.race([
-            chat.sendMessage(lastMessage.content),
-            new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Request timeout after 30 seconds')), 30000)
-            )
-        ]) as any;
+        // Call Gemini API
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: {
+                parts: [{ text: fullPrompt }]
+            }
+        });
 
-        const response = result.response;
-        const text = response.text();
+        const responseText = response.text?.trim() || '';
+        if (!responseText) {
+            throw new Error('Empty response from Gemini API');
+        }
 
-        // Get usage metadata (if available)
-        const usageMetadata = response.usageMetadata || {};
-
-        console.log(`[AI Chat] Request processed - Input: ${usageMetadata.promptTokenCount || 0} tokens, Output: ${usageMetadata.candidatesTokenCount || 0} tokens`);
+        console.log('[AI Chat] ✅ Response generated successfully');
 
         return res.status(200).json({
-            response: text,
-            usage: {
-                inputTokens: usageMetadata.promptTokenCount || 0,
-                outputTokens: usageMetadata.candidatesTokenCount || 0,
-                totalTokens: usageMetadata.totalTokenCount || 0
-            }
+            response: responseText
         });
 
     } catch (error: any) {
         console.error('[AI Chat Error]', error);
-        console.error('[AI Chat Error Stack]', error.stack);
 
         // Handle specific errors
-        if (error.message && error.message.includes('API_KEY_INVALID')) {
+        if (error.message && error.message.includes('API key not valid')) {
             return res.status(401).json({
                 error: 'API key invalid',
                 message: 'The GEMINI_API_KEY is invalid or expired'
@@ -145,23 +122,6 @@ export default async function handler(req: any, res: any) {
             return res.status(429).json({
                 error: 'Rate limit exceeded',
                 message: 'Too many requests. Please try again later.'
-            });
-        }
-
-        // Handle network/fetch errors (common on Windows)
-        if (error.message && (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND') || error.message.includes('ETIMEDOUT'))) {
-            console.error('[AI Chat] Network error - possible causes: firewall, proxy, DNS, or network settings');
-            return res.status(503).json({
-                error: 'Network error',
-                message: 'Unable to connect to Gemini API. Please check your internet connection, firewall, or proxy settings.',
-                details: process.env.NODE_ENV === 'development' ? error.message : undefined
-            });
-        }
-
-        if (error.message && error.message.includes('timeout')) {
-            return res.status(504).json({
-                error: 'Request timeout',
-                message: 'The AI service took too long to respond. Please try again.'
             });
         }
 
