@@ -308,7 +308,8 @@ export const DashboardPage: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        <AlloggiatiCredentials />
+                        {/* key={user?.id} forces component to remount when user changes (clears old user's data) */}
+                        <AlloggiatiCredentials key={user?.id} />
                         {/* <ApiKeyGuide /> */}
                         {/* Commented for SaaS: Gemini API key will be centralized (server-side) */}
                     </aside>
@@ -322,7 +323,9 @@ export const DashboardPage: React.FC = () => {
                         <hr className="mx-6 border-t-2 border-dashed border-gray-300 flex-shrink-0" />
                         
                         <div className="flex-1 overflow-y-auto px-6 py-6">
+                            {/* key={user?.id} forces component to remount when user changes (clears old user's data) */}
                             <MainForm
+                                key={user?.id}
                                 data={documentData}
                                 onDataChange={handleDataChange}
                                 onExport={handleExportForExtension}

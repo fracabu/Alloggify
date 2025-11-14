@@ -37,6 +37,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         if (storedUser && token) {
             setUser(JSON.parse(storedUser));
+        } else {
+            // SECURITY: If no valid session exists, clear any leftover sensitive data
+            // This handles cases where the browser was closed without explicit logout
+            localStorage.removeItem('alloggiatiUtente');
+            localStorage.removeItem('alloggiatiPassword');
+            localStorage.removeItem('alloggiatiWskey');
+            localStorage.removeItem('alloggifyToken');
+            localStorage.removeItem('alloggifyData');
+            localStorage.removeItem('alloggifyDataTimestamp');
         }
         setLoading(false);
     }, []);
@@ -102,8 +111,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const logout = (): void => {
+        // Clear authentication session
         sessionStorage.removeItem('alloggify_user');
         sessionStorage.removeItem('alloggify_token');
+
+        // SECURITY: Clear ALL sensitive data from localStorage on logout
+        // This prevents the next user from seeing previous user's credentials
+        localStorage.removeItem('alloggiatiUtente');      // Alloggiati Web username
+        localStorage.removeItem('alloggiatiPassword');    // Alloggiati Web password
+        localStorage.removeItem('alloggiatiWskey');       // Alloggiati Web WSKEY
+        localStorage.removeItem('alloggifyToken');        // SOAP API token
+        localStorage.removeItem('alloggifyData');         // Exported document data
+        localStorage.removeItem('alloggifyDataTimestamp'); // Export timestamp
+        localStorage.removeItem('geminiApiKey');          // Gemini API key (if user-configured)
+
         setUser(null);
     };
 

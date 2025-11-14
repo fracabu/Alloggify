@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Alloggify is an OCR-powered web application that extracts information from identity documents (Italian ID cards, passports, driving licenses) and prepares data for the Alloggiati Web portal (Italian police hospitality reporting system).
+**CheckInly** (formerly Alloggify) is an OCR-powered web application that extracts information from identity documents (Italian ID cards, passports, driving licenses) and prepares data for the Alloggiati Web portal (Italian police hospitality reporting system).
+
+**Note**: The codebase is currently undergoing rebranding from "Alloggify" to "CheckInly". You may see both names in the code - when adding new features or making changes, prefer using "CheckInly" for user-facing elements while maintaining backward compatibility with existing code references.
 
 ### Project Evolution
 
@@ -79,7 +81,7 @@ npm run dev
 cd server && npm start
 ```
 
-The frontend runs on `http://localhost:3000` and the backend API runs on `http://localhost:3001`.
+The frontend runs on `http://localhost:3000` (configured in vite.config.ts) and the backend API runs on `http://localhost:3001`.
 
 ## Environment Setup
 
@@ -112,6 +114,10 @@ The app includes an `ApiKeyGuide` component that allows users to set their Gemin
 
 ## Project Structure
 
+**Note**: The project has a dual component structure due to migration in progress:
+- **`src/components/`**: New SaaS-related components (landing page, auth, UI library)
+- **`components/`** (root): Legacy document processing components from MVP phase
+
 ```
 Alloggify/
 ├── src/
@@ -123,9 +129,6 @@ Alloggify/
 │   │   ├── PrivacyPolicy.tsx    # Legal page
 │   │   └── TermsOfService.tsx   # Legal page
 │   ├── components/
-│   │   ├── MainForm.tsx         # Main form (Dati Schedina, Anagrafici, Documento)
-│   │   ├── AlloggiatiCredentials.tsx  # SOAP API credentials panel
-│   │   ├── ConfirmationModal.tsx      # Confirmation dialog
 │   │   ├── AIChatWidget.tsx           # AI assistant chat UI
 │   │   ├── SEOHead.tsx                # SEO meta tags
 │   │   ├── ProtectedRoute.tsx         # Auth route guard
@@ -134,12 +137,12 @@ Alloggify/
 │   │   │   ├── Testimonials.tsx
 │   │   │   ├── FAQ.tsx
 │   │   │   └── Footer.tsx
-│   │   ├── ui/                        # Reusable UI components
-│   │   │   ├── Button.tsx
-│   │   │   ├── Card.tsx
-│   │   │   ├── Badge.tsx
-│   │   │   └── Alert.tsx
-│   │   └── icons/                     # Icon components
+│   │   └── ui/                        # Reusable UI components
+│   │       ├── Button.tsx
+│   │       ├── Card.tsx
+│   │       ├── Badge.tsx
+│   │       ├── Alert.tsx
+│   │       └── index.ts
 │   ├── context/
 │   │   └── AuthContext.tsx      # Authentication state management
 │   ├── hooks/
@@ -149,6 +152,15 @@ Alloggify/
 │   │   └── alloggiatiApiService.ts  # SOAP API client wrapper
 │   └── utils/
 │       └── fileUtils.ts         # File handling utilities (fileToBase64)
+├── components/                  # Root-level legacy components
+│   ├── MainForm.tsx         # Main form (Dati Schedina, Anagrafici, Documento)
+│   ├── AlloggiatiCredentials.tsx  # SOAP API credentials panel
+│   ├── ConfirmationModal.tsx      # Confirmation dialog
+│   ├── ApiKeyGuide.tsx      # Gemini API key configuration UI
+│   ├── Header.tsx           # App header component
+│   ├── Logo.tsx             # Logo component
+│   ├── Sidebar.tsx          # Sidebar navigation
+│   └── icons/               # Icon components
 ├── server/                      # Backend Express server
 │   ├── index.js                 # Express app entry point
 │   ├── routes/                  # API route handlers
@@ -168,9 +180,9 @@ Alloggify/
 │   ├── popup.html/js            # Extension popup UI
 │   ├── alloggify-bridge.js      # Bridge script for localhost
 │   └── icons/                   # Extension icons
-├── App.tsx                      # React Router setup + route definitions
-├── index.tsx                    # React entry point
-├── types.ts                     # TypeScript interfaces
+├── App.tsx                      # React Router setup + route definitions (root)
+├── index.tsx                    # React entry point (root)
+├── types.ts                     # TypeScript interfaces (root)
 ├── vite.config.ts               # Vite configuration
 └── .env.local                   # Environment variables (GEMINI_API_KEY)
 ```
@@ -437,6 +449,25 @@ import { DocumentData } from '@/types';
 
 Configured in both `tsconfig.json` and `vite.config.ts`.
 
+## Styling & Design System
+
+**Color Scheme**: The app uses a custom Tailwind configuration with Airbnb-inspired colors defined in `tailwind.config.js`.
+
+**Primary Brand Colors** (Airbnb red palette):
+- `primary-50` to `primary-900` - Use for buttons, links, accents
+- `primary-500` (#FF385C) - Main brand color
+- **Always use**: `primary-*` utilities (e.g., `bg-primary-500`, `text-primary-600`, `hover:bg-primary-700`)
+- **Never use**: `indigo-*`, `blue-*` for primary UI elements (legacy colors removed during rebranding)
+
+**Neutral Colors**:
+- `dark` (#222222) and `dark-light` (#484848) - Dark text and backgrounds
+- `gray-light`, `gray-lighter`, `gray-lightest` - Custom gray shades
+
+**Styling Conventions**:
+- All styling uses Tailwind utility classes
+- Avoid inline styles or custom CSS where possible
+- Responsive design: Use Tailwind breakpoints (`sm:`, `md:`, `lg:`, etc.)
+
 ## AI Chat Assistant Feature
 
 The application includes a Gemini 2.5 Flash-powered AI assistant accessible via a floating chat widget in the dashboard.
@@ -523,8 +554,8 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 
 ### Modifying Document Processing
 - **OCR Logic**: `src/services/geminiService.ts` - contains Gemini prompt and response parsing
-- **Form Fields**: `components/MainForm.tsx` - three fieldsets structure
-- **Data Model**: `types.ts` - DocumentData interface
+- **Form Fields**: `components/MainForm.tsx` (root-level) - three fieldsets structure
+- **Data Model**: `types.ts` (root-level) - DocumentData and ExtractedInfo interfaces
 - **Validation**: Happens client-side in MainForm + server-side via SOAP test endpoint
 
 ### Working with SOAP API
@@ -538,3 +569,32 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 - **Testing**: Load unpacked extension, make changes, click "Reload" in chrome://extensions
 - **Debugging**: Open DevTools on portal page, check Console for errors
 - **Data Format**: Extension expects `alloggifyData` in localStorage with specific DocumentData structure
+
+## Common Pitfalls & Important Notes
+
+### Environment Variables
+- `.env.local` is gitignored - **NEVER commit this file**
+- After changing `.env.local`, restart the Vite dev server (variables are injected at build time)
+- WSKEY and API keys are sensitive - treat them like passwords
+- Variables prefixed with `VITE_` are exposed to client-side code
+
+### Component Import Paths
+- Use `@/` alias for cleaner imports (configured in vite.config.ts)
+- Be aware of dual component structure: `src/components/` (new) vs `components/` (root, legacy)
+- When importing, check both locations if component not found
+
+### CORS and API Integration
+- Backend server (`localhost:3001`) acts as SOAP proxy to avoid browser CORS issues
+- Always use backend for SOAP API calls, never call Alloggiati Web API directly from frontend
+- Backend CORS is configured for Vite dev (`localhost:3000`) and Vercel production domains
+
+### Data Format Conversions
+- Dates are stored internally as `YYYY-MM-DD` but portal requires `DD/MM/YYYY`
+- Sex values: internal `"Maschio"/"Femmina"` vs portal `"M"/"F"`
+- These conversions happen automatically in `chrome-extension/content.js`
+
+### Testing the Application
+- **No test suite currently exists** - manual testing required
+- Test both submission methods (Chrome Extension + SOAP API) when making changes
+- Always test with real document images (ID cards, passports, licenses)
+- Verify SOAP API with valid Alloggiati Web credentials before extensive testing

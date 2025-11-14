@@ -16,6 +16,22 @@ export const AlloggiatiCredentials: React.FC = () => {
 
     // Load credentials from .env or localStorage on mount
     useEffect(() => {
+        // SECURITY: Only load credentials if there's an active user session
+        // This prevents showing old user's credentials after logout
+        const hasActiveSession = sessionStorage.getItem('alloggify_user') && sessionStorage.getItem('alloggify_token');
+
+        if (!hasActiveSession) {
+            // No active session - clear any stale data
+            console.log('⚠️ No active session - clearing credentials');
+            localStorage.removeItem('alloggiatiUtente');
+            localStorage.removeItem('alloggiatiPassword');
+            localStorage.removeItem('alloggiatiWskey');
+            setUtente('');
+            setPassword('');
+            setWskey('');
+            return;
+        }
+
         // Priority: 1. .env variables, 2. localStorage
         const envUtente = import.meta.env.VITE_ALLOGGIATI_UTENTE;
         const envPassword = import.meta.env.VITE_ALLOGGIATI_PASSWORD;
