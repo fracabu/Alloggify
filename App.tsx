@@ -11,6 +11,8 @@ import { DashboardPage } from './src/pages/DashboardPage';
 import { VerifyEmailPage } from './src/pages/VerifyEmailPage';
 import { PrivacyPolicyPage } from './src/pages/PrivacyPolicy';
 import { TermsOfServicePage } from './src/pages/TermsOfService';
+import { TestStripePage } from './src/pages/TestStripePage';
+import { UpgradePage } from './src/pages/UpgradePage';
 
 const App: React.FC = () => {
     return (
@@ -35,6 +37,26 @@ const App: React.FC = () => {
                     <Route
                         path="/dashboard"
                         element={<Navigate to="/dashboard/scan" replace />}
+                    />
+
+                    {/* Test Stripe Page (Protected) */}
+                    <Route
+                        path="/test-stripe"
+                        element={
+                            <ProtectedRoute>
+                                <TestStripePage />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    {/* Upgrade Page (Protected) */}
+                    <Route
+                        path="/upgrade"
+                        element={
+                            <ProtectedRoute>
+                                <UpgradePage />
+                            </ProtectedRoute>
+                        }
                     />
 
                     {/* Legal Pages */}

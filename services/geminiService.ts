@@ -1,10 +1,19 @@
 import { ExtractedInfo } from '../types';
 
+export interface OcrResult {
+    data: ExtractedInfo;
+    usage?: {
+        scanCount: number;
+        monthlyLimit: number;
+        remaining: number;
+    };
+}
+
 /**
  * Extract document information using backend OCR endpoint
  * 🔒 Requires authentication - sends JWT token from sessionStorage
  */
-export async function extractDocumentInfo(base64Image: string, mimeType: string): Promise<ExtractedInfo> {
+export async function extractDocumentInfo(base64Image: string, mimeType: string): Promise<OcrResult> {
     console.log('[OCR] Calling backend OCR endpoint...');
 
     try {
@@ -37,9 +46,15 @@ export async function extractDocumentInfo(base64Image: string, mimeType: string)
         }
 
         if (response.status === 403) {
-            // Scan limit reached
+            // Scan limit reached - redirect to upgrade page
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Hai raggiunto il limite mensile di scansioni.');
+
+            // Redirect to upgrade page with reason parameter
+            setTimeout(() => {
+                window.location.href = '/upgrade?reason=scan_limit';
+            }, 1500);
+
+            throw new Error(errorData.message || 'Hai raggiunto il limite mensile di scansioni. Reindirizzamento alla pagina di upgrade...');
         }
 
         if (!response.ok) {
@@ -59,7 +74,11 @@ export async function extractDocumentInfo(base64Image: string, mimeType: string)
         }
 
         console.log('[OCR] ✅ Document extracted successfully');
-        return result.data as ExtractedInfo;
+
+        return {
+            data: result.data as ExtractedInfo,
+            usage: result.usage
+        };
 
     } catch (error) {
         console.error("Error calling OCR API:", error);

@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { HomeModernIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../hooks/useAuth';
 import { MainForm } from '../../components/MainForm';
@@ -31,7 +31,9 @@ const initialDocumentData: DocumentData = {
 };
 
 export const DashboardPage: React.FC = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, updateScanCount, updateUser } = useAuth();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const [documentData, setDocumentData] = useState<DocumentData>(initialDocumentData);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -43,6 +45,70 @@ export const DashboardPage: React.FC = () => {
     const [apiTestSuccess, setApiTestSuccess] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Handle Stripe payment success
+    useEffect(() => {
+        const upgradeSuccess = searchParams.get('upgrade');
+        const planName = searchParams.get('plan');
+
+        console.log('[Dashboard] URL params:', { upgradeSuccess, planName });
+
+        if (upgradeSuccess === 'success' && planName) {
+            console.log('[Dashboard] Payment success detected, calling handler...');
+            handlePaymentSuccess(planName);
+        }
+    }, [searchParams]);
+
+    const handlePaymentSuccess = async (planName: string) => {
+        try {
+            console.log('[Dashboard] Getting token from sessionStorage...');
+            const token = sessionStorage.getItem('alloggify_token');
+
+            if (!token) {
+                console.error('[Dashboard] No token found!');
+                return;
+            }
+
+            console.log('[Dashboard] Calling payment-success API for plan:', planName);
+
+            const response = await fetch('/api/stripe/payment-success', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ planName })
+            });
+
+            console.log('[Dashboard] Response status:', response.status);
+
+            const data = await response.json();
+            console.log('[Dashboard] Response data:', data);
+
+            if (response.ok && data.user) {
+                console.log('[Dashboard] Updating user with full data:', data.user);
+
+                // Update user in context with all fields including subscriptionPlan
+                updateUser({
+                    subscriptionPlan: data.user.subscriptionPlan as 'free' | 'basic' | 'pro' | 'enterprise',
+                    scanCount: data.user.scanCount,
+                    monthlyScanLimit: data.user.monthlyScanLimit
+                });
+
+                setOcrSuccess(`🎉 Upgrade completato! Ora hai ${data.user.monthlyScanLimit} scansioni al mese con il piano ${data.user.subscriptionPlan.toUpperCase()}`);
+
+                // Clean URL
+                console.log('[Dashboard] Navigating to clean URL...');
+                setTimeout(() => {
+                    navigate('/dashboard/scan', { replace: true });
+                }, 1500);
+            } else {
+                console.error('[Dashboard] Invalid response or missing user data');
+            }
+        } catch (error) {
+            console.error('[Dashboard] Error handling payment success:', error);
+        }
+    };
 
     const handleDataChange = useCallback((field: keyof DocumentData, value: string) => {
         setDocumentData(prev => ({ ...prev, [field]: value }));
@@ -62,7 +128,8 @@ export const DashboardPage: React.FC = () => {
             const base64Image = await fileToBase64(file);
             const mimeType = file.type;
 
-            const extractedData = await extractDocumentInfo(base64Image, mimeType);
+            const ocrResult = await extractDocumentInfo(base64Image, mimeType);
+            const extractedData = ocrResult.data;
 
             const formattedDateOfBirth = extractedData.dateOfBirth;
 
@@ -80,9 +147,14 @@ export const DashboardPage: React.FC = () => {
                 luogoRilascioDocumento: extractedData.issuingPlace || ''
             };
 
+            // Update user scan count in context
+            if (ocrResult.usage) {
+                updateScanCount(ocrResult.usage.scanCount, ocrResult.usage.monthlyLimit);
+            }
+
             // Security: Removed console.log with personal data
             setDocumentData(updatedData);
-            setOcrSuccess('Document processed successfully! Please review the data below.');
+            setOcrSuccess(`Document processed successfully! Scans: ${ocrResult.usage?.scanCount || 0}/${ocrResult.usage?.monthlyLimit || 0}`);
             setTimeout(() => setOcrSuccess(null), 5000);
 
         } catch (err) {

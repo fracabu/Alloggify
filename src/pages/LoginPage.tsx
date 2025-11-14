@@ -87,6 +87,7 @@ export const LoginPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="nome@esempio.it"
                                 disabled={loading}
+                                autocomplete="email"
                             />
                         </div>
 
@@ -111,6 +112,7 @@ export const LoginPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
+                                autocomplete="current-password"
                             />
                         </div>
 

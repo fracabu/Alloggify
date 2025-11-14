@@ -12,7 +12,7 @@ import { getUserById, logUserAction } from '../../lib/db';
 import { getStripePriceId, getPricingPlan } from '../../lib/pricing';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-11-20.acacia'
+    apiVersion: '2024-10-28.acacia'
 });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -83,7 +83,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     quantity: 1,
                 },
             ],
-            success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard?upgrade=success&plan=${planName}`,
+            success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard/scan?upgrade=success&plan=${planName}`,
             cancel_url: `${process.env.NEXT_PUBLIC_URL}/pricing?canceled=true`,
             metadata: {
                 userId,

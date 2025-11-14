@@ -132,6 +132,7 @@ export const SignupPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="Mario Rossi"
                                 disabled={loading}
+                                autocomplete="name"
                             />
                         </div>
 
@@ -149,6 +150,7 @@ export const SignupPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="nome@esempio.it"
                                 disabled={loading}
+                                autocomplete="email"
                             />
                         </div>
 
@@ -166,6 +168,7 @@ export const SignupPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="B&B La Terrazza"
                                 disabled={loading}
+                                autocomplete="organization"
                             />
                         </div>
 
@@ -183,6 +186,7 @@ export const SignupPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
+                                autocomplete="new-password"
                             />
                             {/* Password Strength Indicator */}
                             {formData.password && (
@@ -221,6 +225,7 @@ export const SignupPage: React.FC = () => {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
                                 placeholder="••••••••"
                                 disabled={loading}
+                                autocomplete="new-password"
                             />
                             {formData.confirmPassword && (
                                 <div className="mt-2 flex items-center gap-2 text-xs">

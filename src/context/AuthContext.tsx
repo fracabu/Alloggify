@@ -15,6 +15,8 @@ export interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     signup: (email: string, password: string, fullName: string, companyName?: string) => Promise<void>;
     logout: () => void;
+    updateScanCount: (scanCount: number, monthlyScanLimit: number) => void;
+    updateUser: (userData: Partial<User>) => void;
     isAuthenticated: boolean;
     loading: boolean;
 }
@@ -137,11 +139,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(null);
     };
 
+    const updateScanCount = (scanCount: number, monthlyScanLimit: number): void => {
+        if (user) {
+            const updatedUser = {
+                ...user,
+                scanCount,
+                monthlyScanLimit
+            };
+            setUser(updatedUser);
+            sessionStorage.setItem('alloggify_user', JSON.stringify(updatedUser));
+        }
+    };
+
+    const updateUser = (userData: Partial<User>): void => {
+        if (user) {
+            const updatedUser = {
+                ...user,
+                ...userData
+            };
+            setUser(updatedUser);
+            sessionStorage.setItem('alloggify_user', JSON.stringify(updatedUser));
+            console.log('[AuthContext] User updated:', updatedUser);
+        }
+    };
+
     const value: AuthContextType = {
         user,
         login,
         signup,
         logout,
+        updateScanCount,
+        updateUser,
         isAuthenticated: !!user,
         loading
     };
