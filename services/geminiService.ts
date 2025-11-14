@@ -4,7 +4,7 @@ import { ExtractedInfo } from '../types';
 export async function extractDocumentInfo(base64Image: string, mimeType: string): Promise<ExtractedInfo> {
     // Try to get API key from localStorage first, then fallback to env variable
     const userApiKey = localStorage.getItem('geminiApiKey');
-    const apiKey = (userApiKey?.trim() || process.env.API_KEY)?.trim();
+    const apiKey = (userApiKey?.trim() || import.meta.env.VITE_GEMINI_API_KEY)?.trim();
 
     console.log('🔑 API Key source:', userApiKey ? 'localStorage' : 'env');
     console.log('🔑 API Key length:', apiKey?.length || 0);
