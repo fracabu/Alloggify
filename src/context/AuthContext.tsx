@@ -53,28 +53,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const login = async (email: string, password: string): Promise<void> => {
         setLoading(true);
 
-        // TODO: Replace with real API call when backend is ready
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-        // Mock user data
-        const mockUser: User = {
-            id: `user_${Date.now()}`,
-            email,
-            fullName: email.split('@')[0], // Extract name from email for now
-            subscriptionPlan: 'free',
-            scanCount: 0,
-            monthlyScanLimit: 5
-        };
+            const data = await response.json();
 
-        const mockToken = `mock_jwt_token_${Date.now()}`;
+            if (!response.ok) {
+                throw new Error(data.message || 'Login fallito');
+            }
 
-        // Using sessionStorage to auto-logout when browser/tab closes
-        sessionStorage.setItem('alloggify_user', JSON.stringify(mockUser));
-        sessionStorage.setItem('alloggify_token', mockToken);
+            // Store user and token
+            const user: User = {
+                id: data.user.id,
+                email: data.user.email,
+                fullName: data.user.fullName,
+                companyName: data.user.companyName,
+                subscriptionPlan: data.user.subscriptionPlan,
+                scanCount: data.user.scanCount || 0,
+                monthlyScanLimit: data.user.monthlyScanLimit || 5
+            };
 
-        setUser(mockUser);
-        setLoading(false);
+            sessionStorage.setItem('alloggify_user', JSON.stringify(user));
+            sessionStorage.setItem('alloggify_token', data.accessToken);
+
+            setUser(user);
+        } catch (error: any) {
+            throw new Error(error.message || 'Errore durante il login');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signup = async (
@@ -85,29 +96,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     ): Promise<void> => {
         setLoading(true);
 
-        // TODO: Replace with real API call when backend is ready
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, fullName, companyName })
+            });
 
-        // Mock user data
-        const mockUser: User = {
-            id: `user_${Date.now()}`,
-            email,
-            fullName,
-            companyName,
-            subscriptionPlan: 'free',
-            scanCount: 0,
-            monthlyScanLimit: 5
-        };
+            const data = await response.json();
 
-        const mockToken = `mock_jwt_token_${Date.now()}`;
+            if (!response.ok) {
+                throw new Error(data.message || 'Registrazione fallita');
+            }
 
-        // Using sessionStorage to auto-logout when browser/tab closes
-        sessionStorage.setItem('alloggify_user', JSON.stringify(mockUser));
-        sessionStorage.setItem('alloggify_token', mockToken);
-
-        setUser(mockUser);
-        setLoading(false);
+            // Do NOT auto-login after signup - user must verify email first
+            // Show success message instead
+            alert('✅ Registrazione completata! Controlla la tua email per verificare l\'account.');
+        } catch (error: any) {
+            throw new Error(error.message || 'Errore durante la registrazione');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const logout = (): void => {

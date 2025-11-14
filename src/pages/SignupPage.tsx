@@ -80,9 +80,14 @@ export const SignupPage: React.FC = () => {
 
         try {
             await signup(formData.email, formData.password, formData.fullName, formData.companyName);
-            navigate('/dashboard/scan', { replace: true });
-        } catch (err) {
-            setError('Errore durante la registrazione. Riprova.');
+            // Redirect to login page after successful signup
+            // User must verify email before logging in
+            navigate('/login', {
+                replace: true,
+                state: { message: 'Registrazione completata! Controlla la tua email per verificare l\'account.' }
+            });
+        } catch (err: any) {
+            setError(err.message || 'Errore durante la registrazione. Riprova.');
         } finally {
             setLoading(false);
         }
