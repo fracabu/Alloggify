@@ -22,20 +22,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
         // Parse body if string
         let body = req.body;
+
+        console.log('[ALLOGGIATI] Raw body type:', typeof body);
+        console.log('[ALLOGGIATI] Raw body:', body ? JSON.stringify(body).substring(0, 200) : 'empty');
+
         if (typeof body === 'string') {
             try {
                 body = JSON.parse(body);
-            } catch {
+            } catch (e) {
+                console.error('[ALLOGGIATI] JSON parse error:', e);
                 return res.status(400).json({ error: 'Invalid JSON body' });
             }
         }
 
-        const { action } = body;
+        const { action } = body || {};
+
+        console.log('[ALLOGGIATI] Action:', action);
 
         if (!action) {
             return res.status(400).json({
                 error: 'Missing required field: action',
-                validActions: ['auth', 'test', 'send', 'ricevuta', 'tabelle']
+                validActions: ['auth', 'test', 'send', 'ricevuta', 'tabelle'],
+                receivedBody: body
             });
         }
 
@@ -72,12 +80,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 // ============================================
 async function handleAuth(body: any, res: VercelResponse) {
     console.log('[AUTH] Starting authentication request');
+    console.log('[AUTH] Body keys:', Object.keys(body || {}));
 
     const { utente, password, wskey } = body;
 
+    console.log('[AUTH] Extracted - utente:', utente ? 'present' : 'missing');
+    console.log('[AUTH] Extracted - password:', password ? 'present' : 'missing');
+    console.log('[AUTH] Extracted - wskey:', wskey ? 'present' : 'missing');
+
     if (!utente || !password || !wskey) {
         return res.status(400).json({
-            error: 'Missing required fields: utente, password, wskey'
+            error: 'Missing required fields: utente, password, wskey',
+            received: { utente: !!utente, password: !!password, wskey: !!wskey }
         });
     }
 
