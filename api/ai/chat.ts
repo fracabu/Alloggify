@@ -62,9 +62,9 @@ export default async function handler(req: any, res: any) {
             });
         }
 
-        // Initialize model (Gemini 2.0 Flash - latest model)
+        // Initialize model (Gemini 2.5 Flash - latest model)
         const model = genAI.getGenerativeModel({
-            model: 'gemini-2.0-flash-exp',
+            model: 'gemini-2.5-flash',
             systemInstruction: systemPrompt || ''
         });
 
