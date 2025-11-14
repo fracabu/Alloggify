@@ -62,9 +62,9 @@ export default async function handler(req: any, res: any) {
             });
         }
 
-        // Initialize model (Gemini 1.5 Flash - free tier with 15 RPM)
+        // Initialize model (Gemini 2.0 Flash - latest model)
         const model = genAI.getGenerativeModel({
-            model: 'gemini-1.5-flash',
+            model: 'gemini-2.0-flash-exp',
             systemInstruction: systemPrompt || ''
         });
 
