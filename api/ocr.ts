@@ -127,7 +127,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             }
         });
 
-        const jsonText = response.text.trim();
+        const jsonText = response.text?.trim() || '';
+        if (!jsonText) {
+            throw new Error('Empty response from Gemini API');
+        }
         const parsedJson = JSON.parse(jsonText);
 
         console.log('[OCR] ✅ Document extracted successfully');
