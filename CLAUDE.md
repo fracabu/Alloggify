@@ -16,112 +16,154 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Manual submission through portal interface
 - Simple setup, no backend required
 
-**Phase 2 - SOAP API Integration (Current)**
+**Phase 2 - SOAP API Integration**
 - Discovered official Alloggiati Web SOAP API
 - Implemented WSKEY-based authentication
 - Full automation: OCR → Test → Send → Receipt download
-- Express backend server for SOAP proxy
-- Production-ready for high-volume operations
+- Express backend server for SOAP proxy (deprecated - see Phase 3)
 
-**Phase 3 - SaaS Platform (Future Vision)**
-The project is planned to evolve into a full SaaS platform with:
-- **Backend API**: Node.js + Express/Fastify with PostgreSQL database
-- **Authentication**: JWT-based auth with OAuth 2.0 support
-- **Payment System**: Stripe integration with subscription tiers (Free, Basic €19, Pro €49, Enterprise €199)
-- **Chrome Web Store**: Published extension with cloud sync
-- **Multi-tenant Architecture**: Support for hotel chains and property managers
+**Phase 3 - SaaS Platform (CURRENT)**
+Now deployed as a production SaaS platform with:
+- **Vercel Serverless Functions**: Auto-scaling API endpoints (no Express server)
+- **Neon PostgreSQL**: Serverless database via `@vercel/postgres`
+- **JWT Authentication**: Email verification, password reset, session management
+- **Transactional Email**: Resend API integration
+- **Subscription System**: Database schema ready for Stripe integration
+- **Multi-tenant Architecture**: User isolation with scan usage limits
 
-**See `SAAS_PLAN.md` for complete roadmap, financial projections, and technical architecture.**
+**See `SAAS_PLAN.md` for complete roadmap and financial projections.**
 
-### Current Architecture (SaaS Platform)
+### Current Architecture (Vercel Serverless)
 
 1. **React Web App**: Vite + React 19 + React Router application with:
    - Landing page with pricing, testimonials, FAQ
-   - Authentication system (login/signup)
+   - Authentication system (login/signup with email verification)
    - Protected dashboard for document scanning
    - Responsive UI with Tailwind CSS
-2. **Authentication Layer**: React Context-based auth with localStorage (mock implementation, ready for backend API)
-3. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
-4. **Express Backend**: SOAP API proxy for direct submission with WSKEY authentication (Method B)
-5. **AI Chat Assistant**: Gemini 2.5 Flash-powered assistant for hospitality support (integrated in dashboard)
+2. **Vercel Serverless API**: TypeScript functions in `api/` directory:
+   - Authentication endpoints (`/api/auth/*`)
+   - OCR endpoint (`/api/ocr`)
+   - SOAP API proxy (`/api/alloggiati`)
+   - AI chat assistant (`/api/ai/chat`)
+3. **Neon PostgreSQL**: Serverless database with:
+   - User management (email verification, password reset)
+   - Scan history tracking
+   - Subscription management (Stripe integration ready)
+   - Usage analytics
+4. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
+5. **AI Services**: Gemini 2.5 Flash for OCR and chat assistant
 
 ## Common Development Commands
 
 ```bash
-# Install dependencies (root - frontend)
+# Install dependencies
 npm install
 
-# Install server dependencies
-cd server && npm install
-
-# Run FRONTEND development server (starts on port 3000)
+# Development server (frontend + serverless API)
 npm run dev
-
-# Run BACKEND server (starts on port 3001)
-cd server && npm start
-# OR for dev mode with auto-reload:
-cd server && npm run dev
+# Opens on http://localhost:3000 (Vite dev server)
+# API routes available at /api/* (auto-proxied in dev)
 
 # Build for production
 npm run build
 
-# Preview production build
+# Preview production build locally
 npm run preview
+
+# Database management
+node scripts/init-db.js              # Initialize database schema
+node scripts/delete-test-users.js    # Clean up test users
 ```
 
-### Running Full Stack Development
+### Local Development Setup
 
-For full functionality, you need BOTH frontend and backend running:
+The app runs on a single Vite dev server with API routes handled by Vercel's local development environment:
 
-```bash
-# Terminal 1 - Frontend (Vite)
-npm run dev
+1. Configure `.env.local` with all required environment variables
+2. Run `npm run dev`
+3. API endpoints are available at `http://localhost:3000/api/*`
+4. Frontend served at `http://localhost:3000`
 
-# Terminal 2 - Backend (Express)
-cd server && npm start
-```
-
-The frontend runs on `http://localhost:3000` (configured in vite.config.ts) and the backend API runs on `http://localhost:3001`.
+**Note**: The old `server/` directory with Express is deprecated. All backend logic now lives in `api/` as Vercel Serverless Functions.
 
 ## Environment Setup
 
-**CRITICAL**: Before running the app, configure `.env.local` in the project root:
+**CRITICAL**: Configure `.env.local` in the project root. See `.env.local.example` for template.
 
 ```env
-# Gemini API for OCR (required for document scanning)
+# ==========================================
+# FRONTEND URL
+# ==========================================
+NEXT_PUBLIC_URL=http://localhost:3000
+
+# ==========================================
+# JWT SECRET (REQUIRED)
+# Generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# ==========================================
+JWT_SECRET=your_generated_secret_here
+
+# ==========================================
+# RESEND API KEY (for email verification/reset)
+# Get free key from: https://resend.com
+# ==========================================
+RESEND_API_KEY=re_XXXXX
+
+# ==========================================
+# GEMINI API KEY (for OCR + AI chat)
+# ==========================================
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Backend URL (Express server)
-VITE_BACKEND_URL=http://localhost:3001
+# ==========================================
+# BACKEND URL (Vercel Serverless - use http://localhost:3000 for dev)
+# ==========================================
+VITE_BACKEND_URL=http://localhost:3000
 
-# Alloggiati Web credentials (required for SOAP API integration)
-VITE_ALLOGGIATI_UTENTE=your_username_here
-VITE_ALLOGGIATI_PASSWORD=your_password_here
-VITE_ALLOGGIATI_WSKEY=your_wskey_here
+# ==========================================
+# VERCEL POSTGRES (Neon Database)
+# Copy from: Vercel Dashboard → Storage → Postgres → .env.local tab
+# These are AUTO-CONFIGURED when you deploy to Vercel
+# ==========================================
+POSTGRES_URL="postgres://..."
+POSTGRES_PRISMA_URL="postgres://..."
+POSTGRES_URL_NON_POOLING="postgres://..."
+POSTGRES_USER="..."
+POSTGRES_HOST="..."
+POSTGRES_PASSWORD="..."
+POSTGRES_DATABASE="..."
 ```
 
-**Gemini API Key Resolution Order** (in `geminiService.ts`):
-1. First checks `localStorage.getItem('geminiApiKey')` (user can set via UI)
-2. Falls back to `import.meta.env.VITE_GEMINI_API_KEY` (from `.env.local`, injected at build time via Vite)
-
-**Alloggiati Web Credentials**:
-- Credentials are loaded from `.env.local` on app startup
-- Stored in localStorage as `alloggifyCredentials`
-- Token generated via `/api/alloggiati/auth` and persisted in localStorage as `alloggifyToken`
-- Token is automatically refreshed when expired
-
-The app includes an `ApiKeyGuide` component that allows users to set their Gemini API key through the UI, which stores it in localStorage.
+**Important Notes**:
+- **JWT_SECRET**: Generate a secure random string (32+ characters) - NEVER use default in production
+- **Database Variables**: Automatically set by Vercel when you add Postgres storage
+- **Local Development**: Copy database variables from Vercel Dashboard → Storage → Postgres
+- **Gemini API**: Users can still configure via UI (stored in localStorage), env var is fallback
 
 ## Project Structure
 
-**Note**: The project has a dual component structure due to migration in progress:
-- **`src/components/`**: New SaaS-related components (landing page, auth, UI library)
-- **`components/`** (root): Legacy document processing components from MVP phase
-
 ```
 Alloggify/
+├── api/                         # Vercel Serverless Functions (TypeScript)
+│   ├── auth/
+│   │   ├── login.ts             # POST /api/auth/login - JWT authentication
+│   │   ├── register.ts          # POST /api/auth/register - User registration + email
+│   │   ├── verify.ts            # GET /api/auth/verify - Email verification
+│   │   ├── forgot.ts            # POST /api/auth/forgot - Password reset request
+│   │   └── reset.ts             # POST /api/auth/reset - Password reset confirmation
+│   ├── ai/
+│   │   └── chat.ts              # POST /api/ai/chat - Gemini AI assistant
+│   ├── ocr.ts                   # POST /api/ocr - Document OCR extraction
+│   └── alloggiati.ts            # POST /api/alloggiati - SOAP API proxy (unified)
+├── lib/                         # Shared backend utilities
+│   ├── db.ts                    # Database helpers (Neon PostgreSQL via @vercel/postgres)
+│   ├── auth.ts                  # JWT generation, password hashing, validation
+│   └── soap.ts                  # SOAP client for Alloggiati Web API
+├── database/
+│   └── schema.sql               # PostgreSQL schema (users, scans, subscriptions, usage_logs)
+├── scripts/
+│   ├── init-db.js               # Initialize database schema
+│   └── delete-test-users.js     # Clean up test data
 ├── src/
-│   ├── pages/              # React pages (routing)
+│   ├── pages/                   # React pages (routing)
 │   │   ├── LandingPage.tsx      # Public landing page with pricing
 │   │   ├── LoginPage.tsx        # Login form
 │   │   ├── SignupPage.tsx       # Registration form
@@ -129,22 +171,12 @@ Alloggify/
 │   │   ├── PrivacyPolicy.tsx    # Legal page
 │   │   └── TermsOfService.tsx   # Legal page
 │   ├── components/
-│   │   ├── AIChatWidget.tsx           # AI assistant chat UI
-│   │   ├── SEOHead.tsx                # SEO meta tags
-│   │   ├── ProtectedRoute.tsx         # Auth route guard
-│   │   ├── landing/                   # Landing page sections
-│   │   │   ├── Pricing.tsx
-│   │   │   ├── Testimonials.tsx
-│   │   │   ├── FAQ.tsx
-│   │   │   └── Footer.tsx
-│   │   └── ui/                        # Reusable UI components
-│   │       ├── Button.tsx
-│   │       ├── Card.tsx
-│   │       ├── Badge.tsx
-│   │       ├── Alert.tsx
-│   │       └── index.ts
+│   │   ├── AIChatWidget.tsx     # AI assistant chat UI
+│   │   ├── ProtectedRoute.tsx   # Auth route guard
+│   │   ├── landing/             # Landing page sections (Pricing, FAQ, etc.)
+│   │   └── ui/                  # Reusable UI components (Button, Card, Alert)
 │   ├── context/
-│   │   └── AuthContext.tsx      # Authentication state management
+│   │   └── AuthContext.tsx      # Authentication state (calls /api/auth/*)
 │   ├── hooks/
 │   │   └── useAuth.tsx          # Authentication hook
 │   ├── services/
@@ -153,79 +185,129 @@ Alloggify/
 │   └── utils/
 │       └── fileUtils.ts         # File handling utilities (fileToBase64)
 ├── components/                  # Root-level legacy components
-│   ├── MainForm.tsx         # Main form (Dati Schedina, Anagrafici, Documento)
-│   ├── AlloggiatiCredentials.tsx  # SOAP API credentials panel
-│   ├── ConfirmationModal.tsx      # Confirmation dialog
-│   ├── ApiKeyGuide.tsx      # Gemini API key configuration UI
-│   ├── Header.tsx           # App header component
-│   ├── Logo.tsx             # Logo component
-│   ├── Sidebar.tsx          # Sidebar navigation
-│   └── icons/               # Icon components
-├── server/                      # Backend Express server
-│   ├── index.js                 # Express app entry point
-│   ├── routes/                  # API route handlers
-│   │   ├── auth.js              # WSKEY authentication + token generation
-│   │   ├── test.js              # Test schedina (validation)
-│   │   ├── send.js              # Send schedina to Alloggiati Web
-│   │   ├── ricevuta.js          # Download receipt PDF
-│   │   ├── chat.js              # AI assistant endpoint
-│   │   └── tabelle.js           # Download reference tables (CSV)
-│   ├── utils/
-│   │   └── soap.js              # SOAP client utilities for Alloggiati Web API
-│   └── package.json             # Server dependencies
-├── chrome-extension/            # Chrome extension files
-│   ├── manifest.json            # Extension manifest (v3)
-│   ├── content.js               # Content script for Alloggiati Web
-│   ├── background.js            # Service worker
-│   ├── popup.html/js            # Extension popup UI
-│   ├── alloggify-bridge.js      # Bridge script for localhost
-│   └── icons/                   # Extension icons
-├── App.tsx                      # React Router setup + route definitions (root)
-├── index.tsx                    # React entry point (root)
-├── types.ts                     # TypeScript interfaces (root)
+│   ├── MainForm.tsx             # Main form (Dati Schedina, Anagrafici, Documento)
+│   ├── AlloggiatiCredentials.tsx # SOAP API credentials panel
+│   ├── ConfirmationModal.tsx    # Confirmation dialog
+│   └── ...                      # Header, Logo, Sidebar, icons
+├── chrome-extension/            # Chrome extension files (Manifest V3)
+│   ├── manifest.json
+│   ├── content.js               # Auto-fill script for Alloggiati Web
+│   └── ...
+├── server/                      # DEPRECATED - Legacy Express server (use api/ instead)
+├── App.tsx                      # React Router setup + route definitions
+├── types.ts                     # TypeScript interfaces (DocumentData, User, etc.)
 ├── vite.config.ts               # Vite configuration
-└── .env.local                   # Environment variables (GEMINI_API_KEY)
+├── vercel.json                  # Vercel deployment config
+└── .env.local                   # Environment variables
 ```
 
+**Key Directories**:
+- **`api/`**: Vercel Serverless Functions - all backend logic lives here
+- **`lib/`**: Shared utilities for serverless functions (DB, auth, SOAP)
+- **`database/`**: SQL schema and migration scripts
+- **`src/`**: React frontend application
+- **`server/`**: DEPRECATED - old Express server (kept for reference, not used in production)
+
 ## Architecture
+
+### Vercel Serverless Functions
+
+All backend logic is implemented as **Vercel Serverless Functions** (TypeScript):
+
+**Configuration** (`vercel.json`):
+```json
+{
+  "functions": {
+    "api/**/*.ts": {
+      "maxDuration": 30  // 30-second timeout for all API routes
+    }
+  }
+}
+```
+
+**Function Pattern**:
+- Each `.ts` file in `api/` becomes an endpoint
+- Export default async handler: `(req: VercelRequest, res: VercelResponse) => Promise<void>`
+- Auto-deployed on Vercel, auto-scaling
+- No server management required
+
+**Example Function** (`api/auth/login.ts`):
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  // ... authentication logic
+}
+```
+
+### Database Integration (Neon PostgreSQL)
+
+**Connection Library**: `@vercel/postgres`
+- **Auto-configured** by Vercel (no connection strings in code)
+- **Connection pooling** built-in
+- **Tagged template queries** for SQL injection protection
+
+**Usage Pattern** (`lib/db.ts`):
+```typescript
+import { sql } from '@vercel/postgres';
+
+const result = await sql`
+  SELECT * FROM users WHERE email = ${email} LIMIT 1
+`;
+```
+
+**Database Schema** (`database/schema.sql`):
+- **users**: Email verification, password reset, subscription management
+- **scans**: Document scan history with JSONB extracted data
+- **subscriptions**: Stripe integration (ready for webhooks)
+- **usage_logs**: Analytics and audit trail
+
+**Key Features**:
+- UUID primary keys (`uuid_generate_v4()`)
+- JSONB columns for flexible data
+- Automatic `updated_at` triggers
+- Comprehensive indexing
 
 ### Routing & Authentication System
 
 The application uses **React Router v7** with protected routes:
 
-**Public Routes** (accessible without login):
-- `/` - Landing page (pricing, features, testimonials)
+**Public Routes**:
+- `/` - Landing page
 - `/login` - Login page
-- `/signup` - Signup page
+- `/signup` - Registration page
 - `/privacy` - Privacy policy
 - `/terms` - Terms of service
 
-**Protected Routes** (require authentication):
+**Protected Routes**:
 - `/dashboard` - Redirects to `/dashboard/scan`
-- `/dashboard/scan` - Main document scanning interface (DashboardPage)
+- `/dashboard/scan` - Main document scanning interface
 
 **Authentication Flow**:
 ```
-index.tsx → App.tsx (Router + AuthProvider wrapper)
-  ↓
-AuthContext provides: { user, login, signup, logout, isAuthenticated }
-  ↓
-ProtectedRoute component checks isAuthenticated
-  ↓
-If authenticated: Render dashboard
-If not: Redirect to /login
+1. User Registration:
+   POST /api/auth/register → Create user in DB → Send verification email (Resend API)
+   ↓
+2. Email Verification:
+   GET /api/auth/verify?token=xxx → Update email_verified = TRUE
+   ↓
+3. User Login:
+   POST /api/auth/login → Verify credentials → Generate JWT tokens
+   ↓
+4. Frontend Storage:
+   sessionStorage: alloggify_user, alloggify_token (auto-logout on browser close)
+   ↓
+5. Protected Routes:
+   ProtectedRoute checks sessionStorage → Redirect to /login if unauthenticated
 ```
 
-**Current Auth Implementation**:
-- **Storage**: localStorage (`alloggify_user`, `alloggify_token`)
+**Auth Implementation**:
+- **Storage**: sessionStorage (`alloggify_user`, `alloggify_token`) - auto-clear on browser close
 - **State Management**: React Context API (AuthContext)
-- **Mock Backend**: Login/signup simulate API calls with setTimeout
-- **User Model**: { id, email, fullName, companyName, subscriptionPlan, scanCount, monthlyScanLimit }
-- **Future**: Ready to connect to real backend API (see `AuthContext.tsx` TODO comments)
-
-**Auto-redirect Logic**:
-- Authenticated users visiting `/login` or `/signup` → redirect to `/dashboard`
-- Unauthenticated users visiting `/dashboard/*` → redirect to `/login`
+- **Backend**: Real Vercel Serverless API with Neon PostgreSQL
+- **JWT**: 7-day access token, 30-day refresh token
+- **Password Security**: bcrypt hashing (10 salt rounds)
+- **Email Verification**: Required before login (24-hour token expiry)
 
 ### Web Application Flow
 
@@ -341,33 +423,14 @@ The extension works on:
 - `https://alloggiatiweb.poliziadistato.it/*` (production portal)
 - `http://localhost:*/*` (local development - uses bridge script)
 
-### Backend Express Server (SOAP API Integration)
+### SOAP API Integration (Alloggiati Web)
 
-The `server/` directory contains an Express.js backend that provides SOAP API integration with the Alloggiati Web portal using **WSKEY authentication**.
+The `/api/alloggiati.ts` serverless function provides SOAP API integration with the Alloggiati Web portal using **WSKEY authentication**.
 
-**Architecture**:
-- **Port**: 3001 (default, configurable via PORT env var)
-- **CORS**: Configured for localhost:3000 (Vite dev) and Vercel production/preview deployments
-- **Purpose**: Proxies requests to Alloggiati Web SOAP API (avoids CORS issues in browser)
-- **Authentication**: WSKEY-based token generation for API access
-
-**API Endpoints**:
-- `POST /api/alloggiati/auth` - **Generate authentication token** using Username + Password + **WSKEY**
-- `POST /api/alloggiati/test` - Validate schedina data before submission (requires token)
-- `POST /api/alloggiati/send` - Send schedina to Alloggiati Web (requires token)
-- `POST /api/alloggiati/ricevuta` - Download receipt PDF (requires token + date range)
-- `GET /api/alloggiati/tabelle` - Download reference tables (Luoghi, Tipi Documento, Tipi Alloggiato) as CSV
-- `POST /api/ai/chat` - AI assistant chat endpoint (Gemini 2.5 Flash)
-
-**Key Files**:
-- `server/index.js` - Express app setup, middleware, route registration
-- `server/utils/soap.js` - SOAP client implementation for Alloggiati Web API
-- `server/routes/auth.js` - **WSKEY authentication** and token generation
-- `server/routes/test.js` - Schedina validation endpoint
-- `server/routes/send.js` - Schedina submission endpoint
-- `server/routes/ricevuta.js` - Receipt download endpoint
-- `server/routes/tabelle.js` - Reference tables download (CSV format)
-- `server/routes/chat.js` - AI assistant backend endpoint
+**Unified Endpoint**: `POST /api/alloggiati`
+- **Action-based routing**: Single endpoint with `action` parameter
+- **Actions**: `auth`, `test`, `send`, `ricevuta`, `tabelle`
+- **Purpose**: Proxies requests to Alloggiati Web SOAP API (avoids CORS issues)
 
 **WSKEY Role & Authentication Flow**:
 
@@ -381,11 +444,11 @@ The **WSKEY (Web Service Key)** is a secret credential that enables programmatic
 
 2. **Authentication Flow**:
    ```
-   Frontend sends: { utente, password, wskey }
+   Frontend sends: POST /api/alloggiati { action: 'auth', utente, password, wskey }
    ↓
-   server/routes/auth.js receives request
+   api/alloggiati.ts receives request
    ↓
-   server/utils/soap.js builds SOAP envelope:
+   lib/soap.ts builds SOAP envelope:
      <GenerateToken>
        <Utente>username</Utente>
        <Password>password</Password>
@@ -405,29 +468,20 @@ The **WSKEY (Web Service Key)** is a secret credential that enables programmatic
    - **WSKEY**: Permanent credential (until regenerated); used once per session
    - **Token**: Temporary session token (expires after 30-60 min); regenerated as needed
 
-4. **Security**:
-   - WSKEY passed from frontend (stored in .env.local or UI)
-   - Never logged or committed to git
-   - Transmitted only over HTTPS
-   - Token automatically refreshed on expiry
-
-**SOAP Integration**:
-The backend communicates with the official Alloggiati Web SOAP API endpoint:
-- **URL**: `https://alloggiatiweb.poliziadistato.it/wsAlloggiati/service.asmx`
-- **Protocol**: SOAP 1.1 (XML over HTTPS)
+**SOAP Integration** (`lib/soap.ts`):
+- **API Endpoint**: `https://alloggiatiweb.poliziadistato.it/service/service.asmx`
+- **Protocol**: SOAP 1.2 (XML over HTTPS)
 - **Operations**: GenerateToken, TestSchedula, InviaSchedula, DownloadRicevuta
+- **XML Escaping**: `escapeXml()` function prevents injection attacks
+- **Helper Functions**:
+  - `callSoap(envelope, operation)` - HTTP POST with SOAP envelope
+  - `escapeXml(unsafe)` - Escape XML entities (&, <, >, ", ')
 
-The server acts as a proxy to:
-- Handle SOAP XML request/response serialization
-- Bypass browser CORS restrictions
-- Manage token lifecycle
-- Provide REST-like interface for frontend
-
-**Environment**:
-- Development: `npm run dev` (auto-reload with --watch flag)
-- Production: `npm start`
-- Logs all requests with timestamp for debugging
-- No database required (stateless operation)
+**Security**:
+- WSKEY transmitted only over HTTPS
+- Never logged or committed to git
+- Token automatically refreshed on expiry
+- XML injection protection via `escapeXml()`
 
 ### Document Type Classification Logic
 
@@ -514,14 +568,17 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
   - Direct ID selectors: `#Cognome`, `#Nome`, `#datan`, `#nascluo`, `#citt`, `#docT`, `#docN`, `#docLR`, `#NGioPerm`, `#dataA`
   - Placeholder/title-based searches: `fillByIdOrPlaceholder()` for fields without stable IDs
   - Select option matching: Case-insensitive matching by value or text content
-- **localStorage Keys**:
-  - `alloggifyData`: JSON-serialized DocumentData object (for Chrome Extension method)
-  - `alloggifyDataTimestamp`: Timestamp of last export
-  - `geminiApiKey`: User's Gemini API key (optional, UI-configurable)
-  - `alloggifyToken`: SOAP API authentication token (temporary, expires after session)
-  - `alloggifyCredentials`: JSON object with { utente, password, wskey } for SOAP API
-  - `alloggify_user`: Mock user object (SaaS authentication)
-  - `alloggify_token`: Mock auth token (SaaS authentication)
+- **Storage Keys**:
+  - **sessionStorage** (auto-clear on browser close):
+    - `alloggify_user`: User object from database (id, email, fullName, subscriptionPlan, etc.)
+    - `alloggify_token`: JWT access token (7-day expiry)
+  - **localStorage** (persistent):
+    - `alloggifyData`: JSON-serialized DocumentData object (for Chrome Extension method)
+    - `alloggifyDataTimestamp`: Timestamp of last export
+    - `geminiApiKey`: User's Gemini API key (optional, UI-configurable)
+    - `alloggifyToken`: SOAP API authentication token (temporary, expires after session)
+    - `alloggifyCredentials`: JSON object with { utente, password, wskey } for SOAP API
+    - `alloggiatiUtente`, `alloggiatiPassword`, `alloggiatiWskey`: Individual SOAP credentials
 - **Custom Events**: `alloggifyDataExported` event is dispatched on window when data is exported (for extension bridge)
 - **WSKEY Technical Details**:
   - **Format**: Base64-encoded string, typically 88 characters ending with `==`
@@ -541,10 +598,44 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 ## Development Workflow Notes
 
 ### Making Changes to Authentication
-- **Frontend**: Edit `src/context/AuthContext.tsx` for auth logic
+- **Frontend**: Edit `src/context/AuthContext.tsx` for auth state management
+- **Backend**: Modify serverless functions in `api/auth/*.ts`
 - **Protected Routes**: Use `<ProtectedRoute>` wrapper in `App.tsx`
-- **Backend Integration**: Look for `TODO` comments in AuthContext - replace mock API calls with real endpoints
-- **Testing Auth**: Currently uses mock users - login with any email/password
+- **Database**: User model defined in `database/schema.sql` (users table)
+- **Testing Auth**:
+  1. Register user via `/signup` → Check email for verification link
+  2. Click verification link → Email verified
+  3. Login via `/login` → JWT tokens generated
+
+### Adding New Serverless API Endpoints
+1. Create `.ts` file in `api/` directory (e.g., `api/example.ts`)
+2. Export default async handler with `VercelRequest` and `VercelResponse` types
+3. Import helper functions from `lib/` (db, auth, soap)
+4. Handle errors with try/catch and appropriate status codes
+5. Test locally with `npm run dev` → API available at `http://localhost:3000/api/example`
+
+**Example**:
+```typescript
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { requireAuth } from '../lib/auth';
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const user = await requireAuth(req, res);
+  if (!user) return; // Auth failed, response already sent
+
+  // Your logic here
+  return res.status(200).json({ message: 'Success' });
+}
+```
+
+### Database Operations
+- **Connection**: Use `import { sql } from '@vercel/postgres'` in serverless functions
+- **Helpers**: `lib/db.ts` provides common queries (getUserByEmail, createUser, etc.)
+- **Migrations**: Run `node scripts/init-db.js` to initialize schema
+- **Query Pattern**: Tagged template literals for SQL injection protection
+  ```typescript
+  const result = await sql`SELECT * FROM users WHERE email = ${email}`;
+  ```
 
 ### Adding New Pages
 1. Create page component in `src/pages/`
@@ -554,15 +645,16 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 
 ### Modifying Document Processing
 - **OCR Logic**: `src/services/geminiService.ts` - contains Gemini prompt and response parsing
+- **Backend OCR**: `api/ocr.ts` - serverless function for Gemini API calls
 - **Form Fields**: `components/MainForm.tsx` (root-level) - three fieldsets structure
 - **Data Model**: `types.ts` (root-level) - DocumentData and ExtractedInfo interfaces
-- **Validation**: Happens client-side in MainForm + server-side via SOAP test endpoint
+- **Validation**: Client-side in MainForm + server-side via SOAP test endpoint
 
 ### Working with SOAP API
-- **Backend Routes**: `server/routes/*.js` - each endpoint handles specific SOAP operation
-- **SOAP XML Building**: `server/utils/soap.js` - helper functions for XML construction
-- **Testing SOAP Calls**: Use tools like Postman/Insomnia or test via frontend panel
-- **Error Handling**: SOAP errors parsed in backend and returned as JSON to frontend
+- **Serverless Function**: `api/alloggiati.ts` - unified endpoint with action-based routing
+- **SOAP XML Building**: `lib/soap.ts` - helper functions for XML construction
+- **Testing SOAP Calls**: Use Postman/Insomnia or test via frontend panel
+- **Error Handling**: SOAP errors parsed in serverless function and returned as JSON
 
 ### Chrome Extension Development
 - **Content Script**: `chrome-extension/content.js` - runs on Alloggiati Web portal
@@ -583,10 +675,11 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 - Be aware of dual component structure: `src/components/` (new) vs `components/` (root, legacy)
 - When importing, check both locations if component not found
 
-### CORS and API Integration
-- Backend server (`localhost:3001`) acts as SOAP proxy to avoid browser CORS issues
-- Always use backend for SOAP API calls, never call Alloggiati Web API directly from frontend
-- Backend CORS is configured for Vite dev (`localhost:3000`) and Vercel production domains
+### Serverless Functions and CORS
+- Vercel automatically handles CORS for serverless functions
+- API calls from frontend to `/api/*` are same-origin (no CORS issues)
+- SOAP API proxy (`api/alloggiati.ts`) handles external SOAP calls server-side
+- Never call Alloggiati Web API directly from frontend (CORS + security)
 
 ### Data Format Conversions
 - Dates are stored internally as `YYYY-MM-DD` but portal requires `DD/MM/YYYY`
@@ -594,7 +687,55 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 - These conversions happen automatically in `chrome-extension/content.js`
 
 ### Testing the Application
-- **No test suite currently exists** - manual testing required
-- Test both submission methods (Chrome Extension + SOAP API) when making changes
-- Always test with real document images (ID cards, passports, licenses)
-- Verify SOAP API with valid Alloggiati Web credentials before extensive testing
+- **No automated test suite** - manual testing required
+- Test authentication flow: registration → email verification → login
+- Test OCR with real document images (ID cards, passports, licenses)
+- Test SOAP API with valid Alloggiati Web credentials
+- Check email delivery in Resend dashboard
+- Monitor serverless function logs in Vercel dashboard
+
+### Deployment to Vercel
+1. **Initial Setup**:
+   - Connect GitHub repo to Vercel
+   - Add Vercel Postgres storage (auto-configures database env vars)
+   - Add Resend API key to environment variables
+   - Add JWT_SECRET (generate secure random string)
+   - Add GEMINI_API_KEY
+
+2. **Database Initialization**:
+   - Copy database connection strings from Vercel Dashboard
+   - Run `node scripts/init-db.js` locally to create tables
+   - OR run SQL directly in Vercel Postgres Query tab
+
+3. **Post-Deploy**:
+   - Test registration/login flow
+   - Verify email delivery works
+   - Check OCR functionality
+   - Monitor function logs for errors
+
+### SaaS Readiness Checklist
+
+**✅ IMPLEMENTED**:
+- User authentication (JWT + email verification)
+- Password reset flow
+- Neon PostgreSQL database with user management
+- Subscription plan field in database
+- Scan count tracking and limits
+- Usage analytics logging
+- Serverless architecture (auto-scaling)
+- Email service (Resend API)
+
+**🔶 PARTIALLY IMPLEMENTED**:
+- Stripe integration schema (tables exist, no webhooks yet)
+- Scan history tracking (database ready, OCR endpoint not protected)
+
+**❌ TODO FOR FULL SAAS**:
+- Stripe payment integration (checkout, webhooks, subscription management)
+- Protected OCR endpoint with usage limit enforcement
+- User dashboard API endpoints (profile, scan history, billing)
+- Stripe webhook handler (`/api/webhooks/stripe`)
+- Monthly scan limit reset cron job
+- Admin dashboard for user management
+- Email templates for marketing/transactional emails
+- Rate limiting (consider Vercel KV for Redis-like caching)
+- Automated tests (unit, integration, E2E)

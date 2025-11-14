@@ -1,10 +1,22 @@
 /**
  * OCR API Endpoint - Vercel Serverless Function
  * Gemini 2.5 Flash-powered document extraction
+ *
+ * 🔒 PROTECTED ENDPOINT - Requires JWT authentication
+ * 📊 Enforces monthly scan limits based on subscription plan
+ * 💾 Logs all scans to database for analytics
  */
 
 import { GoogleGenAI, Type } from "@google/genai";
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { requireAuth, getIpAddress, getUserAgent } from '../lib/auth';
+import {
+    hasReachedScanLimit,
+    incrementScanCount,
+    logScan,
+    logUserAction,
+    getUserById
+} from '../lib/db';
 
 // Vercel serverless function configuration
 export const config = {
@@ -24,6 +36,13 @@ const ai = new GoogleGenAI({ apiKey });
  * POST /api/ocr
  * Extract document information from image
  *
+ * 🔒 Authentication: Required (Bearer token)
+ *
+ * Request headers:
+ * {
+ *   "Authorization": "Bearer <JWT_TOKEN>"
+ * }
+ *
  * Request body:
  * {
  *   "base64Image": "data:image/jpeg;base64,...",
@@ -37,6 +56,11 @@ const ai = new GoogleGenAI({ apiKey });
  *     "lastName": "ROSSI",
  *     "firstName": "MARIO",
  *     ...
+ *   },
+ *   "usage": {
+ *     "scanCount": 3,
+ *     "monthlyLimit": 5,
+ *     "remaining": 2
  *   }
  * }
  */
@@ -46,7 +70,53 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    const startTime = Date.now();
+
     try {
+        // ========================================
+        // 1. AUTHENTICATION CHECK
+        // ========================================
+        const authPayload = await requireAuth(req, res);
+        if (!authPayload) {
+            // Response already sent by requireAuth
+            return;
+        }
+
+        const userId = authPayload.userId;
+        console.log(`[OCR] Request from user: ${userId}`);
+
+        // ========================================
+        // 2. CHECK SCAN LIMIT
+        // ========================================
+        const limitReached = await hasReachedScanLimit(userId);
+
+        if (limitReached) {
+            // Get user info for limit details
+            const user = await getUserById(userId);
+
+            await logUserAction({
+                userId,
+                action: 'ocr_limit_reached',
+                metadata: {
+                    scanCount: user?.scan_count,
+                    limit: user?.monthly_scan_limit
+                },
+                ipAddress: getIpAddress(req),
+                userAgent: getUserAgent(req)
+            });
+
+            return res.status(403).json({
+                error: 'Scan limit reached',
+                message: 'Hai raggiunto il limite mensile di scansioni. Effettua l\'upgrade per continuare.',
+                scanCount: user?.scan_count || 0,
+                monthlyLimit: user?.monthly_scan_limit || 0,
+                upgradeUrl: '/pricing'
+            });
+        }
+
+        // ========================================
+        // 3. VALIDATE REQUEST
+        // ========================================
         const { base64Image, mimeType } = req.body;
 
         // Validation
@@ -133,15 +203,87 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
         const parsedJson = JSON.parse(jsonText);
 
+        const processingTime = Date.now() - startTime;
+
         console.log('[OCR] ✅ Document extracted successfully');
 
+        // ========================================
+        // 4. LOG SCAN TO DATABASE
+        // ========================================
+        await logScan({
+            userId,
+            documentType: parsedJson.documentType || 'UNKNOWN',
+            extractedData: parsedJson,
+            processingTimeMs: processingTime,
+            success: true
+        });
+
+        // ========================================
+        // 5. INCREMENT SCAN COUNT
+        // ========================================
+        const updatedUsage = await incrementScanCount(userId);
+
+        await logUserAction({
+            userId,
+            action: 'ocr_scan_success',
+            metadata: {
+                documentType: parsedJson.documentType,
+                processingTimeMs: processingTime,
+                scanCount: updatedUsage?.scan_count
+            },
+            ipAddress: getIpAddress(req),
+            userAgent: getUserAgent(req)
+        });
+
+        console.log(`[OCR] User ${userId} scan count: ${updatedUsage?.scan_count}/${updatedUsage?.monthly_scan_limit}`);
+
+        // ========================================
+        // 6. RETURN SUCCESS WITH USAGE INFO
+        // ========================================
         return res.status(200).json({
             success: true,
-            data: parsedJson
+            data: parsedJson,
+            usage: {
+                scanCount: updatedUsage?.scan_count || 0,
+                monthlyLimit: updatedUsage?.monthly_scan_limit || 0,
+                remaining: Math.max(0, (updatedUsage?.monthly_scan_limit || 0) - (updatedUsage?.scan_count || 0))
+            }
         });
 
     } catch (error: any) {
         console.error('[OCR Error]', error);
+
+        const processingTime = Date.now() - startTime;
+
+        // Try to get userId if authentication passed
+        const userId = (req as any).user?.userId;
+
+        // Log error to database if we have userId
+        if (userId) {
+            try {
+                await logScan({
+                    userId,
+                    documentType: 'UNKNOWN',
+                    extractedData: {},
+                    processingTimeMs: processingTime,
+                    success: false,
+                    errorMessage: error.message
+                });
+
+                await logUserAction({
+                    userId,
+                    action: 'ocr_scan_failed',
+                    metadata: {
+                        errorType: error.name,
+                        errorMessage: error.message
+                    },
+                    ipAddress: getIpAddress(req),
+                    userAgent: getUserAgent(req)
+                });
+            } catch (logError) {
+                console.error('[OCR] Failed to log error to database:', logError);
+            }
+        }
 
         // Check if it's an API key error
         if (error.message && error.message.includes('API key not valid')) {
