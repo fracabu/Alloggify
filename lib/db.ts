@@ -4,7 +4,7 @@
  */
 
 import { sql } from '@vercel/postgres';
-import { kv } from '@vercel/kv';
+// import { kv } from '@vercel/kv'; // TODO: Uncomment when Vercel KV is configured
 
 /**
  * Database connection is automatically handled by @vercel/postgres
@@ -17,7 +17,8 @@ import { kv } from '@vercel/kv';
  */
 
 // Export sql for direct queries
-export { sql, kv };
+export { sql };
+// export { kv }; // TODO: Uncomment when Vercel KV is configured
 
 /**
  * Helper: Get user by email
