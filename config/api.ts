@@ -22,11 +22,7 @@ const getApiBaseUrl = (): string => {
 
 export const API_BASE_URL = getApiBaseUrl();
 
-// API Endpoints
+// API Endpoints - Unified Alloggiati endpoint (action-based routing)
 export const API_ENDPOINTS = {
-    auth: `${API_BASE_URL}/api/alloggiati/auth`,
-    test: `${API_BASE_URL}/api/alloggiati/test`,
-    send: `${API_BASE_URL}/api/alloggiati/send`,
-    ricevuta: `${API_BASE_URL}/api/alloggiati/ricevuta`,
-    tabelle: `${API_BASE_URL}/api/alloggiati/tabelle`,
+    alloggiati: `${API_BASE_URL}/api/alloggiati`, // Single unified endpoint
 };

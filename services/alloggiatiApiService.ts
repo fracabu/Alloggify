@@ -84,12 +84,15 @@ export class AlloggiatiApiService {
      */
     async generateToken(credentials: AlloggiatiCredentials): Promise<TokenResponse> {
         try {
-            const response = await fetch(API_ENDPOINTS.auth, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(credentials),
+                body: JSON.stringify({
+                    action: 'auth',
+                    ...credentials
+                }),
             });
 
             if (!response.ok) {
@@ -146,12 +149,13 @@ export class AlloggiatiApiService {
         const csvSchedina = this.buildSchedinaCSV(data);
 
         try {
-            const response = await fetch(API_ENDPOINTS.test, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'test',
                     utente,
                     token: this.token,
                     schedine: [csvSchedina] // Array of strings!
@@ -193,12 +197,13 @@ export class AlloggiatiApiService {
             // Format date as ISO DateTime (YYYY-MM-DDTHH:MM:SS)
             const formattedDate = `${date}T00:00:00`;
 
-            const response = await fetch(API_ENDPOINTS.ricevuta, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'ricevuta',
                     utente,
                     token: this.token,
                     data: formattedDate
@@ -244,12 +249,13 @@ export class AlloggiatiApiService {
         const csvSchedina = this.buildSchedinaCSV(data);
 
         try {
-            const response = await fetch(API_ENDPOINTS.send, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'send',
                     utente,
                     token: this.token,
                     schedine: [csvSchedina] // Array of strings!
@@ -488,12 +494,13 @@ export class AlloggiatiApiService {
         }
 
         try {
-            const response = await fetch(API_ENDPOINTS.tabelle, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'tabelle',
                     utente,
                     token: this.token,
                     tipo: 0 // TipoTabella.Luoghi
@@ -551,12 +558,13 @@ export class AlloggiatiApiService {
         }
 
         try {
-            const response = await fetch(API_ENDPOINTS.tabelle, {
+            const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    action: 'tabelle',
                     utente,
                     token: this.token,
                     tipo: 1 // TipoTabella.Tipi_Documento
