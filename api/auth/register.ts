@@ -26,7 +26,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { email, password, fullName, companyName } = req.body;
+    // Parse body if it's a string (Vercel sometimes sends body as string)
+    let body = req.body;
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (parseError) {
+        return res.status(400).json({
+          error: 'Invalid JSON',
+          message: 'Il corpo della richiesta non è un JSON valido'
+        });
+      }
+    }
+
+    const { email, password, fullName, companyName } = body;
 
     // ========================================
     // 1. VALIDATION
