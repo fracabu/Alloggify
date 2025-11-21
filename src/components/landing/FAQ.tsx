@@ -28,15 +28,15 @@ export const FAQ: React.FC = () => {
         },
         {
             question: 'Funziona anche su mobile?',
-            answer: 'La web app è completamente responsive e funziona perfettamente su tablet e smartphone. Puoi scansionare documenti direttamente dalla fotocamera del telefono. L\'estensione Chrome invece richiede un computer desktop (Chrome, Edge, Brave).'
+            answer: 'Sì! La web app è completamente responsive e funziona perfettamente su tablet e smartphone. Puoi scansionare documenti direttamente dalla fotocamera del telefono e inviare le schedine ad Alloggiati Web da qualsiasi dispositivo.'
         },
         {
             question: 'Serve installare software sul mio computer?',
-            answer: 'No! CheckInly è completamente cloud-based. Hai bisogno solo di: 1) Un browser moderno per accedere alla web app, 2) L\'estensione Chrome (gratuita) se vuoi la compilazione automatica su Alloggiati Web. L\'installazione dell\'estensione richiede un solo click.'
+            answer: 'No! CheckInly è completamente cloud-based. Ti serve solo un browser moderno per accedere alla web app. Tutto funziona online senza bisogno di installazioni o download.'
         },
         {
-            question: 'Come funziona la compilazione automatica su Alloggiati Web?',
-            answer: 'Dopo aver scansionato il documento nella nostra web app, clicchi su "Esporta per Estensione". Poi apri il portale Alloggiati Web della Polizia di Stato. L\'estensione Chrome rileva automaticamente la pagina e mostra un pulsante "Compila da CheckInly". Con un click, tutti i campi vengono riempiti istantaneamente.'
+            question: 'Come funziona l\'invio automatico ad Alloggiati Web?',
+            answer: 'Dopo aver scansionato il documento con l\'OCR, CheckInly compila automaticamente tutti i campi. Inserisci le tue credenziali Alloggiati Web (username, password e WSKEY) e clicca "Invia Schedina". Il sistema invia direttamente i dati tramite le API ufficiali della Polizia di Stato e ti fornisce la ricevuta di conferma.'
         },
         {
             question: 'Cosa succede se l\'OCR fa un errore?',
