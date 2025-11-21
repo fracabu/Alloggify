@@ -224,22 +224,22 @@ export const LandingPage: React.FC = () => {
                         <div className="mb-6 flex justify-center">
                             <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold">
                                 <SparklesIconSolid className="h-4 w-4" />
-                                Nuovo: AI Assistant + Automazione Completa
+                                Powered by Google Gemini AI
                             </span>
                         </div>
 
                         {/* Main Headline */}
                         <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-                            Basta{' '}
+                            Da Documento a Schedina{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-purple-600">
-                                Perdere Ore
+                                Inviata
                             </span>{' '}
-                            su<br className="hidden md:block" /> Alloggiati Web
+                            in<br className="hidden md:block" /> 30 Secondi
                         </h1>
 
                         {/* Subheadline */}
                         <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-                            Scansiona documenti in 1 secondo, invia tutto con 1 click. L'AI fa il lavoro noioso, tu ti dedichi agli ospiti.
+                            L'OCR più veloce ed economico d'Italia per Alloggiati Web. Scansione istantanea con AI, invio automatico, gestione illimitata proprietà. Tutto al prezzo di un caffè al giorno.
                         </p>
 
                         {/* CTA Buttons */}
@@ -248,13 +248,13 @@ export const LandingPage: React.FC = () => {
                                 to="/signup"
                                 className="px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold text-lg hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                             >
-                                Inizia Gratis
+                                5 Scansioni Gratis, Sempre
                             </Link>
                             <a
                                 href="#pricing"
                                 className="px-8 py-4 border-2 border-primary-500 text-primary-500 rounded-lg font-semibold text-lg hover:bg-primary-50 transition-all"
                             >
-                                Vedi Prezzi
+                                Vedi Come Funziona
                             </a>
                         </div>
 
@@ -262,15 +262,15 @@ export const LandingPage: React.FC = () => {
                         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
                             <span className="inline-flex items-center gap-1.5">
                                 <CheckBadgeIcon className="h-4 w-4 text-blue-600" />
-                                99.2% accuracy con Google Vision
+                                Google Gemini AI - Precisione superiore al 99%
                             </span>
                             <span className="inline-flex items-center gap-1.5">
                                 <BoltIconSolid className="h-4 w-4 text-amber-500" />
-                                Attivo in 2 minuti
+                                Multi-proprietà incluso - Nessun costo extra
                             </span>
                             <span className="inline-flex items-center gap-1.5">
                                 <LockClosedIcon className="h-4 w-4 text-primary-600" />
-                                100% GDPR compliant
+                                Piano Free permanente - Nessuna carta richiesta
                             </span>
                         </div>
                     </div>
