@@ -20,11 +20,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Discovered official Alloggiati Web SOAP API
 - Implemented WSKEY-based authentication
 - Full automation: OCR → Test → Send → Receipt download
-- Express backend server for SOAP proxy (deprecated - see Phase 3)
+- Express backend server for SOAP proxy (still used for local development)
 
 **Phase 3 - SaaS Platform (CURRENT)**
 Now deployed as a production SaaS platform with:
-- **Vercel Serverless Functions**: Auto-scaling API endpoints (no Express server)
+- **Hybrid Backend Architecture**: Express server for local dev + Vercel Serverless for production
 - **Neon PostgreSQL**: Serverless database via `@vercel/postgres`
 - **JWT Authentication**: Email verification, password reset, session management
 - **Transactional Email**: Resend API integration
@@ -33,24 +33,32 @@ Now deployed as a production SaaS platform with:
 
 **See `SAAS_PLAN.md` for complete roadmap and financial projections.**
 
-### Current Architecture (Vercel Serverless)
+### Current Architecture (Hybrid)
 
 1. **React Web App**: Vite + React 19 + React Router application with:
    - Landing page with pricing, testimonials, FAQ
    - Authentication system (login/signup with email verification)
    - Protected dashboard for document scanning
    - Responsive UI with Tailwind CSS
-2. **Vercel Serverless API**: TypeScript functions in `api/` directory:
-   - Authentication endpoints (`/api/auth/*`)
-   - OCR endpoint (`/api/ocr`)
-   - SOAP API proxy (`/api/alloggiati`)
-   - AI chat assistant (`/api/ai/chat`)
+
+2. **Backend API** (dual implementation):
+   - **Local Development**: Express server (`server/index.js`) on port 3001
+   - **Production (Vercel)**: Serverless Functions in `api/` directory
+   - Both implement the same endpoints:
+     - Authentication endpoints (`/api/auth/*`)
+     - OCR endpoint (`/api/ocr`)
+     - SOAP API proxy (`/api/alloggiati`)
+     - AI chat assistant (`/api/ai/chat`)
+     - Stripe integration (`/api/stripe/*`)
+
 3. **Neon PostgreSQL**: Serverless database with:
    - User management (email verification, password reset)
    - Scan history tracking
    - Subscription management (Stripe integration ready)
    - Usage analytics
+
 4. **Chrome Extension**: Browser extension to auto-fill the Alloggiati Web portal form (Method A)
+
 5. **AI Services**: Gemini 2.5 Flash for OCR and chat assistant
 
 ## Common Development Commands
@@ -59,12 +67,18 @@ Now deployed as a production SaaS platform with:
 # Install dependencies
 npm install
 
-# Development server (frontend + serverless API)
+# Development server (runs BOTH frontend + backend concurrently)
 npm run dev
-# Opens on http://localhost:3000 (Vite dev server)
-# API routes available at /api/* (auto-proxied in dev)
+# This starts:
+#   - Frontend (Vite): http://localhost:3000
+#   - Backend (Express): http://localhost:3001
+#   - API routes proxied: /api/* → http://localhost:3001/api/*
 
-# Build for production
+# Individual development servers (manual control)
+npm run dev:frontend     # Vite dev server only (port 3000)
+npm run dev:api          # Express backend only (port 3001)
+
+# Build for production (Vercel deployment)
 npm run build
 
 # Preview production build locally
@@ -77,14 +91,69 @@ node scripts/delete-test-users.js    # Clean up test users
 
 ### Local Development Setup
 
-The app runs on a single Vite dev server with API routes handled by Vercel's local development environment:
+The app uses a **hybrid architecture** for development:
 
+1. **Express Server** (`server/index.js`): Handles API requests during local development
+   - Runs on port 3001
+   - SOAP API integration (auth, test, send, ricevuta)
+   - OCR endpoint
+   - AI chat endpoint
+   - User authentication endpoints
+
+2. **Vite Dev Server**: Serves frontend React application
+   - Runs on port 3000
+   - Proxies `/api/*` requests to Express server (port 3001)
+   - Hot module reloading for React components
+
+**Setup Steps**:
 1. Configure `.env.local` with all required environment variables
-2. Run `npm run dev`
-3. API endpoints are available at `http://localhost:3000/api/*`
-4. Frontend served at `http://localhost:3000`
+2. Run `npm run dev` (starts both servers via concurrently)
+3. Frontend: `http://localhost:3000`
+4. Backend API: `http://localhost:3001/api/*` (accessed via frontend proxy)
 
-**Note**: The old `server/` directory with Express is deprecated. All backend logic now lives in `api/` as Vercel Serverless Functions.
+**Note**: For production deployment on Vercel, the Express server is **not used**. Instead, Vercel Serverless Functions in `api/` directory are deployed. The `server/` directory is only for local development convenience.
+
+## External Services & Resources
+
+This project relies on several external services. Access these dashboards to manage and troubleshoot:
+
+### 📊 Database - Neon PostgreSQL
+- **Dashboard**: https://console.neon.tech/
+- **Purpose**: Serverless PostgreSQL database
+- **Tables**: `users`, `scans`, `subscriptions`, `usage_logs`
+- **Access**: Login with Neon account (integrated with Vercel)
+- **Query Interface**: Use Neon's SQL Editor or Vercel's Data tab
+- **Connection**: Auto-configured via Vercel environment variables
+
+### 📧 Email - Resend
+- **Dashboard**: https://resend.com/overview
+- **Purpose**: Transactional emails (verification, password reset)
+- **Current Domain**: `onboarding@resend.dev` (test domain)
+- **Limits (Free Tier)**: 100 emails/day, 3,000 emails/month
+- **API Key**: Configured in `RESEND_API_KEY` environment variable
+- **Troubleshooting**: Check "Emails" tab for delivery status and errors
+
+### 🤖 AI/OCR - Google Gemini
+- **Dashboard**: https://aistudio.google.com/apikey
+- **Purpose**: Document OCR extraction and AI chat assistant
+- **Model**: Gemini 2.5 Flash (free tier)
+- **Limits**: 1,500 requests/day (free)
+- **API Key**: Configured in `GEMINI_API_KEY` environment variable
+
+### 💳 Payments - Stripe
+- **Dashboard**: https://dashboard.stripe.com/
+- **Purpose**: Subscription payments (Basic/Pro/Enterprise)
+- **Test Mode**: Use test keys (`sk_test_*`, `pk_test_*`) for development
+- **Webhooks**: Configure at https://dashboard.stripe.com/webhooks
+- **Products**: Create subscription products and get Price IDs
+
+### 🚀 Hosting - Vercel
+- **Dashboard**: https://vercel.com/dashboard
+- **Purpose**: Serverless functions, frontend hosting, CI/CD
+- **Production URL**: https://alloggify.vercel.app
+- **Logs**: Monitor serverless function execution and errors
+- **Environment Variables**: Settings → Environment Variables
+- **Deployments**: Automatic on git push to main branch
 
 ## Environment Setup
 
@@ -142,7 +211,7 @@ POSTGRES_DATABASE="..."
 
 ```
 Alloggify/
-├── api/                         # Vercel Serverless Functions (TypeScript)
+├── api/                         # Vercel Serverless Functions (TypeScript) - PRODUCTION ONLY
 │   ├── auth/
 │   │   ├── login.ts             # POST /api/auth/login - JWT authentication
 │   │   ├── register.ts          # POST /api/auth/register - User registration + email
@@ -151,9 +220,28 @@ Alloggify/
 │   │   └── reset.ts             # POST /api/auth/reset - Password reset confirmation
 │   ├── ai/
 │   │   └── chat.ts              # POST /api/ai/chat - Gemini AI assistant
+│   ├── stripe/
+│   │   └── create-checkout-session.ts  # POST /api/stripe/create-checkout-session
+│   ├── webhooks/
+│   │   └── stripe.ts            # POST /api/webhooks/stripe - Stripe webhook handler
 │   ├── ocr.ts                   # POST /api/ocr - Document OCR extraction
 │   └── alloggiati.ts            # POST /api/alloggiati - SOAP API proxy (unified)
-├── lib/                         # Shared backend utilities
+├── server/                      # Express Server (LOCAL DEVELOPMENT ONLY)
+│   ├── index.js                 # Express app entry point
+│   ├── routes/
+│   │   ├── auth.js              # SOAP auth (token generation)
+│   │   ├── test.js              # Test schedina validation
+│   │   ├── send.js              # Send schedina to Alloggiati Web
+│   │   ├── ricevuta.js          # Download receipt PDF
+│   │   ├── tabelle.js           # Download lookup tables
+│   │   ├── chat.js              # AI chat endpoint
+│   │   ├── user-auth.js         # User authentication (login/register/verify)
+│   │   ├── ocr.js               # OCR endpoint
+│   │   └── stripe-*.js          # Stripe endpoints
+│   ├── utils/
+│   │   └── soap.js              # SOAP client utilities
+│   └── package.json             # Server dependencies
+├── lib/                         # Shared backend utilities (used by api/)
 │   ├── db.ts                    # Database helpers (Neon PostgreSQL via @vercel/postgres)
 │   ├── auth.ts                  # JWT generation, password hashing, validation
 │   └── soap.ts                  # SOAP client for Alloggiati Web API
@@ -193,7 +281,6 @@ Alloggify/
 │   ├── manifest.json
 │   ├── content.js               # Auto-fill script for Alloggiati Web
 │   └── ...
-├── server/                      # DEPRECATED - Legacy Express server (use api/ instead)
 ├── App.tsx                      # React Router setup + route definitions
 ├── types.ts                     # TypeScript interfaces (DocumentData, User, etc.)
 ├── vite.config.ts               # Vite configuration
@@ -202,17 +289,58 @@ Alloggify/
 ```
 
 **Key Directories**:
-- **`api/`**: Vercel Serverless Functions - all backend logic lives here
+- **`api/`**: Vercel Serverless Functions (TypeScript) - deployed to production on Vercel
+- **`server/`**: Express server (JavaScript) - used ONLY for local development (port 3001)
 - **`lib/`**: Shared utilities for serverless functions (DB, auth, SOAP)
 - **`database/`**: SQL schema and migration scripts
-- **`src/`**: React frontend application
-- **`server/`**: DEPRECATED - old Express server (kept for reference, not used in production)
+- **`src/`**: React frontend application (Vite + React 19)
+- **`components/`**: Root-level legacy components (pre-SaaS architecture)
+- **`chrome-extension/`**: Browser extension for auto-fill functionality
 
 ## Architecture
 
-### Vercel Serverless Functions
+### Hybrid Backend Architecture
 
-All backend logic is implemented as **Vercel Serverless Functions** (TypeScript):
+The project uses **two parallel backend implementations**:
+
+#### 1. Express Server (Local Development)
+
+**Location**: `server/index.js`
+**Port**: 3001
+**Technology**: Node.js + Express 5
+**Purpose**: Local development convenience
+
+**Key Features**:
+- All API routes in `server/routes/*.js`
+- CORS configured for localhost:3000 (Vite)
+- SOAP utilities in `server/utils/soap.js`
+- Hot reload with nodemon (optional)
+
+**Starting the server**:
+```bash
+npm run dev:api          # Start Express server on port 3001
+# OR
+npm run dev              # Start both Express + Vite concurrently
+```
+
+**Example Route** (`server/routes/auth.js`):
+```javascript
+const express = require('express');
+const router = express.Router();
+
+router.post('/api/auth/login', async (req, res) => {
+  // ... authentication logic
+});
+
+module.exports = router;
+```
+
+#### 2. Vercel Serverless Functions (Production)
+
+**Location**: `api/` directory (TypeScript)
+**Deployment**: Vercel auto-deployment
+**Technology**: Vercel Serverless Functions
+**Purpose**: Production scaling
 
 **Configuration** (`vercel.json`):
 ```json
@@ -239,6 +367,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // ... authentication logic
 }
 ```
+
+**Why Both?**
+- **Local Dev**: Express provides simpler debugging, console logs, and faster iteration
+- **Production**: Serverless provides auto-scaling, zero server management, and cost efficiency
+- **Both implement identical endpoints** - switching from local to production is seamless
 
 ### Database Integration (Neon PostgreSQL)
 
@@ -607,14 +740,42 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
   2. Click verification link → Email verified
   3. Login via `/login` → JWT tokens generated
 
-### Adding New Serverless API Endpoints
+### Adding New API Endpoints
+
+You need to implement endpoints in **both places** for consistency:
+
+#### For Local Development (Express):
+
+1. Create route file in `server/routes/` (e.g., `server/routes/example.js`)
+2. Implement Express router with middleware
+3. Register route in `server/index.js`
+4. Test with `npm run dev:api` → API at `http://localhost:3001/api/example`
+
+**Example** (`server/routes/example.js`):
+```javascript
+const express = require('express');
+const router = express.Router();
+
+router.post('/api/example', async (req, res) => {
+  try {
+    // Your logic here
+    res.json({ message: 'Success' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### For Production (Vercel Serverless):
+
 1. Create `.ts` file in `api/` directory (e.g., `api/example.ts`)
 2. Export default async handler with `VercelRequest` and `VercelResponse` types
 3. Import helper functions from `lib/` (db, auth, soap)
 4. Handle errors with try/catch and appropriate status codes
-5. Test locally with `npm run dev` → API available at `http://localhost:3000/api/example`
 
-**Example**:
+**Example** (`api/example.ts`):
 ```typescript
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAuth } from '../lib/auth';
@@ -623,10 +784,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const user = await requireAuth(req, res);
   if (!user) return; // Auth failed, response already sent
 
-  // Your logic here
+  // Your logic here (should match Express implementation)
   return res.status(200).json({ message: 'Success' });
 }
 ```
+
+**Important**: Keep both implementations in sync! When adding features, update both `server/routes/` and `api/` directories.
 
 ### Database Operations
 - **Connection**: Use `import { sql } from '@vercel/postgres'` in serverless functions
@@ -651,10 +814,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 - **Validation**: Client-side in MainForm + server-side via SOAP test endpoint
 
 ### Working with SOAP API
-- **Serverless Function**: `api/alloggiati.ts` - unified endpoint with action-based routing
-- **SOAP XML Building**: `lib/soap.ts` - helper functions for XML construction
-- **Testing SOAP Calls**: Use Postman/Insomnia or test via frontend panel
-- **Error Handling**: SOAP errors parsed in serverless function and returned as JSON
+- **Local Development**: Express routes in `server/routes/` (auth.js, test.js, send.js, ricevuta.js, tabelle.js)
+- **Production**: Serverless function `api/alloggiati.ts` - unified endpoint with action-based routing
+- **SOAP Utilities**:
+  - `lib/soap.ts` - TypeScript utilities for serverless functions
+  - `server/utils/soap.js` - JavaScript utilities for Express server
+- **Testing SOAP Calls**: Use Postman/Insomnia or test via frontend "API Alloggiati Web" panel
+- **Error Handling**: SOAP errors parsed and returned as JSON in both implementations
 
 ### Chrome Extension Development
 - **Content Script**: `chrome-extension/content.js` - runs on Alloggiati Web portal
@@ -675,10 +841,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 - Be aware of dual component structure: `src/components/` (new) vs `components/` (root, legacy)
 - When importing, check both locations if component not found
 
-### Serverless Functions and CORS
-- Vercel automatically handles CORS for serverless functions
-- API calls from frontend to `/api/*` are same-origin (no CORS issues)
-- SOAP API proxy (`api/alloggiati.ts`) handles external SOAP calls server-side
+### Backend and CORS
+- **Express Server**: CORS configured in `server/index.js` for localhost:3000 and Vercel domains
+- **Vercel Serverless**: Automatically handles CORS
+- API calls from frontend to `/api/*` are proxied (no CORS issues)
+- SOAP API proxy handles external SOAP calls server-side (both Express and serverless)
 - Never call Alloggiati Web API directly from frontend (CORS + security)
 
 ### Data Format Conversions

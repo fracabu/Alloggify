@@ -79,12 +79,61 @@
 
 ---
 
+## 🔧 External Services & Resources
+
+This project uses the following external services. Access these dashboards to manage and monitor resources:
+
+### 📊 Database - Neon PostgreSQL
+- **Service**: [Neon](https://neon.tech)
+- **Dashboard**: https://console.neon.tech/
+- **Usage**: Serverless PostgreSQL database for users, scans, subscriptions
+- **Tables**: `users`, `scans`, `subscriptions`, `usage_logs`
+- **Access**: Login with your Neon account (same as Vercel integration)
+- **Configuration**: Environment variables in `.env.local` (auto-configured by Vercel)
+
+### 📧 Email - Resend
+- **Service**: [Resend](https://resend.com)
+- **Dashboard**: https://resend.com/overview
+- **Usage**: Transactional emails (verification, password reset)
+- **API Key**: `RESEND_API_KEY` in `.env.local`
+- **Limits (Free)**: 100 emails/day, 3,000 emails/month
+- **Check**: Monitor email delivery status in Resend dashboard
+- **Domain**: Currently using `onboarding@resend.dev` (test domain)
+
+### 🤖 AI/OCR - Google Gemini
+- **Service**: [Google AI Studio](https://ai.google.dev/)
+- **Dashboard**: https://aistudio.google.com/apikey
+- **Usage**: Document OCR and AI chat assistant
+- **Model**: Gemini 2.5 Flash
+- **API Key**: `GEMINI_API_KEY` in `.env.local`
+- **Limits (Free)**: 1,500 requests/day
+
+### 💳 Payments - Stripe
+- **Service**: [Stripe](https://stripe.com)
+- **Dashboard**: https://dashboard.stripe.com/
+- **Usage**: Subscription payments (Basic/Pro/Enterprise plans)
+- **Keys**: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY` in `.env.local`
+- **Webhooks**: Configure at https://dashboard.stripe.com/webhooks
+- **Test Mode**: Use test keys for development
+
+### 🚀 Hosting - Vercel
+- **Service**: [Vercel](https://vercel.com)
+- **Dashboard**: https://vercel.com/dashboard
+- **Usage**: Serverless functions, frontend hosting, CI/CD
+- **Domain**: https://alloggify.vercel.app (or custom domain)
+- **Logs**: Monitor function logs and errors in Vercel dashboard
+- **Environment Variables**: Set all keys in Settings → Environment Variables
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
 - **Node.js** (v18 or higher)
 - **Gemini API Key** ([Get one free](https://ai.google.dev/))
 - **Chrome Browser** (for extension)
+- **Resend API Key** ([Get one free](https://resend.com/))
+- **Neon Database** (auto-configured via Vercel)
 
 ### Installation
 
