@@ -13,6 +13,8 @@ import { PrivacyPolicyPage } from './src/pages/PrivacyPolicy';
 import { TermsOfServicePage } from './src/pages/TermsOfService';
 import { TestStripePage } from './src/pages/TestStripePage';
 import { UpgradePage } from './src/pages/UpgradePage';
+import { NewsListPage } from './src/pages/NewsListPage';
+import { NewsDetailPage } from './src/pages/NewsDetailPage';
 
 const App: React.FC = () => {
     return (
@@ -24,6 +26,10 @@ const App: React.FC = () => {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/verify" element={<VerifyEmailPage />} />
+
+                    {/* News */}
+                    <Route path="/news" element={<NewsListPage />} />
+                    <Route path="/news/:slug" element={<NewsDetailPage />} />
 
                     {/* Protected Routes */}
                     <Route

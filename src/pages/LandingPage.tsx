@@ -8,6 +8,7 @@ import { FAQ } from '../components/landing/FAQ';
 import { Footer } from '../components/landing/Footer';
 import { SEOHead } from '../components/SEOHead';
 import { useAuth } from '../hooks/useAuth';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export const LandingPage: React.FC = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,6 +16,12 @@ export const LandingPage: React.FC = () => {
     const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
     const userMenuRef = useRef<HTMLDivElement>(null);
+
+    // Scroll animation refs
+    const featuresRef = useScrollAnimation('left');
+    const howItWorksRef = useScrollAnimation('right');
+    const pricingRef = useScrollAnimation('left');
+    const faqRef = useScrollAnimation('right');
 
     // Close user menu when clicking outside
     useEffect(() => {
@@ -36,7 +43,7 @@ export const LandingPage: React.FC = () => {
     const navLinks = [
         { href: '#features', label: 'Funzionalità' },
         { href: '#pricing', label: 'Prezzi' },
-        { href: '#testimonials', label: 'Testimonianze' },
+        { href: '/news', label: 'News', isExternal: true },
         { href: '#faq', label: 'FAQ' }
     ];
 
@@ -63,13 +70,25 @@ export const LandingPage: React.FC = () => {
                         {/* Desktop Nav Links */}
                         <div className="hidden md:flex items-center gap-8">
                             {navLinks.map((link) => (
-                                <a
-                                    key={link.href}
-                                    href={link.href}
-                                    className="text-gray-600 hover:text-gray-900 transition-colors"
-                                >
-                                    {link.label}
-                                </a>
+                                link.isExternal ? (
+                                    <Link
+                                        key={link.href}
+                                        to={link.href}
+                                        className="relative text-gray-600 hover:text-primary-500 transition-all duration-300 font-medium group"
+                                    >
+                                        {link.label}
+                                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
+                                    </Link>
+                                ) : (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        className="relative text-gray-600 hover:text-primary-500 transition-all duration-300 font-medium group"
+                                    >
+                                        {link.label}
+                                        <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-500 group-hover:w-full transition-all duration-300"></span>
+                                    </a>
+                                )
                             ))}
                         </div>
 
@@ -148,14 +167,25 @@ export const LandingPage: React.FC = () => {
                         <div className="md:hidden border-t border-gray-200 py-4">
                             <div className="flex flex-col space-y-4">
                                 {navLinks.map((link) => (
-                                    <a
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={handleNavClick}
-                                        className="text-gray-600 hover:text-gray-900 transition-colors px-2 py-2"
-                                    >
-                                        {link.label}
-                                    </a>
+                                    link.isExternal ? (
+                                        <Link
+                                            key={link.href}
+                                            to={link.href}
+                                            onClick={handleNavClick}
+                                            className="text-gray-600 hover:text-gray-900 transition-colors px-2 py-2"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    ) : (
+                                        <a
+                                            key={link.href}
+                                            href={link.href}
+                                            onClick={handleNavClick}
+                                            className="text-gray-600 hover:text-gray-900 transition-colors px-2 py-2"
+                                        >
+                                            {link.label}
+                                        </a>
+                                    )
                                 ))}
                                 <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
                                     {isAuthenticated && user ? (
@@ -278,60 +308,89 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-20 bg-white">
+            <section ref={featuresRef as any} id="features" className="py-20 bg-white">
                 <div className="container mx-auto px-4">
                     <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
                         Perché Scegliere CheckInly?
                     </h2>
                     <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
-                        La soluzione più completa per automatizzare il processo Alloggiati Web
+                        L'unica piattaforma con Google Gemini AI, multi-proprietà incluso, e piano Free permanente
                     </p>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    {/* 4 Hero Feature Cards */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto mb-16">
                         {[
                             {
                                 icon: SparklesIcon,
-                                title: 'OCR AI Google Vision',
-                                desc: 'Estrazione dati da documenti in 1 secondo. 99.2% di accuratezza. Supporta carte d\'identità, passaporti, patenti EU ed extra-EU.'
+                                emoji: '⭐',
+                                title: 'Google Gemini AI - OCR Superiore',
+                                desc: 'L\'unica piattaforma con Gemini AI. Precisione 99%, supporta tutti i documenti (ID, passaporti, patenti EU/extra-EU).'
                             },
                             {
-                                icon: CloudIcon,
-                                title: 'API SOAP Diretta',
-                                desc: 'Integrazione nativa con Alloggiati Web tramite WSKEY. Invio automatico e ricevuta ufficiale dalla Questura.'
-                            },
-                            {
-                                icon: ChatBubbleLeftRightIcon,
-                                title: 'AI Assistant 24/7',
-                                desc: 'Supporto intelligente su normativa D.Lgs 286/98, casi complessi, e risoluzione problemi. Sempre disponibile.'
-                            },
-                            {
-                                icon: ShieldCheckIcon,
-                                title: 'GDPR & Sicurezza',
-                                desc: 'Dati criptati end-to-end. Nessun salvataggio permanente. Server italiani certificati, privacy garantita al 100%.'
+                                icon: HomeModernIcon,
+                                emoji: '💰',
+                                title: 'Multi-Proprietà Incluso',
+                                desc: '1 proprietà o 100? Stesso prezzo. I competitor ti fanno pagare €10+ per proprietà. Risparmia fino a €500/mese.'
                             },
                             {
                                 icon: BoltIcon,
-                                title: 'Velocità Estrema',
-                                desc: 'Da 20 minuti per ospite a 30 secondi. Risparmia oltre 100 ore al mese per la tua struttura ricettiva.'
+                                emoji: '⚡',
+                                title: '30 Secondi, Non 20 Minuti',
+                                desc: 'Da documento a schedina inviata in 30 secondi. Risparmi 100+ ore al mese. Il check-in più veloce d\'Italia.'
+                            },
+                            {
+                                icon: CurrencyDollarIcon,
+                                emoji: '🎁',
+                                title: 'Piano Free Permanente',
+                                desc: '5 scansioni gratis al mese, per sempre. No carta richiesta, no trial limitati. Provalo ora.'
                             }
                         ].map((feature, idx) => (
                             <div
                                 key={idx}
-                                className="group p-8 bg-gray-50 rounded-xl hover:bg-white hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-indigo-100"
+                                className="group relative p-8 bg-gradient-to-br from-gray-50 to-white rounded-xl hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-primary-100"
                             >
+                                {/* Emoji Badge */}
+                                <div className="absolute -top-4 -right-4 text-4xl">
+                                    {feature.emoji}
+                                </div>
+
                                 <div className="mb-4 inline-block p-3 bg-primary-100 rounded-lg group-hover:bg-primary-500 transition-colors">
                                     <feature.icon className="h-8 w-8 text-primary-500 group-hover:text-white transition-colors" />
                                 </div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                                <p className="text-gray-600 leading-relaxed">{feature.desc}</p>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-tight">{feature.title}</h3>
+                                <p className="text-gray-600 leading-relaxed text-sm">{feature.desc}</p>
                             </div>
                         ))}
+                    </div>
+
+                    {/* Additional Features List */}
+                    <div className="max-w-4xl mx-auto">
+                        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                                Tutte le Feature che Ti Servono
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {[
+                                    'Invio automatico WSKEY API ufficiali',
+                                    'AI Assistant 24/7 per dubbi normativi',
+                                    'GDPR Compliant - Server EU - Dati criptati',
+                                    'Ricevute PDF archiviate automaticamente',
+                                    'Supporto multi-documento (batch upload coming soon)',
+                                    'Interfaccia intuitiva e veloce'
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        <CheckCircleIcon className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
+                                        <span className="text-gray-700 leading-relaxed">{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* How It Works Section */}
-            <section className="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
+            <section ref={howItWorksRef as any} className="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
                 <div className="container mx-auto px-4">
                     <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
                         Come Funziona
@@ -396,17 +455,14 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* Pricing Section */}
-            <div id="pricing">
+            <div ref={pricingRef as any} id="pricing">
                 <Pricing />
             </div>
 
-            {/* Testimonials Section */}
-            <div id="testimonials">
-                <Testimonials />
-            </div>
-
             {/* FAQ Section */}
-            <FAQ />
+            <div ref={faqRef as any}>
+                <FAQ />
+            </div>
 
             {/* Final CTA Section */}
             <section className="py-20 bg-gradient-to-r from-primary-500 to-purple-600">
@@ -424,9 +480,6 @@ export const LandingPage: React.FC = () => {
                         >
                             Crea Account Gratuito
                         </Link>
-                        <p className="mt-6 text-sm opacity-75">
-                            Unisciti a 500+ strutture ricettive che hanno già scelto CheckInly
-                        </p>
                     </div>
                 </div>
             </section>
