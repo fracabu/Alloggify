@@ -6,11 +6,9 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Resend } from 'resend';
 import { isValidEmail, generateRandomToken, getIpAddress, getUserAgent } from '../../lib/auth';
 import { getUserByEmail, setPasswordResetToken, logUserAction } from '../../lib/db';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendPasswordResetEmail } from '../../lib/email';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST
@@ -77,66 +75,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 4. SEND RESET EMAIL
     // ========================================
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`;
-
     try {
-      await resend.emails.send({
-        from: 'CheckInly <onboarding@resend.dev>', // Using Resend's test domain (free tier)
-        to: email,
-        subject: '🔐 Reimposta la tua password - CheckInly',
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #FF385C 0%, #e31c5f 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-                .content { background: #f7f7f7; padding: 30px; border-radius: 0 0 8px 8px; }
-                .button { display: inline-block; background: #FF385C; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
-                .button:hover { background: #e31c5f; }
-                .warning { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0; }
-                .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>🔐 Reimposta Password</h1>
-                </div>
-                <div class="content">
-                  <p>Ciao <strong>${user.full_name}</strong>,</p>
-                  <p>Abbiamo ricevuto una richiesta per reimpostare la password del tuo account CheckInly.</p>
-                  <p>Clicca sul pulsante qui sotto per scegliere una nuova password:</p>
-                  <div style="text-align: center;">
-                    <a href="${resetUrl}" class="button">Reimposta Password</a>
-                  </div>
-                  <p style="font-size: 12px; color: #666;">
-                    Se il pulsante non funziona, copia e incolla questo link nel browser:<br>
-                    <a href="${resetUrl}">${resetUrl}</a>
-                  </p>
-                  <div class="warning">
-                    <strong>⚠️ Importante:</strong>
-                    <ul style="margin: 5px 0;">
-                      <li>Questo link scade tra <strong>1 ora</strong></li>
-                      <li>Se non hai richiesto il reset, ignora questa email</li>
-                      <li>Non condividere questo link con nessuno</li>
-                    </ul>
-                  </div>
-                  <p style="margin-top: 30px; color: #666;">
-                    Se non hai richiesto questa modifica, la tua password è al sicuro e puoi ignorare questa email.
-                  </p>
-                </div>
-                <div class="footer">
-                  <p>CheckInly - Semplifica la gestione degli alloggiati</p>
-                  <p>Questo è un messaggio automatico, si prega di non rispondere.</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `
-      });
-
+      await sendPasswordResetEmail(email, user.full_name, resetToken);
       console.log(`✅ Password reset email sent to ${email}`);
     } catch (emailError) {
       console.error('⚠️ Failed to send reset email:', emailError);

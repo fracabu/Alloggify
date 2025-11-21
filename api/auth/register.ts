@@ -6,7 +6,6 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Resend } from 'resend';
 import {
   hashPassword,
   isValidEmail,
@@ -16,8 +15,7 @@ import {
   getUserAgent
 } from '../../lib/auth';
 import { createUser, getUserByEmail, logUserAction } from '../../lib/db';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendVerificationEmail } from '../../lib/email';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST
@@ -114,59 +112,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 4. SEND VERIFICATION EMAIL
     // ========================================
 
-    const verificationUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/verify?token=${verificationToken}`;
-
     try {
-      await resend.emails.send({
-        from: 'CheckInly <onboarding@resend.dev>', // Using Resend's test domain (free tier)
-        to: email,
-        subject: '✅ Verifica il tuo account CheckInly',
-        html: `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #FF385C 0%, #e31c5f 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-                .content { background: #f7f7f7; padding: 30px; border-radius: 0 0 8px 8px; }
-                .button { display: inline-block; background: #FF385C; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
-                .button:hover { background: #e31c5f; }
-                .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
-              </style>
-            </head>
-            <body>
-              <div class="container">
-                <div class="header">
-                  <h1>🎉 Benvenuto su CheckInly!</h1>
-                </div>
-                <div class="content">
-                  <p>Ciao <strong>${fullName}</strong>,</p>
-                  <p>Grazie per esserti registrato su CheckInly! Siamo felici di averti con noi.</p>
-                  <p>Per completare la registrazione e iniziare a utilizzare tutte le funzionalità, verifica il tuo indirizzo email cliccando sul pulsante qui sotto:</p>
-                  <div style="text-align: center;">
-                    <a href="${verificationUrl}" class="button">Verifica Email</a>
-                  </div>
-                  <p style="font-size: 12px; color: #666;">
-                    Se il pulsante non funziona, copia e incolla questo link nel browser:<br>
-                    <a href="${verificationUrl}">${verificationUrl}</a>
-                  </p>
-                  <p style="margin-top: 30px;">
-                    <strong>Il tuo piano:</strong> Free (5 scansioni al mese)<br>
-                    <strong>Upgrade disponibile:</strong> Basic (€19/mese), Pro (€49/mese), Enterprise (€199/mese)
-                  </p>
-                  <p>Buon lavoro con CheckInly! 🚀</p>
-                </div>
-                <div class="footer">
-                  <p>CheckInly - Semplifica la gestione degli alloggiati</p>
-                  <p>Questo è un messaggio automatico, si prega di non rispondere.</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `
-      });
-
+      await sendVerificationEmail(email, fullName.trim(), verificationToken);
       console.log(`✅ Verification email sent to ${email}`);
     } catch (emailError) {
       // Log error but don't fail registration

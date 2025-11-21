@@ -31,7 +31,41 @@ Now deployed as a production SaaS platform with:
 - **Subscription System**: Database schema ready for Stripe integration
 - **Multi-tenant Architecture**: User isolation with scan usage limits
 
-**See `SAAS_PLAN.md` for complete roadmap and financial projections.**
+**See `SAAS_PLAN.md` for complete roadmap and `SAAS_STATUS.md` for current implementation status (85% complete).**
+
+### SaaS Implementation Status
+
+**Current Completion: ~85%** 🟡
+
+**✅ Fully Implemented**:
+- JWT Authentication (login, registration, email verification, password reset)
+- Neon PostgreSQL database (4 tables: users, scans, subscriptions, usage_logs)
+- Stripe Integration (checkout, webhooks, subscription management) - **COMPLETED & TESTED**
+- OCR endpoint with Gemini 2.5 Flash (protected with JWT, scan limit enforcement)
+- SOAP API proxy for Alloggiati Web
+- Landing page with pricing tiers
+- News section with article list and detail pages
+
+**🔴 Known Critical Issues**:
+1. **Scan Counter Bug**: Currently increments on OCR scan instead of on successful schedina submission
+   - Should count only when `POST /api/alloggiati` (action: 'send') succeeds
+   - Fix requires: Add JWT auth to `/api/alloggiati`, move increment from OCR to Send handler
+   - See todo list for implementation tasks
+
+2. **Missing `/api/alloggiati` JWT Protection**: Endpoint accepts requests without authentication
+   - Should require `requireAuth()` middleware
+   - Needed to track user submissions and increment scan_count correctly
+
+**🟡 Partially Implemented**:
+- User Dashboard API endpoints (profile, scan history, subscription management) - **NOT STARTED**
+- Cron job for monthly scan limit reset - **NOT STARTED**
+
+**📋 Active Todo List** (see current session todos):
+- Protect `/api/alloggiati` with JWT authentication
+- Fix scan counting logic (OCR → Send)
+- Update database with submission tracking
+- User dashboard API endpoints
+- Monthly reset cron job
 
 ### Current Architecture (Hybrid)
 
@@ -416,6 +450,10 @@ The application uses **React Router v7** with protected routes:
 - `/dashboard` - Redirects to `/dashboard/scan`
 - `/dashboard/scan` - Main document scanning interface
 
+**News Routes** (Public):
+- `/news` - News article list page with card grid
+- `/news/:slug` - Individual news article detail page with alternating image/text layout
+
 **Authentication Flow**:
 ```
 1. User Registration:
@@ -655,6 +693,24 @@ Configured in both `tsconfig.json` and `vite.config.ts`.
 - Avoid inline styles or custom CSS where possible
 - Responsive design: Use Tailwind breakpoints (`sm:`, `md:`, `lg:`, etc.)
 
+## News Section
+
+**Architecture**: Content-driven news system with markdown-like rendering
+
+**Data Structure** (`src/data/news.ts`):
+- `NewsArticle` interface with metadata (title, slug, date, category, author, readTime)
+- `content` field supports markdown-style syntax (headers, bold, lists, images, links)
+- Images referenced via `/news/img*.png` in `public/news/` directory
+
+**Pages**:
+- **NewsListPage** (`src/pages/NewsListPage.tsx`): Grid layout with article cards, scroll animations
+- **NewsDetailPage** (`src/pages/NewsDetailPage.tsx`): Full article view with alternating image/text layout
+
+**Rendering**: Custom markdown parser in NewsDetailPage:
+- Supports: Headers (# ## ###), bold (**text**), italic (*text*), lists, links [text](url), images
+- **Image Layout**: Alternates left/right positioning (first section: text left + image right, second: image left + text right, etc.)
+- Two-column grid on desktop (`md:grid-cols-2`), stacked on mobile
+
 ## AI Chat Assistant Feature
 
 The application includes a Gemini 2.5 Flash-powered AI assistant accessible via a floating chat widget in the dashboard.
@@ -687,6 +743,49 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 - **504 Timeout**: Request took >30 seconds, retry recommended
 
 **See `AI_CHAT_FEATURE.md` for detailed design documentation, system prompt, and roadmap.**
+
+## Stripe Payment Integration
+
+**Status**: ✅ **FULLY IMPLEMENTED & TESTED**
+
+**Architecture**:
+- **Checkout**: `api/stripe/create-checkout-session.ts` (Serverless) + `server/routes/stripe-checkout.js` (Local dev)
+- **Webhooks**: `api/webhooks/stripe.ts` - Handles subscription lifecycle events
+- **Pricing**: `lib/pricing.ts` - Centralized pricing configuration
+
+**Pricing Plans**:
+```typescript
+free: { scanLimit: 5, price: €0/month }
+basic: { scanLimit: 100, price: €19/month }
+pro: { scanLimit: 500, price: €49/month }
+enterprise: { scanLimit: 999999, price: €199/month }
+```
+
+**Webhook Events Handled**:
+1. `checkout.session.completed` → Upgrade user plan, update database
+2. `invoice.payment_succeeded` → Renew subscription, reset scan_count to 0
+3. `customer.subscription.deleted` → Downgrade to free plan
+4. `customer.subscription.updated` → Update subscription status
+
+**Flow**:
+```
+User clicks "Upgrade" → POST /api/stripe/create-checkout-session
+  → Stripe Checkout page → Payment → Webhook event
+  → Database updated (subscription_plan, monthly_scan_limit, stripe_customer_id)
+  → User redirected to dashboard with success message
+```
+
+**Database Integration**:
+- Updates `users` table: `subscription_plan`, `stripe_customer_id`, `stripe_subscription_id`
+- Creates/updates `subscriptions` table with period info
+- Automatically resets `scan_count` on successful payment
+
+**Environment Variables Required**:
+- `STRIPE_SECRET_KEY` - Stripe secret API key
+- `STRIPE_WEBHOOK_SECRET` - Webhook signing secret (from Stripe Dashboard)
+- `STRIPE_PRICE_BASIC`, `STRIPE_PRICE_PRO`, `STRIPE_PRICE_ENTERPRISE` - Price IDs from Stripe products
+
+**⚠️ TODO**: Replace placeholder Price IDs (`price_xxx`) with real Stripe Price IDs from dashboard
 
 ## Important Technical Notes
 
@@ -727,6 +826,27 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
   - **Expiry**: Typically 30-60 minutes of inactivity
   - **Refresh**: Automatic re-authentication when 401/403 errors occur
   - **Storage**: localStorage.alloggifyToken (cleared on logout or expiry)
+
+## Rebranding (Alloggify → CheckInly)
+
+**Status**: In progress - code still contains both names
+
+**User-Facing Elements** (use CheckInly):
+- Landing page copy, headers, footers
+- Email templates (Resend)
+- Meta tags, page titles
+- News articles and blog content
+- Marketing materials
+
+**Technical/Internal Elements** (keep Alloggify for now):
+- Git repository name
+- localStorage keys (`alloggify_user`, `alloggify_token`, `alloggifyData`)
+- Database names
+- Environment variable prefixes (`VITE_ALLOGGIATI_*`)
+- Function names, file names
+- API endpoint paths
+
+**Rationale**: Backward compatibility - changing technical identifiers requires migration scripts and could break existing deployments.
 
 ## Development Workflow Notes
 
