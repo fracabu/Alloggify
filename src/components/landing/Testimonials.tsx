@@ -1,181 +1,126 @@
-import React, { useState } from 'react';
-import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from '@heroicons/react/24/solid';
-import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
-
-interface Testimonial {
-    name: string;
-    role: string;
-    company: string;
-    location: string;
-    image: string;
-    rating: number;
-    text: string;
-    stats?: string;
-}
+import React from 'react';
+import { RocketLaunchIcon, SparklesIcon, UserGroupIcon, BoltIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
 
 export const Testimonials: React.FC = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const testimonials: Testimonial[] = [
-        {
-            name: 'Maria Rossi',
-            role: 'Proprietaria',
-            company: 'B&B La Terrazza',
-            location: 'Roma',
-            image: '👩', // Placeholder emoji
-            rating: 5,
-            text: 'Prima impiegavo 20 minuti per ospite per compilare manualmente Alloggiati Web. Ora con CheckInly bastano 30 secondi! Un vero game changer per la mia struttura.',
-            stats: 'Risparmia 15 ore/mese'
-        },
-        {
-            name: 'Luca Torelli',
-            role: 'Manager',
-            company: 'Hotel Panorama',
-            location: 'Firenze',
-            image: '👨',
-            rating: 5,
-            text: 'In alta stagione gestisco 50 check-in al giorno. Senza CheckInly sarebbe impossibile. L\'OCR è preciso e la compilazione automatica funziona perfettamente.',
-            stats: '50+ check-in al giorno automatizzati'
-        },
-        {
-            name: 'Giulia Bianchi',
-            role: 'Responsabile Reception',
-            company: 'Resort Mediterraneo',
-            location: 'Sardegna',
-            image: '👩',
-            rating: 5,
-            text: 'La facilità d\'uso è incredibile. Ho formato il mio team in 10 minuti. L\'investimento si è ripagato nel primo mese con il tempo risparmiato.',
-            stats: 'ROI recuperato in 1 mese'
-        },
-        {
-            name: 'Marco Gentile',
-            role: 'Proprietario',
-            company: 'Affittacamere Centro Storico',
-            location: 'Venezia',
-            image: '👨',
-            rating: 5,
-            text: 'Gestisco 3 proprietà diverse. Con CheckInly posso centralizzare tutto e risparmiare ore di lavoro amministrativo ogni settimana. Consigliatissimo!',
-            stats: '3 proprietà gestite'
-        }
-    ];
-
-    const nextTestimonial = () => {
-        setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    };
-
-    const prevTestimonial = () => {
-        setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-    };
-
-    const currentTestimonial = testimonials[activeIndex];
 
     return (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
             <div className="container mx-auto px-4">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-semibold mb-6">
+                        <RocketLaunchIcon className="h-5 w-5" />
+                        Early Access
+                    </div>
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                        Cosa Dicono i Nostri Clienti
+                        Unisciti ai Primi Host che Automatizzano Alloggiati Web
                     </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Oltre 500 strutture ricettive risparmiano tempo ogni giorno con CheckInly
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                        CheckInly è sviluppato da un host come te, stufo di perdere 20 minuti per ogni check-in. Sei tra i primi a scoprirlo.
                     </p>
                 </div>
 
-                {/* Main Testimonial Card */}
+                {/* Main Card */}
                 <div className="max-w-4xl mx-auto">
-                    <div className="relative bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12 shadow-xl">
-                        {/* Quote Icon */}
-                        <div className="absolute top-8 left-8 opacity-20">
-                            <ChatBubbleLeftIcon className="h-16 w-16 text-indigo-600" />
-                        </div>
-
-                        {/* Content */}
-                        <div className="relative">
-                            {/* Stars */}
-                            <div className="flex gap-1 mb-6 justify-center">
-                                {[...Array(currentTestimonial.rating)].map((_, i) => (
-                                    <StarIcon key={i} className="h-6 w-6 fill-yellow-400 text-yellow-400" />
-                                ))}
-                            </div>
-
-                            {/* Testimonial Text */}
-                            <blockquote className="text-xl md:text-2xl text-gray-800 font-medium text-center mb-8 leading-relaxed">
-                                "{currentTestimonial.text}"
-                            </blockquote>
-
-                            {/* Author Info */}
-                            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-                                <div className="text-6xl">{currentTestimonial.image}</div>
-                                <div className="text-center md:text-left">
-                                    <p className="font-bold text-gray-900 text-lg">{currentTestimonial.name}</p>
-                                    <p className="text-gray-600">
-                                        {currentTestimonial.role} • {currentTestimonial.company}
-                                    </p>
-                                    <p className="text-sm text-gray-500">{currentTestimonial.location}</p>
-                                    {currentTestimonial.stats && (
-                                        <p className="text-sm text-indigo-600 font-semibold mt-2">
-                                            📊 {currentTestimonial.stats}
-                                        </p>
-                                    )}
+                    <div className="relative bg-white rounded-2xl p-8 md:p-12 shadow-xl border-2 border-primary-100">
+                        {/* Icon */}
+                        <div className="flex justify-center mb-8">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-primary-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                                <div className="relative bg-gradient-to-br from-primary-500 to-purple-600 p-6 rounded-full">
+                                    <SparklesIcon className="h-12 w-12 text-white" />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Navigation Arrows */}
-                        <div className="flex items-center justify-center gap-4 mt-8">
-                            <button
-                                onClick={prevTestimonial}
-                                className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all hover:bg-gray-50"
-                                aria-label="Testimonianza precedente"
-                            >
-                                <ChevronLeftIcon className="h-6 w-6 text-gray-700" />
-                            </button>
+                        {/* Story */}
+                        <div className="text-center mb-8">
+                            <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-6">
+                                "Gestisco un appartamento su Booking. Ogni check-in mi portava via 20 minuti solo per compilare Alloggiati Web.
+                                Ho costruito CheckInly per automatizzare tutto in 30 secondi. Ora è disponibile per te."
+                            </p>
+                            <p className="text-gray-600 font-medium">
+                                — Un host come te, non una software house
+                            </p>
+                        </div>
 
-                            {/* Dots Indicator */}
-                            <div className="flex gap-2">
-                                {testimonials.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setActiveIndex(index)}
-                                        className={`h-2 rounded-full transition-all ${
-                                            index === activeIndex
-                                                ? 'w-8 bg-primary-500'
-                                                : 'w-2 bg-gray-300 hover:bg-gray-400'
-                                        }`}
-                                        aria-label={`Vai alla testimonianza ${index + 1}`}
-                                    />
-                                ))}
+                        {/* Benefits Grid */}
+                        <div className="grid md:grid-cols-2 gap-6 mt-12">
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 mt-1">
+                                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Piano Free per Sempre</h3>
+                                    <p className="text-gray-600 text-sm">5 scansioni/mese gratis. No carta richiesta, no trial limitati.</p>
+                                </div>
                             </div>
 
-                            <button
-                                onClick={nextTestimonial}
-                                className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-all hover:bg-gray-50"
-                                aria-label="Testimonianza successiva"
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 mt-1">
+                                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Feedback Diretto con il Founder</h3>
+                                    <p className="text-gray-600 text-sm">Sei tra i primi. La tua opinione conta davvero.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 mt-1">
+                                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Feature Implementate Rapidamente</h3>
+                                    <p className="text-gray-600 text-sm">Piccolo team = decisioni veloci. Chiedi, implementiamo.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                                <div className="flex-shrink-0 mt-1">
+                                    <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                                </div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 mb-1">Prezzo Bloccato Early Adopters</h3>
+                                    <p className="text-gray-600 text-sm">Ti iscrivi oggi? Il tuo prezzo non aumenta mai.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CTA */}
+                        <div className="mt-10 text-center">
+                            <Link
+                                to="/signup"
+                                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-purple-600 text-white rounded-lg font-semibold text-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
                             >
-                                <ChevronRightIcon className="h-6 w-6 text-gray-700" />
-                            </button>
+                                <BoltIcon className="h-5 w-5" />
+                                Inizia Gratis - 5 Scansioni/Mese
+                            </Link>
+                            <p className="text-sm text-gray-500 mt-4">
+                                Nessuna carta richiesta • Attivo in 30 secondi
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mt-16">
+                {/* Real Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-3xl mx-auto mt-16">
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-indigo-600 mb-2">500+</div>
-                        <div className="text-sm text-gray-600">Strutture Attive</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-indigo-600 mb-2">50K+</div>
-                        <div className="text-sm text-gray-600">Scansioni/Mese</div>
-                    </div>
-                    <div className="text-center">
-                        <div className="text-4xl font-bold text-indigo-600 mb-2">99.2%</div>
+                        <div className="text-4xl font-bold text-primary-600 mb-2">99%</div>
                         <div className="text-sm text-gray-600">Accuratezza OCR</div>
+                        <div className="text-xs text-gray-500 mt-1">Gemini 2.5 Flash</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-indigo-600 mb-2">4.9/5</div>
-                        <div className="text-sm text-gray-600">Rating Medio</div>
+                        <div className="text-4xl font-bold text-primary-600 mb-2">30s</div>
+                        <div className="text-sm text-gray-600">Da Foto a Schedina</div>
+                        <div className="text-xs text-gray-500 mt-1">vs 20 min manuale</div>
+                    </div>
+                    <div className="text-center col-span-2 md:col-span-1">
+                        <div className="text-4xl font-bold text-primary-600 mb-2">€15</div>
+                        <div className="text-sm text-gray-600">Prezzo Base/Mese</div>
+                        <div className="text-xs text-gray-500 mt-1">Multi-proprietà incluso</div>
                     </div>
                 </div>
             </div>

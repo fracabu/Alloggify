@@ -39,24 +39,28 @@ export const FAQ: React.FC = () => {
             answer: 'Dopo aver scansionato il documento con l\'OCR, CheckInly compila automaticamente tutti i campi. Inserisci le tue credenziali Alloggiati Web (username, password e WSKEY) e clicca "Invia Schedina". Il sistema invia direttamente i dati tramite le API ufficiali della Polizia di Stato e ti fornisce la ricevuta di conferma.'
         },
         {
+            question: 'Come ottengo la WSKEY per l\'invio automatico?',
+            answer: 'La WSKEY (Web Service Key) è una chiave che abilita l\'invio automatico ad Alloggiati Web. Per ottenerla: 1) Accedi al portale Alloggiati Web (https://alloggiatiweb.poliziadistato.it), 2) Vai su "Profilo" nel menu, 3) Clicca su "Chiave Web Service", 4) Clicca "Genera Chiave" se non ce l\'hai già. La WSKEY è una stringa alfanumerica (tipo "AFWxClHwW6PKdenzGh0n...") che dovrai inserire in CheckInly insieme a username e password.'
+        },
+        {
             question: 'Cosa succede se l\'OCR fa un errore?',
             answer: 'Prima di inviare i dati ad Alloggiati Web, puoi sempre revisionare e correggere manualmente qualsiasi campo nel form. Ti consigliamo sempre di verificare i dati prima dell\'invio. In caso di errori ricorrenti, il nostro supporto è a disposizione per migliorare il sistema.'
         },
         {
-            question: 'Posso usare CheckInly con più strutture?',
-            answer: 'Sì! Con il piano Pro o Enterprise puoi gestire più account utente e più strutture. Ogni utente può avere le proprie credenziali e accedere ai dati della propria struttura. Ideale per property manager o catene alberghiere.'
+            question: 'Posso usare CheckInly con più proprietà?',
+            answer: 'Sì! Tutti i piani CheckInly includono la gestione di proprietà illimitate. Puoi usare le stesse credenziali Alloggiati Web per inviare schedine per tutte le tue strutture. Non ci sono costi aggiuntivi per proprietà.'
         },
         {
-            question: 'Offrite supporto e training?',
-            answer: 'Sì! Tutti i piani includono supporto via email. I piani Pro ed Enterprise includono supporto chat prioritario. Il piano Enterprise include anche training on-site e un account manager dedicato. Inoltre abbiamo guide video e documentazione completa disponibile 24/7.'
+            question: 'Offrite supporto?',
+            answer: 'Sì! Tutti i piani includono supporto via email. I piani a pagamento (Basic e Pro) hanno supporto prioritario. Siamo a disposizione per qualsiasi domanda o problema tecnico.'
         },
         {
             question: 'Posso provare CheckInly prima di pagare?',
             answer: 'Certamente! Il piano Free ti dà 5 scansioni gratuite al mese senza bisogno di carta di credito. È perfetto per testare il servizio. Se ti piace, puoi fare upgrade in qualsiasi momento dalla dashboard.'
         },
         {
-            question: 'Accettate pagamenti con carta e bonifico?',
-            answer: 'Accettiamo tutte le principali carte di credito e debito (Visa, Mastercard, American Express) tramite Stripe. Per il piano Enterprise accettiamo anche pagamenti tramite bonifico bancario e fatturazione su richiesta.'
+            question: 'Accettate pagamenti con carta?',
+            answer: 'Accettiamo tutte le principali carte di credito e debito (Visa, Mastercard, American Express) tramite Stripe, il sistema di pagamento più sicuro al mondo.'
         }
     ];
 
@@ -122,7 +126,7 @@ export const FAQ: React.FC = () => {
                         Non trovi la risposta che cerchi?
                     </p>
                     <a
-                        href="mailto:support@alloggify.com"
+                        href="mailto:support@checkinly.com"
                         className="inline-block px-6 py-3 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors shadow-md hover:shadow-lg"
                     >
                         Contatta il Supporto

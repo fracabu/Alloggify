@@ -179,7 +179,7 @@ export const MainForm: React.FC<MainFormProps> = ({ data, onDataChange, onExport
                         </>
                     )}
                 </button>
-                {/* Chrome Extension Export - Temporarily Hidden */}
+                {/* Chrome Extension Export - Hidden from UI */}
                 {/* <button
                     type="button"
                     onClick={onExport}

@@ -137,14 +137,24 @@
   --breakpoint-2xl: 1536px;
 }
 
-/* Hide scrollbar while maintaining scroll functionality */
-.hide-scrollbar {
+/* Hide scrollbar globally */
+html, body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
 
-.hide-scrollbar::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
   display: none; /* Chrome/Safari/Opera */
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Main content area height fix */
@@ -447,4 +457,57 @@ input:focus, select:focus, textarea:focus {
   h2, h3 {
     page-break-after: avoid;
   }
+}
+
+/* ========================================
+   SCROLL ANIMATIONS
+   ======================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.scroll-animate {
+  opacity: 0;
+}
+
+.scroll-animate.animate-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.scroll-animate.animate-in-left {
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+.scroll-animate.animate-in-right {
+  animation: fadeInRight 0.8s ease-out forwards;
 }

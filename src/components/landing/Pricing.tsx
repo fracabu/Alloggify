@@ -13,77 +13,44 @@ export const Pricing: React.FC = () => {
             popular: false,
             features: [
                 '5 scansioni/mese',
-                'OCR base',
-                'Chrome extension',
-                'Supporto email',
-                'Cronologia 7 giorni'
-            ],
-            limitations: [
-                'No esportazione dati',
-                'No API access'
+                'OCR Gemini AI',
+                'Invio WSKEY automatico',
+                'Download ricevute PDF',
+                'AI Assistant 24/7',
+                'Cronologia 30 giorni'
             ],
             cta: 'Inizia Gratis',
             ctaLink: '/signup?plan=free'
         },
         {
             name: 'Basic',
-            description: 'Per B&B e piccole strutture',
-            price: { monthly: 19, annual: 15 },
-            savings: '21%',
+            description: 'Per host con 1-3 proprietà',
+            price: { monthly: 15, annual: 12 },
+            savings: '20%',
             popular: true,
             features: [
                 '100 scansioni/mese',
-                'OCR avanzato',
-                'Chrome extension',
-                'Cronologia completa',
-                'Esportazione Excel/CSV',
-                'Supporto email prioritario',
-                '10 template personalizzati',
-                'ROI 530%'
+                'Tutto di Free +',
+                'Cronologia illimitata',
+                'Supporto email prioritario'
             ],
             cta: 'Inizia con Basic',
             ctaLink: '/signup?plan=basic'
         },
         {
             name: 'Pro',
-            description: 'Per hotel medi e gestori multi-property',
-            price: { monthly: 49, annual: 39 },
-            savings: '20%',
+            description: 'Per piccoli hotel e multi-property',
+            price: { monthly: 39, annual: 32 },
+            savings: '18%',
             popular: false,
             features: [
                 '500 scansioni/mese',
                 'Tutto di Basic +',
-                'Batch processing (10 doc)',
-                'API access (rate-limited)',
-                'Multi-utente (5 account)',
                 'Supporto chat prioritario',
-                'Statistiche avanzate',
-                'Webhook notifications',
-                'ROI 820%'
+                'Accesso prioritario a nuove feature'
             ],
             cta: 'Scegli Pro',
             ctaLink: '/signup?plan=pro'
-        },
-        {
-            name: 'Enterprise',
-            description: 'Per catene e grandi resort',
-            price: { monthly: 199, annual: 199 },
-            popular: false,
-            features: [
-                'Scansioni illimitate',
-                'Tutto di Pro +',
-                'API illimitata',
-                'Utenti illimitati',
-                'White-label option',
-                'Integrazione PMS custom',
-                'SLA 99.9% uptime',
-                'Supporto telefonico',
-                'Account manager dedicato',
-                'Training on-site'
-            ],
-            cta: 'Contattaci',
-            ctaLink: '/signup?plan=enterprise',
-            enterprise: true
         }
     ];
 
@@ -121,14 +88,14 @@ export const Pricing: React.FC = () => {
                         >
                             Annuale
                             <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                                Risparmia fino al 21%
+                                Risparmia fino al 20%
                             </span>
                         </button>
                     </div>
                 </div>
 
                 {/* Pricing Cards */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
                     {plans.map((plan, index) => (
                         <div
                             key={index}
@@ -179,12 +146,6 @@ export const Pricing: React.FC = () => {
                                             <span className="text-sm text-gray-700">{feature}</span>
                                         </li>
                                     ))}
-                                    {plan.limitations && plan.limitations.map((limitation, idx) => (
-                                        <li key={`limit-${idx}`} className="flex items-start gap-3 opacity-50">
-                                            <span className="text-gray-400">✕</span>
-                                            <span className="text-sm text-gray-500 line-through">{limitation}</span>
-                                        </li>
-                                    ))}
                                 </ul>
 
                                 {/* CTA Button */}
@@ -193,8 +154,6 @@ export const Pricing: React.FC = () => {
                                     className={`block w-full text-center px-6 py-3 rounded-lg font-semibold transition-all ${
                                         plan.popular
                                             ? 'bg-primary-500 text-white hover:bg-primary-600 shadow-md hover:shadow-lg'
-                                            : plan.enterprise
-                                            ? 'bg-gray-900 text-white hover:bg-gray-800'
                                             : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                                     }`}
                                 >

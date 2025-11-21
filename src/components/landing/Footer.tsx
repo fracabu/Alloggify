@@ -47,6 +47,11 @@ export const Footer: React.FC = () => {
                                 </a>
                             </li>
                             <li>
+                                <Link to="/news" className="text-sm hover:text-white transition-colors">
+                                    News
+                                </Link>
+                            </li>
+                            <li>
                                 <a href="#faq" className="text-sm hover:text-white transition-colors">
                                     FAQ
                                 </a>
@@ -56,50 +61,35 @@ export const Footer: React.FC = () => {
                                     Prova Gratuita
                                 </Link>
                             </li>
-                            <li>
-                                <a href="#testimonials" className="text-sm hover:text-white transition-colors">
-                                    Testimonianze
-                                </a>
-                            </li>
                         </ul>
                     </div>
 
-                    {/* Company Links */}
+                    {/* Support */}
                     <div>
-                        <h4 className="font-semibold text-white mb-4">Azienda</h4>
+                        <h4 className="font-semibold text-white mb-4">Supporto</h4>
                         <ul className="space-y-2">
                             <li>
-                                <a href="/about" className="text-sm hover:text-white transition-colors">
-                                    Chi Siamo
+                                <a href="mailto:support@checkinly.com" className="text-sm hover:text-white transition-colors">
+                                    Contattaci
                                 </a>
                             </li>
                             <li>
-                                <a href="/blog" className="text-sm hover:text-white transition-colors">
-                                    Blog
+                                <a href="#faq" className="text-sm hover:text-white transition-colors">
+                                    FAQ
                                 </a>
                             </li>
                             <li>
-                                <a href="/careers" className="text-sm hover:text-white transition-colors">
-                                    Lavora con Noi
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/partners" className="text-sm hover:text-white transition-colors">
-                                    Partnership
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/contact" className="text-sm hover:text-white transition-colors">
-                                    Contatti
-                                </a>
+                                <Link to="/signup" className="text-sm hover:text-white transition-colors">
+                                    Inizia Gratis
+                                </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Legal & Support */}
+                    {/* Legal */}
                     <div>
-                        <h4 className="font-semibold text-white mb-4">Legale & Supporto</h4>
-                        <ul className="space-y-2 mb-6">
+                        <h4 className="font-semibold text-white mb-4">Legale</h4>
+                        <ul className="space-y-2">
                             <li>
                                 <Link to="/privacy" className="text-sm hover:text-white transition-colors">
                                     Privacy Policy
@@ -110,32 +100,7 @@ export const Footer: React.FC = () => {
                                     Termini di Servizio
                                 </Link>
                             </li>
-                            <li>
-                                <a href="/cookies" className="text-sm hover:text-white transition-colors">
-                                    Cookie Policy
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/security" className="text-sm hover:text-white transition-colors">
-                                    Sicurezza
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/gdpr" className="text-sm hover:text-white transition-colors">
-                                    GDPR
-                                </a>
-                            </li>
                         </ul>
-
-                        {/* Contact Info */}
-                        <div className="space-y-2">
-                            <div className="flex items-center gap-2 text-xs text-gray-400">
-                                <EnvelopeIcon className="h-4 w-4" />
-                                <a href="mailto:support@checkinly.com" className="hover:text-white">
-                                    support@checkinly.com
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
