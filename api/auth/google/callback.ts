@@ -9,6 +9,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { google } from 'googleapis';
 import { generateAccessToken, generateRefreshToken } from '../../../lib/auth';
 import { getUserByEmail, createUser } from '../../../lib/db';
+import { sendWelcomeEmail } from '../../../lib/email';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'GET') {
@@ -58,6 +59,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             });
 
             console.log(`✅ New user created via Google OAuth: ${data.email}`);
+
+            // Send welcome email (async, don't wait)
+            sendWelcomeEmail(data.email, fullName).catch((error) => {
+                console.error('❌ Failed to send welcome email:', error);
+            });
         } else if (!user.email_verified) {
             // If user exists but email not verified, verify it now
             const { sql } = await import('@vercel/postgres');

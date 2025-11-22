@@ -8,6 +8,7 @@ const router = express.Router();
 const { google } = require('googleapis');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
+const nodemailer = require('nodemailer');
 
 // PostgreSQL connection pool
 const pool = new Pool({
@@ -16,6 +17,94 @@ const pool = new Pool({
         rejectUnauthorized: false
     }
 });
+
+// Email transporter
+const emailTransporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtps.aruba.it',
+    port: parseInt(process.env.SMTP_PORT || '465'),
+    secure: true,
+    auth: {
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASSWORD || ''
+    }
+});
+
+// Helper function: Send welcome email
+async function sendWelcomeEmail(email, fullName) {
+    const dashboardUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/dashboard`;
+    const fromName = process.env.SMTP_FROM_NAME || 'CheckInly';
+
+    const html = `
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF385C 0%, #e31c5f 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #f7f7f7; padding: 30px; border-radius: 0 0 8px 8px; }
+            .button { display: inline-block; background: #FF385C; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+            .feature { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 4px solid #FF385C; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🎊 Benvenuto su CheckInly!</h1>
+            </div>
+            <div class="content">
+                <p>Ciao <strong>${fullName}</strong>,</p>
+                <p>Grazie per esserti registrato su CheckInly con il tuo account Google! Il tuo account è già verificato e pronto all'uso.</p>
+
+                <h2>🚀 Primi passi:</h2>
+                <div class="feature">
+                    <strong>1. Scansiona un documento</strong><br>
+                    Carica una foto di un documento e lascia che l'AI estragga i dati
+                </div>
+                <div class="feature">
+                    <strong>2. Esporta i dati</strong><br>
+                    Usa il Chrome Extension o l'API SOAP per inviare i dati
+                </div>
+                <div class="feature">
+                    <strong>3. Upgrade (opzionale)</strong><br>
+                    Passa a Basic/Pro per scansioni illimitate e funzionalità avanzate
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="${dashboardUrl}" class="button">Vai alla Dashboard</a>
+                </div>
+
+                <p style="margin-top: 30px;">
+                    <strong>Piano attuale:</strong> Free (5 scansioni al mese)<br>
+                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani
+                </p>
+
+                <p>Buon lavoro! 💼</p>
+            </div>
+            <div class="footer">
+                <p>CheckInly - Semplifica la gestione degli alloggiati</p>
+                <p>Questo è un messaggio automatico, si prega di non rispondere.</p>
+            </div>
+        </div>
+    </body>
+</html>
+    `;
+
+    const mailOptions = {
+        from: `${fromName} <${process.env.SMTP_USER}>`,
+        to: email,
+        subject: '🎊 Benvenuto su CheckInly!',
+        html
+    };
+
+    try {
+        await emailTransporter.sendMail(mailOptions);
+        console.log(`✅ [Welcome Email] Sent to ${email}`);
+    } catch (error) {
+        console.error(`❌ [Welcome Email] Failed to send to ${email}:`, error.message);
+    }
+}
 
 // Helper functions
 const generateAccessToken = (userId) => {
@@ -133,6 +222,11 @@ router.get('/api/auth/google/callback', async (req, res) => {
 
             user = insertResult.rows[0];
             console.log(`✅ New user created via Google OAuth: ${data.email}`);
+
+            // Send welcome email (async, don't wait)
+            sendWelcomeEmail(data.email, fullName).catch((error) => {
+                console.error('❌ Failed to send welcome email:', error);
+            });
 
         } else if (!user.email_verified) {
             // If user exists but email not verified, verify it now
