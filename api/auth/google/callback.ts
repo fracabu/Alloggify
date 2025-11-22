@@ -72,8 +72,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // Generate JWT tokens
-        const accessToken = generateAccessToken(user.id);
-        const refreshToken = generateRefreshToken(user.id);
+        const accessToken = generateAccessToken({
+            userId: user.id,
+            email: user.email,
+            subscriptionPlan: user.subscription_plan
+        });
+        const refreshToken = generateRefreshToken({
+            userId: user.id,
+            email: user.email,
+            subscriptionPlan: user.subscription_plan
+        });
 
         // Prepare user object
         const userObj = {
