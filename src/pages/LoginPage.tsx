@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { ArrowRightOnRectangleIcon, ExclamationCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon, ExclamationCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,10 +11,20 @@ export const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const from = location.state?.from?.pathname || '/dashboard/scan';
+
+    // Handle success message from signup or verify
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+            // Clear the message from location state
+            window.history.replaceState({}, document.title);
+        }
+    }, [location.state]);
 
     // Handle Google OAuth callback
     useEffect(() => {
@@ -93,6 +103,14 @@ export const LoginPage: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {/* Success Message */}
+                        {successMessage && (
+                            <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <CheckCircleIcon className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                <span className="text-sm text-green-700">{successMessage}</span>
+                            </div>
+                        )}
+
                         {/* Error Message */}
                         {error && (
                             <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">

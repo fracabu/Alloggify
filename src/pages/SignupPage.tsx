@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UserPlusIcon, ExclamationCircleIcon, CheckCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+import { UserPlusIcon, ExclamationCircleIcon, CheckCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 
 export const SignupPage: React.FC = () => {
     const navigate = useNavigate();
@@ -17,35 +17,28 @@ export const SignupPage: React.FC = () => {
     });
 
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // Handle Google OAuth callback
+    // Handle Google OAuth callback and registration success
     useEffect(() => {
         const params = new URLSearchParams(location.search);
-        const googleAuth = params.get('google_auth');
-        const token = params.get('token');
-        const user = params.get('user');
+        const googleRegistered = params.get('google_registered');
+        const email = params.get('email');
         const errorParam = params.get('error');
 
-        if (googleAuth === 'success' && token && user) {
-            try {
-                // Store auth data
-                const userData = JSON.parse(decodeURIComponent(user));
-                sessionStorage.setItem('alloggify_token', token);
-                sessionStorage.setItem('alloggify_user', JSON.stringify(userData));
-
-                // Redirect to dashboard
-                navigate('/dashboard/scan', { replace: true });
-            } catch (err) {
-                setError('Errore durante la registrazione con Google. Riprova.');
-            }
+        if (googleRegistered === 'true' && email) {
+            // New user registered via Google - show success message
+            setSuccessMessage(
+                `Registrazione completata con successo! Abbiamo inviato un'email di benvenuto a ${decodeURIComponent(email)}. Clicca il link nell'email per accedere al tuo account.`
+            );
         } else if (errorParam) {
             const message = params.get('message');
             setError(message || 'Errore durante la registrazione con Google');
         }
-    }, [location.search, navigate]);
+    }, [location.search]);
 
     // Redirect if already logged in
     useEffect(() => {
@@ -140,6 +133,20 @@ export const SignupPage: React.FC = () => {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Success Message */}
+                        {successMessage && (
+                            <div className="flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <EnvelopeIcon className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                <div className="text-sm text-green-700">
+                                    <p className="font-semibold mb-1">✅ Registrazione Completata!</p>
+                                    <p>{successMessage}</p>
+                                    <Link to="/login" className="inline-block mt-2 underline font-medium hover:text-green-800">
+                                        Vai al Login →
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Error Message */}
                         {error && (
                             <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">

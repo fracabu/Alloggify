@@ -43,6 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Check if user exists
         let user = await getUserByEmail(data.email);
+        let isNewUser = false;
 
         if (!user) {
             // Create new user
@@ -64,6 +65,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             sendWelcomeEmail(data.email, fullName).catch((error) => {
                 console.error('❌ Failed to send welcome email:', error);
             });
+
+            isNewUser = true;
         } else if (!user.email_verified) {
             // If user exists but email not verified, verify it now
             const { sql } = await import('@vercel/postgres');
@@ -77,6 +80,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             user.email_verified = true;
         }
 
+        // If new user, redirect to signup page with success message (NO auto-login)
+        if (isNewUser) {
+            const signupSuccessUrl = `${process.env.NEXT_PUBLIC_URL}/signup?` +
+                `google_registered=true&` +
+                `email=${encodeURIComponent(data.email)}`;
+            return res.redirect(signupSuccessUrl);
+        }
+
+        // Existing user: proceed with login
         // Generate JWT tokens
         const accessToken = generateAccessToken({
             userId: user.id,
@@ -101,7 +113,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             emailVerified: user.email_verified
         };
 
-        // Redirect to frontend with tokens
+        // Redirect to frontend with tokens (for existing users doing login)
         const frontendUrl = `${process.env.NEXT_PUBLIC_URL}/login?` +
             `google_auth=success&` +
             `token=${accessToken}&` +

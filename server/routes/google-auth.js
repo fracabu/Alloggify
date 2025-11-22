@@ -26,6 +26,9 @@ const emailTransporter = nodemailer.createTransport({
     auth: {
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASSWORD || ''
+    },
+    tls: {
+        rejectUnauthorized: false // Disable SSL verification for local development
     }
 });
 
@@ -191,6 +194,7 @@ router.get('/api/auth/google/callback', async (req, res) => {
         );
 
         let user = userResult.rows[0];
+        let isNewUser = false;
 
         if (!user) {
             // Create new user
@@ -228,6 +232,8 @@ router.get('/api/auth/google/callback', async (req, res) => {
                 console.error('❌ Failed to send welcome email:', error);
             });
 
+            isNewUser = true;
+
         } else if (!user.email_verified) {
             // If user exists but email not verified, verify it now
             await pool.query(
@@ -242,6 +248,16 @@ router.get('/api/auth/google/callback', async (req, res) => {
             console.log(`✅ Email verified for existing user: ${data.email}`);
         }
 
+        // If new user, redirect to signup page with success message (NO auto-login)
+        if (isNewUser) {
+            console.log(`✅ Redirecting new user to signup confirmation...`);
+            const signupSuccessUrl = `${process.env.NEXT_PUBLIC_URL}/signup?` +
+                `google_registered=true&` +
+                `email=${encodeURIComponent(data.email)}`;
+            return res.redirect(signupSuccessUrl);
+        }
+
+        // Existing user: proceed with login
         // Generate JWT tokens
         const accessToken = generateAccessToken(user.id);
         const refreshToken = generateRefreshToken(user.id);
@@ -260,7 +276,7 @@ router.get('/api/auth/google/callback', async (req, res) => {
 
         console.log('✅ User authenticated, redirecting to frontend...');
 
-        // Redirect to frontend with tokens
+        // Redirect to frontend with tokens (for existing users doing login)
         const frontendUrl = `${process.env.NEXT_PUBLIC_URL}/login?` +
             `google_auth=success&` +
             `token=${accessToken}&` +

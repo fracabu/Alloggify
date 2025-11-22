@@ -112,8 +112,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
 
             // Do NOT auto-login after signup - user must verify email first
-            // Show success message instead
-            alert('✅ Registrazione completata! Controlla la tua email per verificare l\'account.');
+            // SignupPage will handle the success message and redirect
         } catch (error: any) {
             throw new Error(error.message || 'Errore durante la registrazione');
         } finally {
