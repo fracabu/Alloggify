@@ -12,7 +12,7 @@ import { sql } from '@vercel/postgres';
 import { getScanLimit } from '../../lib/pricing';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-11-20.acacia'
+    apiVersion: '2025-10-29.clover'
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
@@ -124,14 +124,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                             ${subscription.customer as string},
                             ${planName},
                             ${subscription.status},
-                            to_timestamp(${subscription.current_period_start}),
-                            to_timestamp(${subscription.current_period_end})
+                            to_timestamp(${subscription.currentPeriodStart}),
+                            to_timestamp(${subscription.currentPeriodEnd})
                         )
                         ON CONFLICT (stripe_subscription_id)
                         DO UPDATE SET
                             status = ${subscription.status},
-                            current_period_start = to_timestamp(${subscription.current_period_start}),
-                            current_period_end = to_timestamp(${subscription.current_period_end}),
+                            current_period_start = to_timestamp(${subscription.currentPeriodStart}),
+                            current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
                             updated_at = NOW()
                     `;
                 }
@@ -171,8 +171,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     UPDATE subscriptions
                     SET
                         status = ${subscription.status},
-                        current_period_start = to_timestamp(${subscription.current_period_start}),
-                        current_period_end = to_timestamp(${subscription.current_period_end}),
+                        current_period_start = to_timestamp(${subscription.currentPeriodStart}),
+                        current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
                         updated_at = NOW()
                     WHERE stripe_subscription_id = ${subscription.id}
                 `;
@@ -241,9 +241,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     UPDATE subscriptions
                     SET
                         status = ${subscription.status},
-                        cancel_at_period_end = ${subscription.cancel_at_period_end},
-                        current_period_start = to_timestamp(${subscription.current_period_start}),
-                        current_period_end = to_timestamp(${subscription.current_period_end}),
+                        cancel_at_period_end = ${subscription.cancelAtPeriodEnd || false},
+                        current_period_start = to_timestamp(${subscription.currentPeriodStart}),
+                        current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
                         updated_at = NOW()
                     WHERE stripe_subscription_id = ${subscription.id}
                 `;
