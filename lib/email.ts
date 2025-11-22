@@ -16,14 +16,15 @@ import type { Transporter } from 'nodemailer';
 // SMTP Configuration
 const SMTP_CONFIG = {
     host: process.env.SMTP_HOST || 'smtps.aruba.it',
-    port: parseInt(process.env.SMTP_PORT || '465'),
-    secure: true, // true for port 465, false for 587
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: false, // false for port 587 (use STARTTLS), true for port 465 (SSL)
+    requireTLS: true, // Force TLS upgrade via STARTTLS
     auth: {
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASSWORD || ''
     },
     tls: {
-        rejectUnauthorized: false // Disable SSL verification for development
+        rejectUnauthorized: false // Disable SSL verification (needed for some Aruba configs)
     }
 };
 

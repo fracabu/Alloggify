@@ -68,7 +68,7 @@ export async function createUser(data: {
       ${data.fullName},
       ${data.companyName || null},
       ${data.verificationToken || null},
-      ${data.verificationToken ? new Date(Date.now() + 24 * 60 * 60 * 1000) : null},
+      ${data.verificationToken ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() : null},
       ${data.emailVerified || false},
       ${data.googleId || null}
     )
