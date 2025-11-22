@@ -52,9 +52,9 @@
 | Piano       | Prezzo  | Scansioni | Stripe Price ID |
 |-------------|---------|-----------|-----------------|
 | Free        | €0      | 5/mese    | null            |
-| Basic       | €19     | 100/mese  | `price_basic_xxx` |
-| Pro         | €49     | 500/mese  | `price_pro_xxx` |
-| Enterprise  | €199    | Illimitate| `price_enterprise_xxx` |
+| Basic       | €15     | 100/mese  | `price_basic_xxx` |
+| Pro         | €39     | 500/mese  | `price_pro_xxx` |
+| Enterprise  | €199    | Illimitate| `price_enterprise_xxx` (not shown in UI) |
 
 **Helper functions**:
 - `getPricingPlan(name)` - Get piano per nome

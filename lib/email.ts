@@ -113,7 +113,7 @@ export async function sendVerificationEmail(
                 </p>
                 <p style="margin-top: 30px;">
                     <strong>Il tuo piano:</strong> Free (5 scansioni al mese)<br>
-                    <strong>Upgrade disponibile:</strong> Basic (€19/mese), Pro (€49/mese), Enterprise (€199/mese)
+                    <strong>Upgrade disponibile:</strong> Basic (€15/mese), Pro (€39/mese)
                 </p>
                 <p>Buon lavoro con CheckInly! 🚀</p>
             </div>
@@ -247,7 +247,7 @@ export async function sendWelcomeEmail(
 
                 <p style="margin-top: 30px;">
                     <strong>Piano attuale:</strong> Free (5 scansioni al mese)<br>
-                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani Basic, Pro ed Enterprise
+                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani Basic (€15/mese, 100 scan) e Pro (€39/mese, 500 scan)
                 </p>
 
                 <p>Buon lavoro! 💼</p>

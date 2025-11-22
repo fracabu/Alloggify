@@ -1,16 +1,18 @@
 <div align="center">
 
-# 🏠 Alloggify
+# 🏠 CheckInly
 
-### OCR-Powered Document Extraction for Italian Hospitality Reporting
+### AI-Powered Hospitality Management SaaS
 
-*Streamline your Alloggiati Web workflow with AI-powered document scanning*
+*Automate your Alloggiati Web workflow with AI-powered document scanning*
 
-[![GitHub](https://img.shields.io/badge/GitHub-fracabu%2FAlloggify-blue?logo=github)](https://github.com/fracabu/Alloggify)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?logo=vite)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?logo=vite)](https://vitejs.dev/)
 [![Gemini](https://img.shields.io/badge/Gemini-2.5%20Flash-8E75B2?logo=google)](https://ai.google.dev/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel)](https://vercel.com)
+
+**Live Demo:** [https://alloggify.vercel.app](https://alloggify.vercel.app)
 
 </div>
 
@@ -18,379 +20,498 @@
 
 ## 📖 About
 
-**Alloggify** is an intelligent web application that automates data extraction from identity documents (Italian ID cards, passports, driving licenses) using Google's Gemini AI. It integrates with the **Alloggiati Web** portal (Italian police hospitality reporting system) through **two powerful methods**, dramatically reducing manual data entry time from 15-20 minutes to under 30 seconds.
+**CheckInly** is a complete SaaS platform that automates the Italian hospitality reporting process. It extracts data from identity documents using Google's Gemini AI and automatically submits guest information to the **Alloggiati Web** portal (Italian police hospitality reporting system), reducing manual data entry time from 20 minutes to **30 seconds**.
 
 ### 🎯 Perfect For:
-- 🏨 Hotels and B&Bs
-- 🏡 Vacation rentals
-- 🏢 Accommodation facilities in Italy
-- 👥 Property managers handling guest check-ins
+- 🏨 **Hotels & B&Bs** managing daily check-ins
+- 🏡 **Vacation Rentals** (Airbnb, Booking.com hosts)
+- 🏢 **Property Managers** handling multiple properties
+- 👥 **Hospitality Professionals** in Italy
 
-### 🚀 Evolution
-
-**Phase 1 - Chrome Extension (MVP)**
-- Browser extension for auto-filling forms on Alloggiati Web portal
-- Simple setup, no backend required
-- Manual submission through portal interface
-
-**Phase 2 - SOAP API Integration (Current)**
-- Discovered official Alloggiati Web SOAP API with **WSKEY** authentication
-- Full automation: OCR → Validation → Submission → Receipt download
-- Production-ready for high-volume operations
+### 🚀 Key Benefits:
+- ⚡ **30 Seconds per Guest** - vs 15-20 minutes manual entry
+- 🤖 **99% OCR Accuracy** - Powered by Gemini 2.5 Flash AI
+- 📧 **Auto-Submit** - Direct integration with Alloggiati Web SOAP API
+- 💳 **Flexible Plans** - Free tier + paid subscriptions (Stripe)
+- 🔒 **Secure & Compliant** - GDPR-compliant with EU servers
+- 💬 **AI Assistant** - 24/7 help for Italian hospitality regulations
 
 ---
 
 ## ✨ Features
 
-### 🔍 Smart Document Recognition (All Methods)
-- **Multi-format support**: Italian ID cards (standard & electronic), passports, driving licenses
-- **AI-powered OCR**: Powered by Gemini 2.5 Flash for accurate data extraction
-- **Intelligent classification**: Automatically identifies document type with hierarchical logic
+### 🔍 Smart Document Recognition
+- **Multi-format support**: Italian ID cards (standard & electronic), passports, driving licenses, international documents
+- **AI-powered OCR**: Gemini 2.5 Flash for accurate data extraction
+- **Intelligent classification**: Automatically identifies document type
 - **99% accuracy**: Field-level validation and error correction
+- **Batch processing**: Upload multiple documents (coming soon)
 
-### 📝 Two Submission Methods
+### 🔐 Authentication & User Management
+- **Email/Password Registration** with email verification
+- **Google OAuth** for quick sign-up
+- **JWT-based authentication** with secure session management
+- **Password reset** via email (Aruba SMTP)
+- **Multi-user support** with user isolation
 
-#### Method 1: Chrome Extension (Basic)
-- ✅ **One-click export**: Save data to localStorage
-- ✅ **Auto-fill integration**: Floating button on Alloggiati Web portal
-- ✅ **Visual confirmation**: See form filled before submitting
-- ✅ **No backend required**: Works completely client-side
-- ⚠️ **Manual submission**: User clicks submit on portal
+### 💳 Subscription Plans (Stripe Integration)
+- **Free Plan**: 5 scansioni/mese (permanent)
+- **Basic Plan**: 100 scansioni - €19/mese (or €15/mese annual)
+- **Pro Plan**: 500 scansioni - €49/mese (or €39/mese annual) - **RECOMMENDED**
+- **Enterprise Plan**: Unlimited scans - €199/mese (custom pricing)
+- **Stripe Checkout**: Secure payment processing
+- **Automatic renewal**: Scan limits reset monthly
 
-#### Method 2: SOAP API with WSKEY (Advanced)
-- ✅ **Full automation**: Zero manual interaction required
-- ✅ **Instant submission**: Data sent directly via SOAP API
-- ✅ **Receipt download**: Automatic PDF receipt generation
-- ✅ **Batch processing**: Handle multiple submissions efficiently
-- ✅ **Production-ready**: Suitable for high-volume operations
-- 🔑 **Requires WSKEY**: Web Service Key from Alloggiati Web portal
+### 📤 Direct SOAP API Integration
+- **Automatic submission** to Alloggiati Web portal
+- **WSKEY authentication** for secure API access
+- **Real-time validation** before submission
+- **Receipt download** as PDF with automatic archiving
+- **Token management** with auto-refresh
+- **Error handling** with detailed messages
+
+### 🤖 AI Chat Assistant
+- **24/7 Availability** for hospitality questions
+- **Expert knowledge** on:
+  - Italian hospitality regulations (D.Lgs. 286/1998)
+  - Alloggiati Web portal procedures
+  - Pricing & revenue management
+  - OTA platforms (Airbnb, Booking.com)
+- **Markdown support** with emoji rendering
+- **Suggested questions** for quick help
+
+### 📊 Dashboard & Analytics
+- **Usage tracking**: Monitor monthly scan count
+- **Scan history**: View all submitted guests
+- **Subscription management**: Upgrade/downgrade plans
+- **Receipt archive**: Download past submissions
+- **User profile**: Manage account settings
 
 ### 🔒 Privacy & Security
-- **100% local processing**: Your data never leaves your computer (Extension mode)
-- **Secure transmission**: HTTPS + SOAP encryption (API mode)
-- **No cloud storage**: All data stored in browser localStorage
-- **Secure credential handling**: WSKEY stored locally, never committed to git
+- **GDPR Compliant** - EU server hosting (Vercel)
+- **Encrypted transmission** - HTTPS + SOAP encryption
+- **No data retention** - Documents processed in memory only
+- **User isolation** - Multi-tenant architecture
+- **Secure credentials** - JWT tokens with expiry
 
-### 🎨 User Experience
-- **Modern UI**: Clean, responsive interface built with React 19
-- **Real-time feedback**: Loading states, success messages, error handling
-- **Flexible setup**: Choose your preferred submission method
-- **Dual configuration**: Set credentials via UI or environment variables
-
----
-
-## 🔧 External Services & Resources
-
-This project uses the following external services. Access these dashboards to manage and monitor resources:
-
-### 📊 Database - Neon PostgreSQL
-- **Service**: [Neon](https://neon.tech)
-- **Dashboard**: https://console.neon.tech/
-- **Usage**: Serverless PostgreSQL database for users, scans, subscriptions
-- **Tables**: `users`, `scans`, `subscriptions`, `usage_logs`
-- **Access**: Login with your Neon account (same as Vercel integration)
-- **Configuration**: Environment variables in `.env.local` (auto-configured by Vercel)
-
-### 📧 Email - Resend
-- **Service**: [Resend](https://resend.com)
-- **Dashboard**: https://resend.com/overview
-- **Usage**: Transactional emails (verification, password reset)
-- **API Key**: `RESEND_API_KEY` in `.env.local`
-- **Limits (Free)**: 100 emails/day, 3,000 emails/month
-- **Check**: Monitor email delivery status in Resend dashboard
-- **Domain**: Currently using `onboarding@resend.dev` (test domain)
-
-### 🤖 AI/OCR - Google Gemini
-- **Service**: [Google AI Studio](https://ai.google.dev/)
-- **Dashboard**: https://aistudio.google.com/apikey
-- **Usage**: Document OCR and AI chat assistant
-- **Model**: Gemini 2.5 Flash
-- **API Key**: `GEMINI_API_KEY` in `.env.local`
-- **Limits (Free)**: 1,500 requests/day
-
-### 💳 Payments - Stripe
-- **Service**: [Stripe](https://stripe.com)
-- **Dashboard**: https://dashboard.stripe.com/
-- **Usage**: Subscription payments (Basic/Pro/Enterprise plans)
-- **Keys**: `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY` in `.env.local`
-- **Webhooks**: Configure at https://dashboard.stripe.com/webhooks
-- **Test Mode**: Use test keys for development
-
-### 🚀 Hosting - Vercel
-- **Service**: [Vercel](https://vercel.com)
-- **Dashboard**: https://vercel.com/dashboard
-- **Usage**: Serverless functions, frontend hosting, CI/CD
-- **Domain**: https://alloggify.vercel.app (or custom domain)
-- **Logs**: Monitor function logs and errors in Vercel dashboard
-- **Environment Variables**: Set all keys in Settings → Environment Variables
+### 📧 Email Notifications
+- **Welcome email** on registration (Google OAuth)
+- **Verification email** for email/password signup
+- **Password reset** emails with secure tokens
+- **Aruba SMTP** for reliable delivery (port 587 STARTTLS)
 
 ---
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- **Node.js** (v18 or higher)
-- **Gemini API Key** ([Get one free](https://ai.google.dev/))
-- **Chrome Browser** (for extension)
-- **Resend API Key** ([Get one free](https://resend.com/))
-- **Neon Database** (auto-configured via Vercel)
+### For End Users (Production)
 
-### Installation
+1. **Visit the App**
+   - Go to [https://alloggify.vercel.app](https://alloggify.vercel.app)
 
-1. **Clone the repository**
+2. **Create Account**
+   - Click "Registrati Gratuitamente"
+   - Sign up with email/password OR Google OAuth
+   - Verify your email (if using email/password)
+
+3. **Upload Document**
+   - Login to dashboard
+   - Click "Carica Documento"
+   - Select an ID document image (JPG, PNG)
+   - Wait 2-5 seconds for AI processing
+
+4. **Submit to Alloggiati Web**
+   - Review auto-filled form data
+   - Expand "API Alloggiati Web" panel
+   - Enter credentials (Username, Password, WSKEY)
+   - Click "Connetti" to authenticate
+   - Click "Invia Direttamente" to submit
+   - Download PDF receipt
+
+5. **Upgrade (Optional)**
+   - Click "Upgrade" in navbar when you hit scan limit
+   - Choose plan (Basic/Pro/Enterprise)
+   - Complete Stripe checkout
+   - Scan limits automatically increased
+
+---
+
+### For Developers (Local Development)
+
+#### Prerequisites
+- **Node.js** v20+ (specified in package.json engines)
+- **Neon PostgreSQL** database (or local Postgres)
+- **Aruba SMTP** account (or other SMTP service)
+- **Gemini API Key** ([Get free](https://ai.google.dev/))
+- **Stripe Account** (for payment testing)
+
+#### Installation
+
+1. **Clone Repository**
    ```bash
    git clone https://github.com/fracabu/Alloggify.git
    cd Alloggify
    ```
 
-2. **Install dependencies**
-
-   Frontend dependencies:
+2. **Install Dependencies**
    ```bash
    npm install
-   ```
-
-   Backend dependencies:
-   ```bash
-   cd server
-   npm install
-   cd ..
    ```
 
 3. **Configure Environment Variables**
 
-   Create a `.env.local` file in the project root:
+   Create `.env.local` in project root:
 
-   **For Chrome Extension Method (Basic)**:
    ```env
-   # Required: Gemini API for OCR
+   # ==========================================
+   # FRONTEND URL
+   # ==========================================
+   NEXT_PUBLIC_URL=http://localhost:3000
+
+   # ==========================================
+   # JWT SECRET (REQUIRED)
+   # Generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   # ==========================================
+   JWT_SECRET=your_generated_secret_here
+
+   # ==========================================
+   # ARUBA SMTP (Email Verification/Reset)
+   # ==========================================
+   SMTP_HOST=smtps.aruba.it
+   SMTP_PORT=587
+   SMTP_USER=welcome@checkinly.it
+   SMTP_PASSWORD=your_password_here
+   SMTP_FROM_NAME=CheckInly
+
+   # ==========================================
+   # GEMINI API KEY (OCR + AI Chat)
+   # Get free: https://aistudio.google.com/apikey
+   # ==========================================
    GEMINI_API_KEY=your_gemini_api_key_here
+
+   # ==========================================
+   # VERCEL POSTGRES (Neon Database)
+   # Copy from: Vercel Dashboard → Storage → Postgres
+   # ==========================================
+   POSTGRES_URL="postgres://..."
+   POSTGRES_PRISMA_URL="postgres://..."
+   POSTGRES_URL_NON_POOLING="postgres://..."
+   POSTGRES_USER="..."
+   POSTGRES_HOST="..."
+   POSTGRES_PASSWORD="..."
+   POSTGRES_DATABASE="..."
+
+   # ==========================================
+   # STRIPE (Payments)
+   # ==========================================
+   STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_PUBLISHABLE_KEY=pk_test_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   STRIPE_PRICE_BASIC=price_xxx
+   STRIPE_PRICE_PRO=price_xxx
+   STRIPE_PRICE_ENTERPRISE=price_xxx
+
+   # ==========================================
+   # BACKEND URL (for local dev)
+   # ==========================================
+   VITE_BACKEND_URL=http://localhost:3000
    ```
 
-   **For SOAP API Method (Advanced - Full Automation)**:
-   ```env
-   # Required: Gemini API for OCR
-   GEMINI_API_KEY=your_gemini_api_key_here
-
-   # Required: Backend server URL
-   VITE_BACKEND_URL=http://localhost:3001
-
-   # Required: Alloggiati Web credentials + WSKEY
-   VITE_ALLOGGIATI_UTENTE=your_username_here
-   VITE_ALLOGGIATI_PASSWORD=your_password_here
-   VITE_ALLOGGIATI_WSKEY=your_wskey_here  # 🔑 KEY FOR AUTOMATION!
+4. **Initialize Database**
+   ```bash
+   node scripts/init-db.js
    ```
 
-   **How to get your WSKEY** (see detailed guide below):
-   1. Login to [Alloggiati Web](https://alloggiatiweb.poliziadistato.it)
-   2. Go to: **Profilo** → **Chiave Web Service**
-   3. Click **"Genera Chiave"** and copy the Base64 key
+5. **Start Development Server**
 
-   *Note: You can also configure credentials through the UI after starting the app.*
+   The app uses a **hybrid architecture**:
+   - **Vite dev server** (frontend) on port 3000
+   - **Express server** (local API) on port 3001
 
-4. **Start development servers**
-
-   You need to run **both** frontend and backend:
-
-   **Terminal 1 - Frontend (Vite):**
+   Start both concurrently:
    ```bash
    npm run dev
    ```
 
-   **Terminal 2 - Backend (Express):**
+   OR start individually:
    ```bash
-   cd server
-   npm start
+   npm run dev:frontend  # Port 3000
+   npm run dev:api       # Port 3001
    ```
 
-   The frontend will be available at `http://localhost:5173` and the backend API at `http://localhost:3001`
+6. **Access the App**
+   - Frontend: `http://localhost:3000`
+   - Backend API: `http://localhost:3001/api/*`
+
+---
+
+## 🏗️ Architecture
+
+### Tech Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | React 19 + TypeScript | Modern UI with hooks |
+| **Build Tool** | Vite 6.2 | Fast HMR and builds |
+| **Styling** | Tailwind CSS | Utility-first CSS |
+| **State** | React Context API | Auth state management |
+| **Routing** | React Router v7 | Client-side routing |
+| **Backend (Local)** | Express 5 | Local development API |
+| **Backend (Prod)** | Vercel Serverless | Scalable cloud functions |
+| **Database** | Neon PostgreSQL | Serverless SQL database |
+| **ORM** | @vercel/postgres | Tagged template queries |
+| **Auth** | JWT + bcrypt | Secure authentication |
+| **Email** | Nodemailer + Aruba SMTP | Transactional emails |
+| **AI/OCR** | Gemini 2.5 Flash | Document extraction |
+| **Payments** | Stripe | Subscription billing |
+| **Hosting** | Vercel | Edge network deployment |
+
+### Hybrid Backend
+
+The app uses **two parallel backend implementations**:
+
+#### 1. Express Server (Local Development)
+- **Location**: `server/index.js`
+- **Port**: 3001
+- **Purpose**: Local development convenience
+- **Features**: Hot reload, console logs, simpler debugging
+
+#### 2. Vercel Serverless Functions (Production)
+- **Location**: `api/` directory (TypeScript)
+- **Technology**: Vercel Serverless Functions
+- **Purpose**: Production scaling
+- **Features**: Auto-scaling, zero server management
+
+Both implement **identical endpoints**:
+- `/api/auth/*` - User authentication
+- `/api/ocr` - Document OCR
+- `/api/alloggiati` - SOAP API proxy
+- `/api/ai/chat` - AI assistant
+- `/api/stripe/*` - Payment processing
+- `/api/webhooks/stripe` - Stripe webhooks
+
+### Database Schema
+
+```sql
+-- Users table
+users (
+  id UUID PRIMARY KEY,
+  email VARCHAR UNIQUE,
+  password_hash VARCHAR,
+  full_name VARCHAR,
+  company_name VARCHAR,
+  email_verified BOOLEAN,
+  verification_token VARCHAR,
+  verification_token_expires TIMESTAMP,
+  google_id VARCHAR UNIQUE,
+  subscription_plan VARCHAR DEFAULT 'free',
+  stripe_customer_id VARCHAR,
+  stripe_subscription_id VARCHAR,
+  monthly_scan_limit INTEGER DEFAULT 5,
+  scan_count INTEGER DEFAULT 0,
+  last_scan_reset_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+)
+
+-- Scans table
+scans (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  document_type VARCHAR,
+  extracted_data JSONB,
+  alloggiati_receipt_number VARCHAR,
+  created_at TIMESTAMP DEFAULT NOW()
+)
+
+-- Subscriptions table
+subscriptions (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  stripe_subscription_id VARCHAR UNIQUE,
+  stripe_customer_id VARCHAR,
+  plan_name VARCHAR,
+  status VARCHAR,
+  current_period_start TIMESTAMP,
+  current_period_end TIMESTAMP,
+  cancel_at_period_end BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+)
+
+-- Usage logs table
+usage_logs (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  action VARCHAR,
+  metadata JSONB,
+  ip_address VARCHAR,
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+)
+```
 
 ---
 
 ## 💻 Usage
 
-### Step 1: Scan Document (Both Methods)
+### 1. Registration & Login
+
+**Email/Password Method:**
+1. Click "Registrati Gratuitamente"
+2. Fill in email, password, nome struttura (optional)
+3. Check email for verification link
+4. Click link → Email verified
+5. Login with email/password
+
+**Google OAuth Method:**
+1. Click "Continua con Google"
+2. Select Google account
+3. Auto-creates account (email already verified)
+4. Receives welcome email
+5. Auto-logged in or redirected to login
+
+### 2. Document Scanning & OCR
 
 1. **Upload Document**
-   - Click "Carica Documento" button
-   - Select an image of an ID document (JPG, PNG, etc.)
-   - Wait for AI processing (2-5 seconds)
+   - Click "Carica Documento" button in sidebar
+   - Select image file (JPG, PNG, HEIC, etc.)
+   - Supported documents:
+     - Carta d'Identità (standard & elettronica)
+     - Passaporto Ordinario
+     - Patente di Guida
+     - International passports
 
-2. **Review Extracted Data**
-   - Verify the auto-populated form fields
-   - Make corrections if needed
-   - All fields are editable
+2. **AI Processing**
+   - Wait 2-5 seconds for Gemini 2.5 Flash OCR
+   - Data automatically fills form fields
+   - Scan counter increments (X/Y scansioni usate)
 
----
+3. **Review Data**
+   - Verify extracted information:
+     - Tipo Alloggiato, Data Arrivo, Permanenza
+     - Cognome, Nome, Sesso, Data di Nascita
+     - Luogo/Stato di Nascita, Cittadinanza
+     - Tipo Documento, Numero, Luogo Rilascio
+   - Edit any incorrect fields
 
-### Step 2: Choose Your Submission Method
+### 3. SOAP API Integration
 
-## 📊 Method Comparison Table
+1. **Expand "API Alloggiati Web" Panel**
+   - Click header to show/hide panel
 
-| Feature | 🔹 Chrome Extension | 🔹 SOAP API (WSKEY) |
-|---------|---------------------|----------------------|
-| **Setup Complexity** | ⭐ Simple | ⭐⭐⭐ Advanced |
-| **Backend Required** | ❌ No | ✅ Yes (port 3001) |
-| **WSKEY Required** | ❌ No | ✅ **Yes** |
-| **Automation Level** | ⚠️ Semi-automatic | ✅ Fully automatic |
-| **Submission** | Manual (user clicks) | Automatic (zero-click) |
-| **Receipt Download** | ❌ Manual from portal | ✅ Automatic PDF |
-| **Processing Time** | ~1-2 minutes | ~5-10 seconds |
-| **Best For** | Testing, beginners | Production, high volume |
-| **Credentials Needed** | Portal login only | Portal login + WSKEY |
+2. **Enter Credentials**
+   - **Nome Utente**: Your Alloggiati Web username
+   - **Password**: Your Alloggiati Web password
+   - **WSKEY**: Your Web Service Key (see guide below)
 
----
+3. **Authenticate**
+   - Click "Connetti" button
+   - System generates session token
+   - Status shows "✓ Connesso" with time remaining
 
-### 🔹 Method A: Chrome Extension (Basic)
+4. **Test Validation (Optional)**
+   - Click "🧪 Test Validazione" button
+   - System validates data with Alloggiati Web
+   - Returns success/error message
 
-**Best for**: Beginners, testing, small-scale operations
+5. **Submit Schedina**
+   - Click "📤 Invia Direttamente" button
+   - Confirmation modal appears
+   - Review data preview
+   - Click "Conferma"
+   - Wait 5-10 seconds for submission
+   - Receive success message with receipt number
 
-#### Setup:
-1. Load extension in Chrome (see "Chrome Extension Setup" below)
-2. Only GEMINI_API_KEY required in `.env.local`
+6. **Download Receipt**
+   - In "Scarica Ricevuta" section
+   - Select date (last 30 days)
+   - Click "📄 PDF" button
+   - PDF downloads automatically
 
-#### Usage:
-1. After scanning document, click **"Esporta per Estensione"** button
-2. Data saved to localStorage automatically
-3. Navigate to [Alloggiati Web Portal](https://alloggiatiweb.poliziadistato.it)
-4. Login with your portal credentials
-5. Click the floating **"Compila da Alloggify"** button
-6. Form auto-fills with extracted data
-7. Review and click **Submit** on the portal
+### 4. Subscription Management
 
-**Pros**: Simple, visual confirmation, no complex setup
-**Cons**: Manual navigation and submission required
+**Check Current Plan:**
+- View in navbar: "Piano: Free • Scansioni: 3/5"
 
----
+**Upgrade Plan:**
+1. Click "Upgrade" button when limit reached (auto-redirect)
+2. OR navigate to `/upgrade` page
+3. Choose plan:
+   - **Basic**: €19/mese (100 scansioni)
+   - **Pro**: €49/mese (500 scansioni) - RECOMMENDED
+   - **Enterprise**: €199/mese (Unlimited)
+4. Click "Passa a [Piano]"
+5. Redirected to Stripe Checkout
+6. Complete payment
+7. Stripe webhook updates database
+8. Scan limit automatically increased
+9. Redirected back to dashboard
 
-### 🔹 Method B: SOAP API with WSKEY (Advanced - Recommended)
-
-**Best for**: Production environments, high-volume operations, full automation
-
-#### Setup:
-1. Obtain your WSKEY (see detailed guide below)
-2. Configure `.env.local` with all credentials (including WSKEY)
-3. Start backend server: `cd server && npm start`
-
-#### Usage:
-1. After scanning document, expand **"API Alloggiati Web"** panel
-2. Enter credentials (Username, Password, WSKEY) if not pre-configured
-3. Click **"Connetti"** to authenticate (generates token)
-4. Click **"Invia Schedina"** button
-5. Confirm in modal dialog
-6. **Automatic submission** - wait 5-10 seconds
-7. Receive confirmation message with receipt number
-8. Download PDF receipt from "Ricevute" section (optional)
-
-**Pros**: Fully automated, instant confirmation, batch-ready, PDF receipts
-**Cons**: Requires WSKEY setup, backend server, more complex configuration
-
-### Chrome Extension Setup
-
-1. **Load Extension in Chrome**
-   ```
-   1. Navigate to chrome://extensions/
-   2. Enable "Developer mode" (top-right toggle)
-   3. Click "Load unpacked"
-   4. Select the chrome-extension folder from this project
-   ```
-
-2. **Use on Alloggiati Web**
-   - Login to [Alloggiati Web](https://alloggiatiweb.poliziadistato.it)
-   - Navigate to guest registration form
-   - Click the floating "Compila da Alloggify" button
-   - OR click the extension icon and select "Compila Form"
-
-3. **Verify & Submit**
-   - Review auto-filled data
-   - Make any necessary adjustments
-   - Submit as usual
+**Monthly Reset:**
+- Scan counters reset automatically on subscription renewal
+- Webhook handler: `/api/webhooks/stripe`
+- Event: `invoice.payment_succeeded`
 
 ---
 
 ## 🔑 How to Obtain Your WSKEY
 
-The **WSKEY (Web Service Key)** is your secret API credential that enables full automation with the Alloggiati Web SOAP API. It's **required only for Method B** (SOAP API).
+The **WSKEY (Web Service Key)** enables automatic API submission to Alloggiati Web.
 
 ### Step-by-Step Guide:
 
-1. **Login to Alloggiati Web Portal**
-   - Navigate to: [https://alloggiatiweb.poliziadistato.it](https://alloggiatiweb.poliziadistato.it)
-   - Enter your username and password
+1. **Login to Portal**
+   - Go to [Alloggiati Web](https://alloggiatiweb.poliziadistato.it)
+   - Enter username and password
 
-2. **Access Web Service Key Section**
-   - Click on **"Profilo"** (Profile) in the top menu
-   - Select **"Chiave Web Service"** (Web Service Key)
+2. **Navigate to WSKEY Section**
+   - Click **"Profilo"** (top menu)
+   - Select **"Chiave Web Service"**
 
-3. **Generate Your WSKEY**
-   - Click the **"Genera Chiave"** (Generate Key) button
-   - A Base64-encoded key will appear (format: `XXX...XXX==`)
-   - Example format: `AFWxClHwW6PKdenzGh0nsQMiFqttTvH2e14VJW1mE9n7D9UuTOXoJca1qJgDk/jyUw==`
+3. **Generate Key**
+   - Click **"Genera Chiave"** button
+   - Copy the Base64 key (format: `XXX...XXX==`)
+   - Example: `AFWxClHwW6PKdenzGh0nsQMiFqttTvH2...==`
 
-4. **Copy and Store Securely**
-   - Copy the entire key (including the `==` at the end)
-   - Add to `.env.local`: `VITE_ALLOGGIATI_WSKEY=your_copied_key_here`
-   - **Never commit** this key to git
-
-5. **Test Your WSKEY**
-   - Start the app and backend server
-   - In "API Alloggiati Web" panel, enter credentials
-   - Click "Connetti" - if successful, WSKEY is valid
+4. **Use in CheckInly**
+   - Enter WSKEY in "API Alloggiati Web" panel
+   - Click "Connetti"
+   - If successful, WSKEY is valid
 
 ### Important Notes:
-
-- ⚠️ **Keep WSKEY Secret**: Treat it like a password
-- 🔄 **Regenerate if Needed**: Can be regenerated anytime from portal
-- ⏱️ **WSKEY vs Token**: WSKEY is permanent; Token expires after each session
-- 🔐 **Security**: WSKEY grants API access; protect it accordingly
-
----
-
-## 🏗️ Project Structure
-
-```
-Alloggify/
-├── components/              # React components
-│   ├── MainForm.tsx        # Main guest data form
-│   ├── ApiKeyGuide.tsx     # API key configuration UI
-│   ├── Header.tsx          # App header
-│   └── icons/              # Icon components
-├── services/
-│   └── geminiService.ts    # Gemini AI integration
-├── utils/
-│   └── fileUtils.ts        # File handling utilities
-├── server/                 # Backend Express server
-│   ├── index.js            # Express app entry point
-│   ├── routes/             # API route handlers
-│   │   ├── auth.js         # Token generation endpoint
-│   │   ├── test.js         # Test schedina (validation)
-│   │   ├── send.js         # Send schedina to Alloggiati Web
-│   │   └── ricevuta.js     # Download receipt PDF
-│   ├── utils/
-│   │   └── soap.js         # SOAP client for Alloggiati Web API
-│   └── package.json        # Server dependencies
-├── chrome-extension/       # Chrome extension
-│   ├── manifest.json       # Extension manifest (v3)
-│   ├── content.js          # Auto-fill logic
-│   ├── popup.html/js       # Extension popup
-│   └── background.js       # Service worker
-├── App.tsx                 # Main app component
-├── types.ts                # TypeScript interfaces
-└── vite.config.ts          # Vite configuration
-```
+- ⚠️ **Keep WSKEY Secret** - Treat like a password
+- 🔄 **Regenerate Anytime** - From portal if needed
+- ⏱️ **WSKEY vs Token**:
+  - WSKEY: Permanent credential
+  - Token: Session token (expires after 30-60 min)
 
 ---
 
-## 🛠️ Technology Stack
+## 🤖 AI Chat Assistant
 
-| Category | Technology |
-|----------|-----------|
-| **Frontend** | React 19, TypeScript, Vite |
-| **AI/OCR** | Google Gemini 2.5 Flash |
-| **Styling** | Tailwind CSS (utility classes) |
-| **Browser Extension** | Chrome Extension Manifest V3 |
-| **Storage** | localStorage |
-| **Build Tool** | Vite 6.2 |
+CheckInly includes a **24/7 AI assistant** powered by Gemini 2.5 Flash to help with:
+
+### Topics Covered:
+- 📋 **Hospitality Management**: Check-in procedures, guest data
+- 📜 **Italian Regulations**: D.Lgs. 286/1998, police reporting requirements
+- 🏨 **Alloggiati Web Portal**: Navigation, troubleshooting, procedures
+- 💰 **Revenue Management**: Pricing strategies, dynamic pricing
+- 🌐 **OTA Platforms**: Airbnb, Booking.com, integration tips
+- ❓ **General Questions**: Best practices, industry standards
+
+### Usage:
+1. Click floating chat icon (💬) in bottom-right corner
+2. Type your question or select suggested question
+3. AI responds with detailed, context-aware answer
+4. Supports markdown formatting with emoji
+5. Chat history preserved during session
+
+### Example Questions:
+- "Quali documenti sono validi per l'Alloggiati Web?"
+- "Come gestisco un ospite straniero senza documento italiano?"
+- "Cosa fare se il portale Alloggiati Web non risponde?"
+- "Come calcolo il prezzo per un weekend lungo?"
 
 ---
 
@@ -398,164 +519,247 @@ Alloggify/
 
 ### Frontend (Root Directory)
 ```bash
-npm install          # Install frontend dependencies
-npm run dev          # Start frontend dev server (port 5173)
-npm run build        # Build for production
-npm run preview      # Preview production build
+npm install          # Install all dependencies
+npm run dev          # Start both frontend + backend (concurrently)
+npm run dev:frontend # Start only Vite dev server (port 3000)
+npm run dev:api      # Start only Express server (port 3001)
+npm run build        # Build for production (Vercel)
+npm run preview      # Preview production build locally
 ```
 
-### Backend (Server Directory)
+### Database Scripts
 ```bash
-cd server
-npm install          # Install backend dependencies
-npm start            # Start backend server (port 3001)
-npm run dev          # Start backend with auto-reload
+node scripts/init-db.js              # Initialize database schema
+node scripts/delete-test-users.js    # Clean up test users
+```
+
+### Email Testing
+```bash
+node scripts/test-email.cjs          # Test Aruba SMTP configuration
 ```
 
 ---
 
-## 🔧 Configuration
+## 🚀 Deployment (Vercel)
 
-### Environment Variables
+### Initial Setup
 
-Create `.env.local` file:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-```
+1. **Connect GitHub Repository**
+   - Login to [Vercel](https://vercel.com)
+   - Import GitHub repository
+   - Vercel auto-detects Vite configuration
 
-### API Key Priority
-1. **UI Configuration** (localStorage) - Set via ApiKeyGuide component
-2. **Environment Variable** (.env.local) - Fallback option
+2. **Add Neon PostgreSQL**
+   - Vercel Dashboard → Storage → Add → Postgres
+   - Automatically creates Neon database
+   - Auto-injects `POSTGRES_*` environment variables
 
-### Path Aliases
+3. **Configure Environment Variables**
+   - Settings → Environment Variables
+   - Add all variables from `.env.local` example
+   - **Required variables:**
+     - `JWT_SECRET` (generate with `crypto.randomBytes(32).toString('hex')`)
+     - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM_NAME`
+     - `GEMINI_API_KEY`
+     - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+     - `STRIPE_PRICE_BASIC`, `STRIPE_PRICE_PRO`, `STRIPE_PRICE_ENTERPRISE`
+     - `NEXT_PUBLIC_URL` (e.g., `https://checkinly.vercel.app`)
 
-The project uses `@/` alias for imports:
-```typescript
-import { DocumentData } from '@/types';
-import { extractDocumentInfo } from '@/services/geminiService';
-```
+4. **Initialize Database**
+   - Copy `POSTGRES_URL` from Vercel environment variables
+   - Run locally: `node scripts/init-db.js`
+   - OR run SQL directly in Vercel Postgres Query tab
+
+5. **Configure Stripe Webhook**
+   - Stripe Dashboard → Webhooks → Add endpoint
+   - URL: `https://yourdomain.vercel.app/api/webhooks/stripe`
+   - Events to listen:
+     - `checkout.session.completed`
+     - `invoice.payment_succeeded`
+     - `customer.subscription.deleted`
+     - `customer.subscription.updated`
+   - Copy webhook signing secret to `STRIPE_WEBHOOK_SECRET`
+
+6. **Deploy**
+   - Push to `main` branch on GitHub
+   - Vercel auto-deploys
+   - Check deployment logs for errors
+
+### Post-Deployment
+
+1. **Test Registration Flow**
+   - Visit production URL
+   - Register new user
+   - Check email delivery
+
+2. **Test OCR**
+   - Upload document
+   - Verify data extraction
+   - Check scan counter
+
+3. **Test SOAP API**
+   - Enter Alloggiati Web credentials
+   - Submit test schedina
+   - Verify receipt download
+
+4. **Test Stripe (Test Mode)**
+   - Attempt upgrade
+   - Use test card: `4242 4242 4242 4242`
+   - Verify webhook triggers
+   - Check database updates
 
 ---
 
-## 🎯 Key Features Explained
+## 🛠️ Troubleshooting
 
-### Document Type Classification
+### Authentication Issues
 
-The Gemini AI follows a strict hierarchy for document identification:
+**"Devi verificare la tua email prima di accedere"**
+- Check email inbox/spam for verification link
+- Resend verification email (feature TODO)
+- Ensure `SMTP_PORT=587` in Vercel environment
 
-1. **Passport Detection** → `PASSAPORTO ORDINARIO`
-2. **Driving License Detection** → `PATENTE DI GUIDA`
-3. **Italian ID Cards**:
-   - Default: `CARTA DI IDENTITA'` (covers old paper/plastic cards)
-   - Only if chip/EU flag visible: `CARTA IDENTITA' ELETTRONICA`
+**Google OAuth doesn't send welcome email**
+- Check Vercel logs for `/api/auth/google/callback`
+- Look for "Welcome email sent" or error message
+- Verify `SMTP_*` environment variables
 
-### Data Transformation
+### Email Delivery Issues
 
-The extension automatically converts data formats:
+**Emails not arriving (Aruba SMTP)**
+- Verify `SMTP_PORT=587` (NOT 465)
+- Check `SMTP_USER` and `SMTP_PASSWORD` are correct
+- Confirm email account exists and SMTP is enabled
+- Check Aruba firewall/IP whitelisting
 
-| Field | Internal Format | Portal Format |
-|-------|----------------|---------------|
-| Dates | `YYYY-MM-DD` | `DD/MM/YYYY` |
-| Sex | `Maschio` / `Femmina` | `M` / `F` |
-| Places | `ROMA` (uppercase) | Same |
+**How to test email:**
+```bash
+node scripts/test-email.cjs
+```
+
+### Database Errors
+
+**"Missing database credentials"**
+- Ensure all `POSTGRES_*` variables are set in Vercel
+- For local dev, copy from Vercel → Settings → Environment Variables
+
+**"Table does not exist"**
+- Run: `node scripts/init-db.js`
+- OR copy SQL from `database/schema.sql` and run in Neon console
+
+### Stripe Integration Issues
+
+**"No more than 12 Serverless Functions"** (Vercel Hobby plan)
+- Current count: 12 functions (exactly at limit)
+- Remove `api/test-email.ts` if added
+- Upgrade to Pro plan for unlimited functions
+
+**Webhook not triggering**
+- Verify webhook URL in Stripe Dashboard
+- Check `STRIPE_WEBHOOK_SECRET` matches
+- Test with Stripe CLI: `stripe trigger checkout.session.completed`
+- Check Vercel logs for errors
+
+### SOAP API Issues
+
+**"Token scaduto o non valido"**
+- Token expired (30-60 min timeout)
+- Re-authenticate: Click "Riconnetti"
+- Enter credentials again
+
+**"WSKEY non valida"**
+- Verify WSKEY is copied correctly (no spaces)
+- WSKEY format: Base64 ending with `==`
+- Regenerate from portal: Profilo → Chiave Web Service
+
+**"Backend server not responding" (Local Dev)**
+- Ensure Express server is running: `npm run dev:api`
+- Check port 3001 is not blocked
+- Verify `VITE_BACKEND_URL=http://localhost:3001`
 
 ---
 
-## 🐛 Troubleshooting
+<!--
+## 🗄️ LEGACY: Chrome Extension (Deprecated)
 
-### API Key Issues
-- **Error: "Chiave API non configurata"**
-  - Set your API key in `.env.local` OR through the UI
-  - Restart the dev server after changing `.env.local`
+**Note**: The Chrome Extension method is NO LONGER supported in the current SaaS version.
+The extension code remains in the `chrome-extension/` directory for reference but is not
+actively maintained or offered to users.
 
-### Extension Not Working
-- **Extension doesn't load**
-  - Enable Developer Mode in `chrome://extensions/`
-  - Reload the extension after code changes
+### Why Deprecated:
+- SaaS approach provides better user experience
+- SOAP API is more reliable than client-side localStorage
+- Centralized authentication and usage tracking
+- Subscription management requires server-side logic
+- Chrome Extension button is hidden in UI (MainForm.tsx lines 182-190)
 
-- **Floating button not appearing**
-  - Refresh the Alloggiati Web page
-  - Check console for errors (F12)
+### Legacy Documentation:
+If you need to use the Chrome Extension for local development:
+1. Load extension in Chrome: chrome://extensions/ → Developer Mode → Load unpacked
+2. Select `chrome-extension/` folder
+3. Navigate to Alloggiati Web portal
+4. Extension injects floating "Compila da Alloggify" button
+5. Data fills form from localStorage
 
-- **No data available**
-  - Click "Esporta per Estensione" in the web app first
-  - Try clicking "Carica Dati" in extension popup
-
-### WSKEY & SOAP API Issues
-
-- **"Token scaduto o non valido" (Token expired or invalid)**
-  - Token expires after session timeout (typically 30-60 minutes)
-  - Re-authenticate: Click "Riconnetti" in "API Alloggiati Web" panel
-  - Enter credentials again to generate fresh token
-
-- **"Errore autenticazione: WSKEY non valida" (WSKEY authentication error)**
-  - Verify WSKEY is copied correctly (no extra spaces or line breaks)
-  - WSKEY format should be Base64 and end with `==`
-  - Re-generate WSKEY from portal: Profilo → Chiave Web Service
-  - Restart backend server after updating `.env.local`
-
-- **"Missing required fields: wskey"**
-  - WSKEY not configured in `.env.local` or UI panel
-  - Follow "How to Obtain Your WSKEY" guide above
-  - Ensure `VITE_ALLOGGIATI_WSKEY` is set correctly
-
-- **"Backend server not responding"**
-  - Check backend is running: `cd server && npm start`
-  - Verify `VITE_BACKEND_URL` is correct (default: http://localhost:3001)
-  - Check server logs for error messages
-  - Ensure port 3001 is not blocked by firewall
-
-- **"SOAP request failed"**
-  - Verify Alloggiati Web portal is accessible
-  - Check internet connection
-  - Confirm credentials (username/password) are correct
-  - Try authenticating directly on portal to verify account status
+This method is NO LONGER recommended for production use.
+-->
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome! Here's how:
 
-1. **Report Bugs** - Open an issue with reproduction steps
-2. **Suggest Features** - Share your ideas in issues
-3. **Submit PRs** - Fork, create a feature branch, and submit PR
-4. **Improve Docs** - Help make documentation clearer
+1. **Report Bugs** - Open [GitHub issue](https://github.com/fracabu/Alloggify/issues)
+2. **Suggest Features** - Share ideas in issues
+3. **Submit Pull Requests**:
+   - Fork repository
+   - Create feature branch: `git checkout -b feature/amazing-feature`
+   - Commit changes: `git commit -m 'Add amazing feature'`
+   - Push branch: `git push origin feature/amazing-feature`
+   - Open Pull Request
 
 ### Development Guidelines
-- Follow existing code style
+- Follow existing code style (TypeScript + ESLint)
 - Test with multiple document types
-- Update CLAUDE.md if adding major features
-- Ensure `.env.local` is never committed
+- Update `CLAUDE.md` if adding major features
+- Never commit `.env.local` or API keys
+- Document new environment variables
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Google Gemini AI** for powerful OCR capabilities
-- **Vite** for blazing-fast development experience
-- **React Team** for the amazing framework
-- Italian hospitality professionals who inspired this tool
+- **Google Gemini AI** - Powerful OCR capabilities
+- **Vercel** - Serverless hosting platform
+- **Neon** - Serverless PostgreSQL database
+- **Stripe** - Payment processing
+- **React Team** - Amazing framework
+- **Vite Team** - Blazing-fast build tool
+- Italian hospitality professionals - Inspiration for this tool
 
 ---
 
 ## 📧 Contact & Support
 
-- **GitHub Issues**: [Report a bug or request a feature](https://github.com/fracabu/Alloggify/issues)
+- **Live App**: [https://alloggify.vercel.app](https://alloggify.vercel.app)
+- **GitHub Issues**: [Report bugs](https://github.com/fracabu/Alloggify/issues)
 - **Developer**: [@fracabu](https://github.com/fracabu)
 
 ---
 
 <div align="center">
 
-**Made with ❤️ for Italian Hospitality Industry**
+**Made with ❤️ for the Italian Hospitality Industry**
 
-⭐ Star this repo if you find it useful!
+⭐ **Star this repo if you find it useful!**
+
+[Get Started](https://alloggify.vercel.app) • [Documentation](CLAUDE.md) • [Report Bug](https://github.com/fracabu/Alloggify/issues)
 
 </div>

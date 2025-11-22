@@ -27,7 +27,7 @@ Now deployed as a production SaaS platform with:
 - **Hybrid Backend Architecture**: Express server for local dev + Vercel Serverless for production
 - **Neon PostgreSQL**: Serverless database via `@vercel/postgres`
 - **JWT Authentication**: Email verification, password reset, session management
-- **Transactional Email**: Resend API integration
+- **Transactional Email**: Aruba SMTP via Nodemailer
 - **Subscription System**: Database schema ready for Stripe integration
 - **Multi-tenant Architecture**: User isolation with scan usage limits
 
@@ -162,7 +162,7 @@ This project relies on several external services. Access these dashboards to man
 ### 📧 Email - Aruba SMTP
 - **Dashboard**: https://admin.aruba.it
 - **Purpose**: Transactional emails (verification, password reset)
-- **Current Setup**: SMTP via Nodemailer (smtps.aruba.it:465)
+- **Current Setup**: SMTP via Nodemailer (smtps.aruba.it:587 with STARTTLS)
 - **Credentials**: Configured in `SMTP_USER` and `SMTP_PASSWORD` environment variables
 - **From Email**: Configure `SMTP_USER` with your Aruba email (e.g., `noreply@tuodominio.it`)
 - **Troubleshooting**: Check Aruba webmail for bounce messages
@@ -210,7 +210,7 @@ JWT_SECRET=your_generated_secret_here
 # Configure at: https://admin.aruba.it
 # ==========================================
 SMTP_HOST=smtps.aruba.it
-SMTP_PORT=465
+SMTP_PORT=587
 SMTP_USER=noreply@tuodominio.it
 SMTP_PASSWORD=TuaPasswordEmailAruba
 SMTP_FROM_NAME=CheckInly
@@ -461,7 +461,7 @@ The application uses **React Router v7** with protected routes:
 **Authentication Flow**:
 ```
 1. User Registration:
-   POST /api/auth/register → Create user in DB → Send verification email (Resend API)
+   POST /api/auth/register → Create user in DB → Send verification email (Aruba SMTP)
    ↓
 2. Email Verification:
    GET /api/auth/verify?token=xxx → Update email_verified = TRUE
@@ -760,9 +760,9 @@ The application includes a Gemini 2.5 Flash-powered AI assistant accessible via 
 **Pricing Plans**:
 ```typescript
 free: { scanLimit: 5, price: €0/month }
-basic: { scanLimit: 100, price: €19/month }
-pro: { scanLimit: 500, price: €49/month }
-enterprise: { scanLimit: 999999, price: €199/month }
+basic: { scanLimit: 100, price: €15/month }
+pro: { scanLimit: 500, price: €39/month }
+enterprise: { scanLimit: 999999, price: €199/month } // Not shown in UI, backend only
 ```
 
 **Webhook Events Handled**:
@@ -837,7 +837,7 @@ User clicks "Upgrade" → POST /api/stripe/create-checkout-session
 
 **User-Facing Elements** (use CheckInly):
 - Landing page copy, headers, footers
-- Email templates (Resend)
+- Email templates (Aruba SMTP)
 - Meta tags, page titles
 - News articles and blog content
 - Marketing materials
@@ -982,14 +982,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 - Test authentication flow: registration → email verification → login
 - Test OCR with real document images (ID cards, passports, licenses)
 - Test SOAP API with valid Alloggiati Web credentials
-- Check email delivery in Resend dashboard
+- Check email delivery in Aruba webmail (https://admin.aruba.it)
 - Monitor serverless function logs in Vercel dashboard
 
 ### Deployment to Vercel
 1. **Initial Setup**:
    - Connect GitHub repo to Vercel
    - Add Vercel Postgres storage (auto-configures database env vars)
-   - Add Resend API key to environment variables
+   - Add Aruba SMTP credentials to environment variables (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM_NAME)
    - Add JWT_SECRET (generate secure random string)
    - Add GEMINI_API_KEY
 
@@ -1014,7 +1014,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 - Scan count tracking and limits
 - Usage analytics logging
 - Serverless architecture (auto-scaling)
-- Email service (Resend API)
+- Email service (Aruba SMTP via Nodemailer)
 
 **🔶 PARTIALLY IMPLEMENTED**:
 - Stripe integration schema (tables exist, no webhooks yet)

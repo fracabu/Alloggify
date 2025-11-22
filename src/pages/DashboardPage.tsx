@@ -12,7 +12,7 @@ import { AlloggiatiCredentials } from '../../components/AlloggiatiCredentials';
 import { alloggiatiApi } from '../../services/alloggiatiApiService';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { AIChatWidget } from '../components/AIChatWidget';
-import { ArrowRightOnRectangleIcon, UserIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon, UserIcon, ChartBarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 const initialDocumentData: DocumentData = {
     tipo: 'Ospite Singolo',
@@ -380,6 +380,32 @@ export const DashboardPage: React.FC = () => {
                                 </div>
                             )}
                         </div>
+
+                        {/* Taxly - Calcolatore Tassa Soggiorno */}
+                        <a
+                            href="https://tassa-soggiorno-calculator.vercel.app"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block p-4 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 shadow-md rounded-lg border-2 border-green-200 hover:border-green-300 transition-all group"
+                        >
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                    <CurrencyDollarIcon className="h-6 w-6 text-green-600" />
+                                    <h3 className="font-bold text-base text-gray-800">Tassa di Soggiorno</h3>
+                                </div>
+                                <svg className="h-4 w-4 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </div>
+                            <p className="text-sm text-gray-700 mb-2">
+                                Calcola automaticamente la tassa di soggiorno dai tuoi file Excel/CSV
+                            </p>
+                            <div className="flex items-center gap-2 text-xs text-green-700">
+                                <span className="bg-green-100 px-2 py-1 rounded-full">100% Gratuito</span>
+                                <span className="bg-green-100 px-2 py-1 rounded-full">Tutti i Comuni</span>
+                            </div>
+                        </a>
+
                         {/* key={user?.id} forces component to remount when user changes (clears old user's data) */}
                         <AlloggiatiCredentials key={user?.id} />
                         {/* <ApiKeyGuide /> */}

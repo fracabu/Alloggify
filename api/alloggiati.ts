@@ -8,16 +8,30 @@
  * - action: 'send' → Submit schedina
  * - action: 'ricevuta' → Download receipt
  * - action: 'tabelle' → Download reference tables
+ *
+ * PROTECTED: Requires JWT authentication
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { escapeXml, callSoap } from '../lib/soap';
+import { requireAuth } from '../lib/auth';
+import { incrementScanCount, logScan, logUserAction } from '../lib/db';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Only allow POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // ✅ REQUIRE AUTHENTICATION
+    const user = await requireAuth(req, res);
+    if (!user) {
+        // requireAuth already sent 401 response
+        return;
+    }
+
+    console.log(`[ALLOGGIATI] Authenticated request from user: ${user.email} (${user.userId})`);
+
 
     try {
         // Parse body if string
@@ -47,18 +61,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             });
         }
 
-        // Route to appropriate handler
+        // Route to appropriate handler (pass user for logging)
         switch (action) {
             case 'auth':
-                return await handleAuth(body, res);
+                return await handleAuth(body, user, res);
             case 'test':
-                return await handleTest(body, res);
+                return await handleTest(body, user, res);
             case 'send':
-                return await handleSend(body, res);
+                return await handleSend(body, user, res);
             case 'ricevuta':
-                return await handleRicevuta(body, res);
+                return await handleRicevuta(body, user, res);
             case 'tabelle':
-                return await handleTabelle(body, res);
+                return await handleTabelle(body, user, res);
             default:
                 return res.status(400).json({
                     error: `Unknown action: ${action}`,
@@ -78,8 +92,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 // ============================================
 // AUTH - Generate Token
 // ============================================
-async function handleAuth(body: any, res: VercelResponse) {
+async function handleAuth(body: any, user: any, res: VercelResponse) {
     console.log('[AUTH] Starting authentication request');
+    console.log('[AUTH] User:', user.email);
     console.log('[AUTH] Body keys:', Object.keys(body || {}));
 
     const { utente, password, wskey } = body;
@@ -87,6 +102,13 @@ async function handleAuth(body: any, res: VercelResponse) {
     console.log('[AUTH] Extracted - utente:', utente ? 'present' : 'missing');
     console.log('[AUTH] Extracted - password:', password ? 'present' : 'missing');
     console.log('[AUTH] Extracted - wskey:', wskey ? 'present' : 'missing');
+
+    // Log action
+    try {
+        await logUserAction(user.userId, 'alloggiati_auth', { utente });
+    } catch (error) {
+        console.error('[AUTH] Failed to log action:', error);
+    }
 
     if (!utente || !password || !wskey) {
         return res.status(400).json({
@@ -133,8 +155,15 @@ async function handleAuth(body: any, res: VercelResponse) {
 // ============================================
 // TEST - Validate Schedina
 // ============================================
-async function handleTest(body: any, res: VercelResponse) {
+async function handleTest(body: any, user: any, res: VercelResponse) {
     const { utente, token, schedine } = body;
+
+    // Log action
+    try {
+        await logUserAction(user.userId, 'alloggiati_test', { utente });
+    } catch (error) {
+        console.error('[TEST] Failed to log action:', error);
+    }
 
     if (!utente || !token || !schedine) {
         return res.status(400).json({
@@ -200,8 +229,9 @@ async function handleTest(body: any, res: VercelResponse) {
 // ============================================
 // SEND - Submit Schedina
 // ============================================
-async function handleSend(body: any, res: VercelResponse) {
+async function handleSend(body: any, user: any, res: VercelResponse) {
     console.log('[SEND] ===== NEW SEND REQUEST =====');
+    console.log('[SEND] User:', user.email, 'ID:', user.userId);
 
     const { utente, token, schedine } = body;
 
@@ -257,6 +287,13 @@ async function handleSend(body: any, res: VercelResponse) {
     const ricevuta = ricevutaMatch ? ricevutaMatch[1] : undefined;
 
     if (!esito || schedineValide === 0) {
+        // Log failed send attempt
+        try {
+            await logUserAction(user.userId, 'alloggiati_send_failed', { utente, error: errorDettaglio });
+        } catch (err) {
+            console.error('[SEND] Failed to log failed send:', err);
+        }
+
         return res.status(200).json({
             success: false,
             message: errorDettaglio ? `${errorDes}: ${errorDettaglio}` : 'Errore durante l\'invio',
@@ -265,6 +302,22 @@ async function handleSend(body: any, res: VercelResponse) {
     }
 
     console.log('[SEND] ✅ Schedina inviata con successo!');
+
+    // ✅ INCREMENT SCAN COUNT (only on successful send)
+    try {
+        await incrementScanCount(user.userId);
+        console.log('[SEND] ✅ Scan count incremented for user:', user.userId);
+    } catch (error) {
+        console.error('[SEND] ❌ Failed to increment scan count:', error);
+        // Don't fail the request, just log error
+    }
+
+    // Log successful send
+    try {
+        await logUserAction(user.userId, 'alloggiati_send_success', { utente, schedineValide, ricevuta });
+    } catch (error) {
+        console.error('[SEND] Failed to log success:', error);
+    }
 
     return res.status(200).json({
         success: true,
@@ -276,8 +329,15 @@ async function handleSend(body: any, res: VercelResponse) {
 // ============================================
 // RICEVUTA - Download Receipt PDF
 // ============================================
-async function handleRicevuta(body: any, res: VercelResponse) {
+async function handleRicevuta(body: any, user: any, res: VercelResponse) {
     const { utente, token, data } = body;
+
+    // Log action
+    try {
+        await logUserAction(user.userId, 'alloggiati_ricevuta', { utente, data });
+    } catch (error) {
+        console.error('[RICEVUTA] Failed to log action:', error);
+    }
 
     if (!utente || !token || !data) {
         return res.status(400).json({
@@ -322,8 +382,15 @@ async function handleRicevuta(body: any, res: VercelResponse) {
 // ============================================
 // TABELLE - Download Reference Tables
 // ============================================
-async function handleTabelle(body: any, res: VercelResponse) {
+async function handleTabelle(body: any, user: any, res: VercelResponse) {
     const { utente, token, tipo } = body;
+
+    // Log action
+    try {
+        await logUserAction(user.userId, 'alloggiati_tabelle', { utente, tipo });
+    } catch (error) {
+        console.error('[TABELLE] Failed to log action:', error);
+    }
 
     if (!utente || !token || tipo === undefined) {
         return res.status(400).json({

@@ -80,14 +80,32 @@ export class AlloggiatiApiService {
     }
 
     /**
+     * Get CheckInly JWT token from sessionStorage
+     */
+    private getAuthToken(): string | null {
+        try {
+            return sessionStorage.getItem('alloggify_token');
+        } catch (error) {
+            console.error('Error getting auth token:', error);
+            return null;
+        }
+    }
+
+    /**
      * Generate authentication token using credentials
      */
     async generateToken(credentials: AlloggiatiCredentials): Promise<TokenResponse> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         try {
             const response = await fetch(API_ENDPOINTS.alloggiati, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'auth',
@@ -137,6 +155,11 @@ export class AlloggiatiApiService {
      * Test schedina before sending (preliminary check)
      */
     async testSchedina(data: DocumentData): Promise<{ success: boolean; message: string }> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         if (!this.token || !this.isTokenValid()) {
             throw new Error('Token scaduto o non disponibile. Effettua il login.');
         }
@@ -153,6 +176,7 @@ export class AlloggiatiApiService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'test',
@@ -184,6 +208,11 @@ export class AlloggiatiApiService {
      * Date must be within last 30 days (excluding today)
      */
     async downloadRicevuta(date: string): Promise<{ success: boolean; message: string; pdf?: string }> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         if (!this.token || !this.isTokenValid()) {
             throw new Error('Token scaduto o non disponibile. Effettua il login.');
         }
@@ -201,6 +230,7 @@ export class AlloggiatiApiService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'ricevuta',
@@ -237,6 +267,11 @@ export class AlloggiatiApiService {
      * Send schedina to Alloggiati Web
      */
     async sendSchedina(data: DocumentData): Promise<{ success: boolean; message: string; ricevuta?: string }> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         if (!this.token || !this.isTokenValid()) {
             throw new Error('Token scaduto o non disponibile. Effettua il login.');
         }
@@ -253,6 +288,7 @@ export class AlloggiatiApiService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'send',
@@ -484,6 +520,11 @@ export class AlloggiatiApiService {
      * Download and cache Tabella Luoghi (comuni italiani)
      */
     async downloadTabelleLuoghi(): Promise<void> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         if (!this.token || !this.isTokenValid()) {
             throw new Error('Token scaduto o non disponibile. Effettua il login.');
         }
@@ -498,6 +539,7 @@ export class AlloggiatiApiService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'tabelle',
@@ -548,6 +590,11 @@ export class AlloggiatiApiService {
      * Download and cache Tabella Documenti (tipi documento)
      */
     async downloadTabellaDocumenti(): Promise<void> {
+        const authToken = this.getAuthToken();
+        if (!authToken) {
+            throw new Error('Non autenticato. Effettua il login a CheckInly.');
+        }
+
         if (!this.token || !this.isTokenValid()) {
             throw new Error('Token scaduto o non disponibile. Effettua il login.');
         }
@@ -562,6 +609,7 @@ export class AlloggiatiApiService {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify({
                     action: 'tabelle',

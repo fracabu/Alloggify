@@ -30,7 +30,7 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     basic: {
         name: 'basic',
         displayName: 'Basic',
-        price: 19,
+        price: 15, // Updated to match UI pricing (was 19)
         scanLimit: 100,
         stripePriceId: process.env.STRIPE_PRICE_BASIC || 'price_basic_xxx', // TODO: Replace with real Stripe Price ID
         features: [
@@ -46,7 +46,7 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     pro: {
         name: 'pro',
         displayName: 'Pro',
-        price: 49,
+        price: 39, // Updated to match UI pricing (was 49)
         scanLimit: 500,
         stripePriceId: process.env.STRIPE_PRICE_PRO || 'price_pro_xxx', // TODO: Replace with real Stripe Price ID
         features: [
