@@ -12,7 +12,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAuth, getIpAddress, getUserAgent } from '../lib/auth';
 import {
     hasReachedScanLimit,
-    incrementScanCount,
     logScan,
     logUserAction,
     getUserById
@@ -219,9 +218,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         // ========================================
-        // 5. INCREMENT SCAN COUNT
+        // 5. GET CURRENT USAGE (NO INCREMENT)
         // ========================================
-        const updatedUsage = await incrementScanCount(userId);
+        // NOTE: Scan count is incremented only on successful Send (not on OCR)
+        // OCR is just for data extraction, not for counting submissions
+        const userUsage = await getUserById(userId);
 
         await logUserAction({
             userId,
@@ -229,13 +230,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             metadata: {
                 documentType: parsedJson.documentType,
                 processingTimeMs: processingTime,
-                scanCount: updatedUsage?.scan_count
+                scanCount: userUsage?.scan_count
             },
             ipAddress: getIpAddress(req),
             userAgent: getUserAgent(req)
         });
 
-        console.log(`[OCR] User ${userId} scan count: ${updatedUsage?.scan_count}/${updatedUsage?.monthly_scan_limit}`);
+        console.log(`[OCR] User ${userId} current usage: ${userUsage?.scan_count}/${userUsage?.monthly_scan_limit}`);
 
         // ========================================
         // 6. RETURN SUCCESS WITH USAGE INFO
@@ -244,9 +245,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             success: true,
             data: parsedJson,
             usage: {
-                scanCount: updatedUsage?.scan_count || 0,
-                monthlyLimit: updatedUsage?.monthly_scan_limit || 0,
-                remaining: Math.max(0, (updatedUsage?.monthly_scan_limit || 0) - (updatedUsage?.scan_count || 0))
+                scanCount: userUsage?.scan_count || 0,
+                monthlyLimit: userUsage?.monthly_scan_limit || 0,
+                remaining: Math.max(0, (userUsage?.monthly_scan_limit || 0) - (userUsage?.scan_count || 0))
             }
         });
 
