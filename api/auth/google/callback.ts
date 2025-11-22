@@ -62,9 +62,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             console.log(`✅ New user created via Google OAuth: ${data.email}`);
 
             // Send welcome email (async, don't wait)
-            sendWelcomeEmail(data.email, fullName).catch((error) => {
-                console.error('❌ Failed to send welcome email:', error);
-            });
+            sendWelcomeEmail(data.email, fullName)
+                .then(() => {
+                    console.log(`✅ Welcome email sent to ${data.email} (Google OAuth)`);
+                })
+                .catch((error: any) => {
+                    console.error('❌ Failed to send welcome email (Google OAuth):', {
+                        email: data.email,
+                        message: error.message,
+                        code: error.code,
+                        response: error.response
+                    });
+                });
 
             isNewUser = true;
         } else if (!user.email_verified) {
