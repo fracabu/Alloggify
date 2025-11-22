@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { UserPlusIcon, ExclamationCircleIcon, CheckCircleIcon, HomeModernIcon } from '@heroicons/react/24/outline';
+import { UserPlusIcon, ExclamationCircleIcon, CheckCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export const SignupPage: React.FC = () => {
     const navigate = useNavigate();
@@ -9,7 +9,6 @@ export const SignupPage: React.FC = () => {
     const { signup, isAuthenticated, loading: authLoading } = useAuth();
 
     const [formData, setFormData] = useState({
-        fullName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -19,6 +18,8 @@ export const SignupPage: React.FC = () => {
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     // Handle Google OAuth callback
     useEffect(() => {
@@ -78,7 +79,7 @@ export const SignupPage: React.FC = () => {
         setError('');
 
         // Validation
-        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+        if (!formData.email || !formData.password || !formData.confirmPassword) {
             setError('Compila tutti i campi obbligatori');
             return;
         }
@@ -106,7 +107,9 @@ export const SignupPage: React.FC = () => {
         setLoading(true);
 
         try {
-            await signup(formData.email, formData.password, formData.fullName, formData.companyName);
+            // Use email username as fullName if not provided
+            const fullName = formData.email.split('@')[0];
+            await signup(formData.email, formData.password, fullName, formData.companyName);
             // Redirect to login page after successful signup
             // User must verify email before logging in
             navigate('/login', {
@@ -144,24 +147,6 @@ export const SignupPage: React.FC = () => {
                                 <span className="text-sm text-red-700">{error}</span>
                             </div>
                         )}
-
-                        {/* Full Name */}
-                        <div>
-                            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                                Nome Completo <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="fullName"
-                                name="fullName"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                                placeholder="Mario Rossi"
-                                disabled={loading}
-                                autocomplete="name"
-                            />
-                        </div>
 
                         {/* Email */}
                         <div>
@@ -204,17 +189,30 @@ export const SignupPage: React.FC = () => {
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                                 Password <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                                placeholder="••••••••"
-                                disabled={loading}
-                                autocomplete="new-password"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                    placeholder="••••••••"
+                                    disabled={loading}
+                                    autoComplete="new-password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showPassword ? (
+                                        <EyeSlashIcon className="h-5 w-5" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </div>
                             {/* Password Strength Indicator */}
                             {formData.password && (
                                 <div className="mt-2">
@@ -243,17 +241,30 @@ export const SignupPage: React.FC = () => {
                             <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
                                 Conferma Password <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="password"
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                                placeholder="••••••••"
-                                disabled={loading}
-                                autocomplete="new-password"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                    placeholder="••••••••"
+                                    disabled={loading}
+                                    autoComplete="new-password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showConfirmPassword ? (
+                                        <EyeSlashIcon className="h-5 w-5" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </div>
                             {formData.confirmPassword && (
                                 <div className="mt-2 flex items-center gap-2 text-xs">
                                     {formData.password === formData.confirmPassword ? (

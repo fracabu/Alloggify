@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { ArrowRightOnRectangleIcon, ExclamationCircleIcon, HomeModernIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon, ExclamationCircleIcon, HomeModernIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -12,6 +12,7 @@ export const LoginPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const from = location.state?.from?.pathname || '/dashboard/scan';
 
@@ -130,16 +131,29 @@ export const LoginPage: React.FC = () => {
                                     Password dimenticata?
                                 </Link>
                             </div>
-                            <input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                                placeholder="••••••••"
-                                disabled={loading}
-                                autocomplete="current-password"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                    placeholder="••••••••"
+                                    disabled={loading}
+                                    autoComplete="current-password"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                                >
+                                    {showPassword ? (
+                                        <EyeSlashIcon className="h-5 w-5" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
 
                         {/* Remember Me - Future feature */}
