@@ -15,6 +15,32 @@ export const LoginPage: React.FC = () => {
 
     const from = location.state?.from?.pathname || '/dashboard/scan';
 
+    // Handle Google OAuth callback
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const googleAuth = params.get('google_auth');
+        const token = params.get('token');
+        const user = params.get('user');
+        const errorParam = params.get('error');
+
+        if (googleAuth === 'success' && token && user) {
+            try {
+                // Store auth data
+                const userData = JSON.parse(decodeURIComponent(user));
+                sessionStorage.setItem('alloggify_token', token);
+                sessionStorage.setItem('alloggify_user', JSON.stringify(userData));
+
+                // Redirect to dashboard
+                navigate('/dashboard/scan', { replace: true });
+            } catch (err) {
+                setError('Errore durante il login con Google. Riprova.');
+            }
+        } else if (errorParam) {
+            const message = params.get('message');
+            setError(message || 'Errore durante il login con Google');
+        }
+    }, [location.search, navigate]);
+
     // Redirect if already logged in
     useEffect(() => {
         if (isAuthenticated && !authLoading) {
@@ -158,12 +184,15 @@ export const LoginPage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Social Login - Placeholder for future */}
-                    <div className="mt-6 grid grid-cols-2 gap-3">
+                    {/* Social Login - Google OAuth */}
+                    <div className="mt-6">
                         <button
                             type="button"
-                            disabled
-                            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={() => {
+                                // Redirect to Google OAuth
+                                window.location.href = '/api/auth/google';
+                            }}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
                         >
                             <svg className="h-5 w-5" viewBox="0 0 24 24">
                                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -171,17 +200,7 @@ export const LoginPage: React.FC = () => {
                                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                             </svg>
-                            Google
-                        </button>
-                        <button
-                            type="button"
-                            disabled
-                            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <svg className="h-5 w-5" fill="#00A4EF" viewBox="0 0 24 24">
-                                <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zm12.6 0H12.6V0H24v11.4z"/>
-                            </svg>
-                            Microsoft
+                            Continua con Google
                         </button>
                     </div>
 

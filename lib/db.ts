@@ -45,10 +45,12 @@ export async function getUserById(id: string) {
  */
 export async function createUser(data: {
   email: string;
-  passwordHash: string;
+  passwordHash: string | null;
   fullName: string;
-  companyName?: string;
-  verificationToken: string;
+  companyName?: string | null;
+  verificationToken?: string | null;
+  emailVerified?: boolean;
+  googleId?: string | null;
 }) {
   const result = await sql`
     INSERT INTO users (
@@ -57,16 +59,20 @@ export async function createUser(data: {
       full_name,
       company_name,
       verification_token,
-      verification_token_expires
+      verification_token_expires,
+      email_verified,
+      google_id
     ) VALUES (
       ${data.email},
       ${data.passwordHash},
       ${data.fullName},
       ${data.companyName || null},
-      ${data.verificationToken},
-      NOW() + INTERVAL '24 hours'
+      ${data.verificationToken || null},
+      ${data.verificationToken ? sql`NOW() + INTERVAL '24 hours'` : null},
+      ${data.emailVerified || false},
+      ${data.googleId || null}
     )
-    RETURNING id, email, full_name, company_name, subscription_plan, monthly_scan_limit, created_at
+    RETURNING id, email, full_name, company_name, subscription_plan, monthly_scan_limit, email_verified, created_at
   `;
   return result.rows[0];
 }

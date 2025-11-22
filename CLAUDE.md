@@ -45,27 +45,27 @@ Now deployed as a production SaaS platform with:
 - SOAP API proxy for Alloggiati Web
 - Landing page with pricing tiers
 - News section with article list and detail pages
+- Aruba SMTP email service for transactional emails (via Nodemailer)
+
+**🟡 Partially Implemented**:
+- User Dashboard API endpoints (profile, scan history, subscription management) - **NOT STARTED**
+- Cron job for monthly scan limit reset - **NOT STARTED**
+- `/api/alloggiati` endpoint JWT protection - **NEEDS IMPLEMENTATION**
 
 **🔴 Known Critical Issues**:
 1. **Scan Counter Bug**: Currently increments on OCR scan instead of on successful schedina submission
    - Should count only when `POST /api/alloggiati` (action: 'send') succeeds
    - Fix requires: Add JWT auth to `/api/alloggiati`, move increment from OCR to Send handler
-   - See todo list for implementation tasks
 
 2. **Missing `/api/alloggiati` JWT Protection**: Endpoint accepts requests without authentication
    - Should require `requireAuth()` middleware
    - Needed to track user submissions and increment scan_count correctly
 
-**🟡 Partially Implemented**:
-- User Dashboard API endpoints (profile, scan history, subscription management) - **NOT STARTED**
-- Cron job for monthly scan limit reset - **NOT STARTED**
-
-**📋 Active Todo List** (see current session todos):
-- Protect `/api/alloggiati` with JWT authentication
-- Fix scan counting logic (OCR → Send)
-- Update database with submission tracking
-- User dashboard API endpoints
-- Monthly reset cron job
+**Priority Next Steps**:
+1. Protect `/api/alloggiati` with JWT authentication
+2. Fix scan counting logic (OCR → Send)
+3. Implement user dashboard API endpoints
+4. Add monthly reset cron job
 
 ### Current Architecture (Hybrid)
 
@@ -159,13 +159,13 @@ This project relies on several external services. Access these dashboards to man
 - **Query Interface**: Use Neon's SQL Editor or Vercel's Data tab
 - **Connection**: Auto-configured via Vercel environment variables
 
-### 📧 Email - Resend
-- **Dashboard**: https://resend.com/overview
+### 📧 Email - Aruba SMTP
+- **Dashboard**: https://admin.aruba.it
 - **Purpose**: Transactional emails (verification, password reset)
-- **Current Domain**: `onboarding@resend.dev` (test domain)
-- **Limits (Free Tier)**: 100 emails/day, 3,000 emails/month
-- **API Key**: Configured in `RESEND_API_KEY` environment variable
-- **Troubleshooting**: Check "Emails" tab for delivery status and errors
+- **Current Setup**: SMTP via Nodemailer (smtps.aruba.it:465)
+- **Credentials**: Configured in `SMTP_USER` and `SMTP_PASSWORD` environment variables
+- **From Email**: Configure `SMTP_USER` with your Aruba email (e.g., `noreply@tuodominio.it`)
+- **Troubleshooting**: Check Aruba webmail for bounce messages
 
 ### 🤖 AI/OCR - Google Gemini
 - **Dashboard**: https://aistudio.google.com/apikey
@@ -206,10 +206,14 @@ NEXT_PUBLIC_URL=http://localhost:3000
 JWT_SECRET=your_generated_secret_here
 
 # ==========================================
-# RESEND API KEY (for email verification/reset)
-# Get free key from: https://resend.com
+# ARUBA SMTP (for email verification/reset)
+# Configure at: https://admin.aruba.it
 # ==========================================
-RESEND_API_KEY=re_XXXXX
+SMTP_HOST=smtps.aruba.it
+SMTP_PORT=465
+SMTP_USER=noreply@tuodominio.it
+SMTP_PASSWORD=TuaPasswordEmailAruba
+SMTP_FROM_NAME=CheckInly
 
 # ==========================================
 # GEMINI API KEY (for OCR + AI chat)

@@ -26,6 +26,7 @@ const tabelleRoute = require('./routes/tabelle');
 const chatRoute = require('./routes/chat');
 // New routes for user authentication and OCR
 const userAuthRoute = require('./routes/user-auth');
+const googleAuthRoute = require('./routes/google-auth');
 const ocrRoute = require('./routes/ocr');
 const stripeCheckoutRoute = require('./routes/stripe-checkout');
 const stripeSuccessRoute = require('./routes/stripe-success');
@@ -70,6 +71,7 @@ app.get('/health', (req, res) => {
 // API Routes with /api prefix (to match frontend expectations)
 // User authentication routes
 app.use('/api/auth', userAuthRoute);
+app.use(googleAuthRoute); // Google OAuth (full path already in route file)
 // OCR route
 app.use('/api/ocr', ocrRoute);
 // Stripe routes
@@ -113,6 +115,8 @@ app.listen(PORT, () => {
     console.log(`   👤 User Authentication:`);
     console.log(`      POST /api/auth/login - User login`);
     console.log(`      POST /api/auth/register - User registration`);
+    console.log(`      GET  /api/auth/google - Google OAuth login`);
+    console.log(`      GET  /api/auth/google/callback - Google OAuth callback`);
     console.log(`   📄 OCR:`);
     console.log(`      POST /api/ocr - Extract document data`);
     console.log(`   💳 Stripe Payments:`);

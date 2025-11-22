@@ -1,27 +1,38 @@
 /**
- * Email Service Wrapper
- * Supports both Resend and SendGrid
+ * Email Service using Aruba SMTP
  *
  * Configuration via environment variables:
- * - EMAIL_PROVIDER=sendgrid|resend (default: resend)
- * - SENDGRID_API_KEY (if using SendGrid)
- * - SENDGRID_FROM_EMAIL (if using SendGrid)
- * - RESEND_API_KEY (if using Resend)
+ * - SMTP_HOST (default: smtps.aruba.it)
+ * - SMTP_PORT (default: 465)
+ * - SMTP_USER (your email: noreply@yourdomain.it)
+ * - SMTP_PASSWORD (your email password)
+ * - SMTP_FROM_NAME (default: CheckInly)
+ * - NEXT_PUBLIC_URL (for email links)
  */
 
-import { Resend } from 'resend';
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer';
 
-// Email provider configuration
-const EMAIL_PROVIDER = process.env.EMAIL_PROVIDER || 'resend';
+// SMTP Configuration
+const SMTP_CONFIG = {
+    host: process.env.SMTP_HOST || 'smtps.aruba.it',
+    port: parseInt(process.env.SMTP_PORT || '465'),
+    secure: true, // true for port 465, false for 587
+    auth: {
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASSWORD || ''
+    }
+};
 
-// SendGrid configuration
-if (EMAIL_PROVIDER === 'sendgrid' && process.env.SENDGRID_API_KEY) {
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Create reusable transporter
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter {
+    if (!transporter) {
+        transporter = nodemailer.createTransport(SMTP_CONFIG);
+    }
+    return transporter;
 }
-
-// Resend configuration
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface EmailOptions {
     to: string;
@@ -31,43 +42,28 @@ interface EmailOptions {
 }
 
 /**
- * Send email using configured provider
+ * Send email using Aruba SMTP
  */
 export async function sendEmail(options: EmailOptions): Promise<void> {
     const { to, subject, html, from } = options;
 
-    if (EMAIL_PROVIDER === 'sendgrid') {
-        // ========================================
-        // SENDGRID
-        // ========================================
-        const fromEmail = from || process.env.SENDGRID_FROM_EMAIL || 'noreply@example.com';
-        const fromName = process.env.SENDGRID_FROM_NAME || 'CheckInly';
+    const fromName = process.env.SMTP_FROM_NAME || 'CheckInly';
+    const fromEmail = from || `${fromName} <${process.env.SMTP_USER}>`;
 
-        await sgMail.send({
-            to,
-            from: {
-                email: fromEmail,
-                name: fromName
-            },
-            subject,
-            html
-        });
+    const mailOptions = {
+        from: fromEmail,
+        to,
+        subject,
+        html
+    };
 
-        console.log(`✅ [SendGrid] Email sent to ${to}`);
-    } else {
-        // ========================================
-        // RESEND (default)
-        // ========================================
-        const fromEmail = from || process.env.RESEND_FROM_EMAIL || 'CheckInly <onboarding@resend.dev>';
-
-        await resend.emails.send({
-            from: fromEmail,
-            to,
-            subject,
-            html
-        });
-
-        console.log(`✅ [Resend] Email sent to ${to}`);
+    try {
+        const transporter = getTransporter();
+        const info = await transporter.sendMail(mailOptions);
+        console.log(`✅ [Aruba SMTP] Email sent to ${to} - Message ID: ${info.messageId}`);
+    } catch (error: any) {
+        console.error(`❌ [Aruba SMTP] Failed to send email to ${to}:`, error.message);
+        throw new Error(`Email send failed: ${error.message}`);
     }
 }
 
