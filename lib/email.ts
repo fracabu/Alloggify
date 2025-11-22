@@ -198,7 +198,7 @@ export async function sendWelcomeEmail(
     email: string,
     fullName: string
 ): Promise<void> {
-    const dashboardUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/dashboard`;
+    const loginUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/login`;
 
     const html = `
 <!DOCTYPE html>
@@ -217,33 +217,33 @@ export async function sendWelcomeEmail(
     <body>
         <div class="container">
             <div class="header">
-                <h1>🎊 Account Verificato!</h1>
+                <h1>🎊 Benvenuto su CheckInly!</h1>
             </div>
             <div class="content">
                 <p>Ciao <strong>${fullName}</strong>,</p>
-                <p>Il tuo account CheckInly è stato verificato con successo! Ora puoi iniziare a semplificare la gestione degli alloggiati.</p>
+                <p>Grazie per esserti registrato su CheckInly! Il tuo account è pronto all'uso.</p>
 
                 <h2>🚀 Primi passi:</h2>
                 <div class="feature">
-                    <strong>1. Scansiona un documento</strong><br>
+                    <strong>1. Accedi al tuo account</strong><br>
+                    Clicca il pulsante qui sotto per fare login
+                </div>
+                <div class="feature">
+                    <strong>2. Scansiona un documento</strong><br>
                     Carica una foto di un documento e lascia che l'AI estragga i dati
                 </div>
                 <div class="feature">
-                    <strong>2. Esporta i dati</strong><br>
-                    Usa il Chrome Extension o l'API SOAP per inviare i dati
-                </div>
-                <div class="feature">
-                    <strong>3. Upgrade (opzionale)</strong><br>
-                    Passa a Basic/Pro per scansioni illimitate e funzionalità avanzate
+                    <strong>3. Esporta i dati</strong><br>
+                    Usa il Chrome Extension o l'API SOAP per inviare i dati al portale Alloggiati Web
                 </div>
 
                 <div style="text-align: center;">
-                    <a href="${dashboardUrl}" class="button">Vai alla Dashboard</a>
+                    <a href="${loginUrl}" class="button">Accedi Ora</a>
                 </div>
 
                 <p style="margin-top: 30px;">
                     <strong>Piano attuale:</strong> Free (5 scansioni al mese)<br>
-                    <strong>Hai bisogno di più scansioni?</strong> <a href="${process.env.NEXT_PUBLIC_URL}/pricing">Scopri i nostri piani</a>
+                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani Basic, Pro ed Enterprise
                 </p>
 
                 <p>Buon lavoro! 💼</p>
@@ -259,7 +259,7 @@ export async function sendWelcomeEmail(
 
     await sendEmail({
         to: email,
-        subject: '🎊 Benvenuto su CheckInly - Account Verificato!',
+        subject: '🎊 Benvenuto su CheckInly!',
         html
     });
 }

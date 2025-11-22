@@ -31,7 +31,7 @@ const emailTransporter = nodemailer.createTransport({
 
 // Helper function: Send welcome email
 async function sendWelcomeEmail(email, fullName) {
-    const dashboardUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/dashboard`;
+    const loginUrl = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/login`;
     const fromName = process.env.SMTP_FROM_NAME || 'CheckInly';
 
     const html = `
@@ -55,29 +55,29 @@ async function sendWelcomeEmail(email, fullName) {
             </div>
             <div class="content">
                 <p>Ciao <strong>${fullName}</strong>,</p>
-                <p>Grazie per esserti registrato su CheckInly con il tuo account Google! Il tuo account è già verificato e pronto all'uso.</p>
+                <p>Grazie per esserti registrato su CheckInly! Il tuo account è pronto all'uso.</p>
 
                 <h2>🚀 Primi passi:</h2>
                 <div class="feature">
-                    <strong>1. Scansiona un documento</strong><br>
+                    <strong>1. Accedi al tuo account</strong><br>
+                    Clicca il pulsante qui sotto per fare login
+                </div>
+                <div class="feature">
+                    <strong>2. Scansiona un documento</strong><br>
                     Carica una foto di un documento e lascia che l'AI estragga i dati
                 </div>
                 <div class="feature">
-                    <strong>2. Esporta i dati</strong><br>
-                    Usa il Chrome Extension o l'API SOAP per inviare i dati
-                </div>
-                <div class="feature">
-                    <strong>3. Upgrade (opzionale)</strong><br>
-                    Passa a Basic/Pro per scansioni illimitate e funzionalità avanzate
+                    <strong>3. Esporta i dati</strong><br>
+                    Usa il Chrome Extension o l'API SOAP per inviare i dati al portale Alloggiati Web
                 </div>
 
                 <div style="text-align: center;">
-                    <a href="${dashboardUrl}" class="button">Vai alla Dashboard</a>
+                    <a href="${loginUrl}" class="button">Accedi Ora</a>
                 </div>
 
                 <p style="margin-top: 30px;">
                     <strong>Piano attuale:</strong> Free (5 scansioni al mese)<br>
-                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani
+                    <strong>Hai bisogno di più scansioni?</strong> Scopri i nostri piani Basic, Pro ed Enterprise
                 </p>
 
                 <p>Buon lavoro! 💼</p>
