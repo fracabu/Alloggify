@@ -95,7 +95,7 @@ export const DashboardPage: React.FC = () => {
                     monthlyScanLimit: data.user.monthlyScanLimit
                 });
 
-                setOcrSuccess(`🎉 Upgrade completato! Ora hai ${data.user.monthlyScanLimit} scansioni al mese con il piano ${data.user.subscriptionPlan.toUpperCase()}`);
+                setOcrSuccess(`🎉 Upgrade completato! Ora hai ${data.user.monthlyScanLimit} invii al mese con il piano ${data.user.subscriptionPlan.toUpperCase()}`);
 
                 // Clean URL
                 console.log('[Dashboard] Navigating to clean URL...');
@@ -154,7 +154,7 @@ export const DashboardPage: React.FC = () => {
 
             // Security: Removed console.log with personal data
             setDocumentData(updatedData);
-            setOcrSuccess(`Document processed successfully! Scans: ${ocrResult.usage?.scanCount || 0}/${ocrResult.usage?.monthlyLimit || 0}`);
+            setOcrSuccess(`Documento elaborato con successo! Invii: ${ocrResult.usage?.scanCount || 0}/${ocrResult.usage?.monthlyLimit || 0}`);
             setTimeout(() => setOcrSuccess(null), 5000);
 
         } catch (err) {
@@ -311,7 +311,7 @@ export const DashboardPage: React.FC = () => {
                                     <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
                                     <p className="text-xs text-gray-500">
                                         Piano: <span className="font-semibold capitalize">{user?.subscriptionPlan}</span> •
-                                        <span className="ml-1">{user?.scanCount}/{user?.monthlyScanLimit} scansioni</span>
+                                        <span className="ml-1">{user?.scanCount}/{user?.monthlyScanLimit} invii</span>
                                     </p>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
@@ -363,7 +363,7 @@ export const DashboardPage: React.FC = () => {
                                 ) : (
                                     <>
                                         <UploadIcon className="-ml-1 mr-2 h-5 w-5" />
-                                        Scansiona Documento
+                                        Carica Documento
                                     </>
                                 )}
                             </button>

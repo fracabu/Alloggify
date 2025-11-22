@@ -75,7 +75,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                                     <li><strong>Dati Account:</strong> Email, nome completo, nome azienda (opzionale)</li>
                                     <li><strong>Dati Documenti:</strong> Immagini di documenti d'identità processate tramite OCR</li>
                                     <li><strong>Dati Tecnici:</strong> Indirizzo IP, browser, sistema operativo (per sicurezza)</li>
-                                    <li><strong>Dati Utilizzo:</strong> Numero scansioni, timestamp, preferenze app</li>
+                                    <li><strong>Dati Utilizzo:</strong> Numero invii, timestamp, preferenze app</li>
                                 </ul>
                                 <p className="text-sm bg-amber-50 border border-amber-200 rounded-lg p-4">
                                     <strong>Importante:</strong> Le immagini dei documenti NON sono salvate permanentemente sui nostri server. Vengono processate in tempo reale e eliminate immediatamente dopo l'estrazione dei dati.

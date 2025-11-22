@@ -76,10 +76,10 @@ export const UpgradePage: React.FC = () => {
                             <XCircleIcon className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-0.5" />
                             <div>
                                 <h3 className="text-lg font-semibold text-yellow-900 mb-2">
-                                    Hai raggiunto il limite di scansioni
+                                    Hai raggiunto il limite di invii
                                 </h3>
                                 <p className="text-yellow-800">
-                                    Hai utilizzato tutte le <strong>{user?.monthlyScanLimit || 5} scansioni gratuite</strong> del piano Free.
+                                    Hai utilizzato tutti i <strong>{user?.monthlyScanLimit || 5} invii gratuiti</strong> del piano Free.
                                     Effettua l'upgrade per continuare a usare CheckInly senza limiti!
                                 </p>
                             </div>
@@ -116,7 +116,7 @@ export const UpgradePage: React.FC = () => {
                         <ul className="space-y-4 mb-8">
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />
-                                <span className="text-gray-700">100 scansioni/mese</span>
+                                <span className="text-gray-700">100 invii/mese</span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />
@@ -155,7 +155,7 @@ export const UpgradePage: React.FC = () => {
                         <ul className="space-y-4 mb-8">
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />
-                                <span className="text-gray-700"><strong>500 scansioni/mese</strong></span>
+                                <span className="text-gray-700"><strong>500 invii/mese</strong></span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />
@@ -193,7 +193,7 @@ export const UpgradePage: React.FC = () => {
                         <ul className="space-y-4 mb-8">
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />
-                                <span className="text-gray-700"><strong>Scansioni illimitate</strong></span>
+                                <span className="text-gray-700"><strong>Invii illimitati</strong></span>
                             </li>
                             <li className="flex items-start gap-3">
                                 <CheckCircleIcon className="h-6 w-6 text-green-500 flex-shrink-0" />

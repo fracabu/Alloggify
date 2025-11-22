@@ -108,7 +108,7 @@ export const TermsOfServicePage: React.FC = () => {
                                             <h3 className="font-semibold">Piano Gratuito</h3>
                                         </div>
                                         <ul className="text-sm space-y-1">
-                                            <li>• 5 scansioni/mese</li>
+                                            <li>• 5 invii/mese</li>
                                             <li>• Supporto community</li>
                                             <li>• Funzionalità base</li>
                                         </ul>
@@ -119,7 +119,7 @@ export const TermsOfServicePage: React.FC = () => {
                                             <h3 className="font-semibold">Piani Premium</h3>
                                         </div>
                                         <ul className="text-sm space-y-1">
-                                            <li>• Da 100 a 5000 scansioni/mese</li>
+                                            <li>• Da 100 a 5000 invii/mese</li>
                                             <li>• Supporto prioritario</li>
                                             <li>• Funzionalità avanzate</li>
                                         </ul>

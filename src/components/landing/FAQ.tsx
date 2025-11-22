@@ -12,7 +12,7 @@ export const FAQ: React.FC = () => {
     const faqs: FAQItem[] = [
         {
             question: 'Come funziona l\'OCR di CheckInly?',
-            answer: 'CheckInly utilizza l\'intelligenza artificiale di Google Gemini 2.5 Flash per scansionare documenti d\'identità (carte d\'identità, passaporti, patenti) ed estrarre automaticamente tutti i dati anagrafici. L\'accuratezza è del 99.2% e il processo richiede meno di 2 secondi per documento.'
+            answer: 'CheckInly utilizza l\'intelligenza artificiale di Google Gemini 2.5 Flash per acquisire dati da documenti d\'identità (carte d\'identità, passaporti, patenti) ed estrarre automaticamente tutti i dati anagrafici. L\'accuratezza è del 99.2% e il processo richiede meno di 2 secondi per documento.'
         },
         {
             question: 'È compatibile con tutti i tipi di documenti?',
@@ -28,7 +28,7 @@ export const FAQ: React.FC = () => {
         },
         {
             question: 'Funziona anche su mobile?',
-            answer: 'Sì! La web app è completamente responsive e funziona perfettamente su tablet e smartphone. Puoi scansionare documenti direttamente dalla fotocamera del telefono e inviare le schedine ad Alloggiati Web da qualsiasi dispositivo.'
+            answer: 'Sì! La web app è completamente responsive e funziona perfettamente su tablet e smartphone. Puoi acquisire dati da documenti direttamente dalla fotocamera del telefono e inviare le schedine ad Alloggiati Web da qualsiasi dispositivo.'
         },
         {
             question: 'Serve installare software sul mio computer?',
@@ -36,7 +36,7 @@ export const FAQ: React.FC = () => {
         },
         {
             question: 'Come funziona l\'invio automatico ad Alloggiati Web?',
-            answer: 'Dopo aver scansionato il documento con l\'OCR, CheckInly compila automaticamente tutti i campi. Inserisci le tue credenziali Alloggiati Web (username, password e WSKEY) e clicca "Invia Schedina". Il sistema invia direttamente i dati tramite le API ufficiali della Polizia di Stato e ti fornisce la ricevuta di conferma.'
+            answer: 'Dopo aver acquisito i dati dal documento con l\'OCR, CheckInly compila automaticamente tutti i campi. Inserisci le tue credenziali Alloggiati Web (username, password e WSKEY) e clicca "Invia Schedina". Il sistema invia direttamente i dati tramite le API ufficiali della Polizia di Stato e ti fornisce la ricevuta di conferma.'
         },
         {
             question: 'Come ottengo la WSKEY per l\'invio automatico?',
@@ -56,7 +56,7 @@ export const FAQ: React.FC = () => {
         },
         {
             question: 'Posso provare CheckInly prima di pagare?',
-            answer: 'Certamente! Il piano Free ti dà 5 scansioni gratuite al mese senza bisogno di carta di credito. È perfetto per testare il servizio. Se ti piace, puoi fare upgrade in qualsiasi momento dalla dashboard.'
+            answer: 'Certamente! Il piano Free ti dà 5 invii gratuiti al mese senza bisogno di carta di credito. È perfetto per testare il servizio. Se ti piace, puoi fare upgrade in qualsiasi momento dalla dashboard.'
         },
         {
             question: 'Accettate pagamenti con carta?',

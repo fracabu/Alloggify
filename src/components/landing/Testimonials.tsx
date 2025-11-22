@@ -54,7 +54,7 @@ export const Testimonials: React.FC = () => {
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-gray-900 mb-1">Piano Free per Sempre</h3>
-                                    <p className="text-gray-600 text-sm">5 scansioni/mese gratis. No carta richiesta, no trial limitati.</p>
+                                    <p className="text-gray-600 text-sm">5 invii/mese gratis. No carta richiesta, no trial limitati.</p>
                                 </div>
                             </div>
 
@@ -96,7 +96,7 @@ export const Testimonials: React.FC = () => {
                                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-500 to-purple-600 text-white rounded-lg font-semibold text-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
                             >
                                 <BoltIcon className="h-5 w-5" />
-                                Inizia Gratis - 5 Scansioni/Mese
+                                Inizia Gratis - 5 Invii/Mese
                             </Link>
                             <p className="text-sm text-gray-500 mt-4">
                                 Nessuna carta richiesta • Attivo in 30 secondi

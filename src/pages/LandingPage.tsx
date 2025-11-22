@@ -269,7 +269,7 @@ export const LandingPage: React.FC = () => {
 
                         {/* Subheadline */}
                         <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-                            L'OCR più veloce ed economico d'Italia per Alloggiati Web. Scansione istantanea con AI, invio automatico, gestione illimitata proprietà. Tutto al prezzo di un caffè al giorno.
+                            L'OCR più veloce ed economico d'Italia per Alloggiati Web. Estrazione istantanea con AI, invio automatico, gestione illimitata proprietà. Tutto al prezzo di un caffè al giorno.
                         </p>
 
                         {/* CTA Buttons */}
@@ -278,7 +278,7 @@ export const LandingPage: React.FC = () => {
                                 to="/signup"
                                 className="px-8 py-4 bg-primary-500 text-white rounded-lg font-semibold text-lg hover:bg-primary-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                             >
-                                5 Scansioni Gratis, Sempre
+                                5 Invii Gratis, Sempre
                             </Link>
                             <a
                                 href="#pricing"
@@ -342,7 +342,7 @@ export const LandingPage: React.FC = () => {
                                 icon: CurrencyDollarIcon,
                                 emoji: '🎁',
                                 title: 'Piano Free Permanente',
-                                desc: '5 scansioni gratis al mese, per sempre. No carta richiesta, no trial limitati. Provalo ora.'
+                                desc: '5 invii gratis al mese, per sempre. No carta richiesta, no trial limitati. Provalo ora.'
                             }
                         ].map((feature, idx) => (
                             <div
@@ -404,7 +404,7 @@ export const LandingPage: React.FC = () => {
                             {[
                                 {
                                     step: '1',
-                                    title: 'Scansiona il Documento',
+                                    title: 'Carica il Documento',
                                     desc: 'Carica la foto del documento d\'identità. Il nostro OCR AI estrae tutti i dati in 1 secondo.',
                                     icon: DocumentTextIcon,
                                     iconColor: 'text-blue-600'
@@ -472,7 +472,7 @@ export const LandingPage: React.FC = () => {
                             Pronto a Risparmiare Tempo?
                         </h2>
                         <p className="text-xl mb-8 opacity-90">
-                            Inizia con 5 scansioni gratuite. Nessuna carta di credito richiesta.
+                            Inizia con 5 invii gratuiti. Nessuna carta di credito richiesta.
                         </p>
                         <Link
                             to="/signup"

@@ -12,7 +12,7 @@ export const Pricing: React.FC = () => {
             price: { monthly: 0, annual: 0 },
             popular: false,
             features: [
-                '5 scansioni/mese',
+                '5 invii/mese',
                 'OCR Gemini AI',
                 'Invio WSKEY automatico',
                 'Download ricevute PDF',
@@ -29,7 +29,7 @@ export const Pricing: React.FC = () => {
             savings: '20%',
             popular: true,
             features: [
-                '100 scansioni/mese',
+                '100 invii/mese',
                 'Tutto di Free +',
                 'Cronologia illimitata',
                 'Supporto email prioritario'
@@ -44,7 +44,7 @@ export const Pricing: React.FC = () => {
             savings: '18%',
             popular: false,
             features: [
-                '500 scansioni/mese',
+                '500 invii/mese',
                 'Tutto di Basic +',
                 'Supporto chat prioritario',
                 'Accesso prioritario a nuove feature'

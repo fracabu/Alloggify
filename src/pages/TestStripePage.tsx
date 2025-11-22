@@ -85,7 +85,7 @@ export const TestStripePage: React.FC = () => {
                     <div className="text-sm text-blue-800">
                         <p><strong>Email:</strong> {user?.email}</p>
                         <p><strong>Piano:</strong> {user?.subscriptionPlan || 'free'}</p>
-                        <p><strong>Scansioni:</strong> {user?.scanCount || 0} / {user?.monthlyScanLimit || 5}</p>
+                        <p><strong>Invii:</strong> {user?.scanCount || 0} / {user?.monthlyScanLimit || 5}</p>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@ export const TestStripePage: React.FC = () => {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">Basic</h3>
                         <p className="text-3xl font-bold text-primary-500 mb-4">€19<span className="text-lg text-gray-600">/mese</span></p>
                         <ul className="text-sm text-gray-600 mb-6 space-y-2">
-                            <li>✅ 100 scansioni/mese</li>
+                            <li>✅ 100 invii/mese</li>
                             <li>✅ API Alloggiati Web</li>
                             <li>✅ Supporto email</li>
                         </ul>
@@ -121,7 +121,7 @@ export const TestStripePage: React.FC = () => {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">Pro</h3>
                         <p className="text-3xl font-bold text-primary-500 mb-4">€49<span className="text-lg text-gray-600">/mese</span></p>
                         <ul className="text-sm text-gray-600 mb-6 space-y-2">
-                            <li>✅ 500 scansioni/mese</li>
+                            <li>✅ 500 invii/mese</li>
                             <li>✅ AI Assistant</li>
                             <li>✅ Analytics</li>
                         </ul>
@@ -138,7 +138,7 @@ export const TestStripePage: React.FC = () => {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">Enterprise</h3>
                         <p className="text-3xl font-bold text-primary-500 mb-4">€199<span className="text-lg text-gray-600">/mese</span></p>
                         <ul className="text-sm text-gray-600 mb-6 space-y-2">
-                            <li>✅ Scansioni illimitate</li>
+                            <li>✅ Invii illimitati</li>
                             <li>✅ Multi-utente</li>
                             <li>✅ SLA dedicato</li>
                         </ul>

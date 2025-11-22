@@ -99,7 +99,7 @@ export const NewsListPage: React.FC = () => {
                         Pronto a Provare CheckInly?
                     </h2>
                     <p className="text-xl text-gray-600 mb-8">
-                        5 scansioni gratuite. Nessuna carta richiesta.
+                        5 invii gratuiti. Nessuna carta richiesta.
                     </p>
                     <Link
                         to="/signup"
