@@ -115,9 +115,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       await sendVerificationEmail(email, fullName.trim(), verificationToken);
       console.log(`✅ Verification email sent to ${email}`);
-    } catch (emailError) {
+    } catch (emailError: any) {
       // Log error but don't fail registration
-      console.error('⚠️ Failed to send verification email:', emailError);
+      console.error('⚠️ Failed to send verification email:', {
+        message: emailError.message,
+        code: emailError.code,
+        command: emailError.command,
+        response: emailError.response,
+        responseCode: emailError.responseCode,
+        stack: emailError.stack
+      });
       // User can request resend later
     }
 
