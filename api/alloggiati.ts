@@ -13,9 +13,11 @@
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { sql } from '@vercel/postgres';
 import { escapeXml, callSoap } from '../lib/soap';
 import { requireAuth } from '../lib/auth';
 import { incrementScanCount, logScan, logUserAction } from '../lib/db';
+import { decryptWskey } from '../lib/encryption';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Only allow POST
@@ -97,7 +99,64 @@ async function handleAuth(body: any, user: any, res: VercelResponse) {
     console.log('[AUTH] User:', user.email);
     console.log('[AUTH] Body keys:', Object.keys(body || {}));
 
-    const { utente, password, wskey } = body;
+    // Support both OLD (direct credentials) and NEW (property_id) methods
+    let utente, password, wskey;
+
+    if (body.propertyId) {
+        // NEW METHOD: Get credentials from properties table
+        const { propertyId } = body;
+
+        const { rows } = await sql`
+            SELECT wskey_encrypted, alloggiati_username, property_name
+            FROM properties
+            WHERE id = ${propertyId} AND user_id = ${user.userId}
+            LIMIT 1
+        `;
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                error: 'Property not found',
+                message: 'Struttura non trovata o non autorizzata'
+            });
+        }
+
+        const property = rows[0];
+
+        // Decrypt WSKEY
+        try {
+            wskey = decryptWskey(property.wskey_encrypted);
+        } catch (error) {
+            console.error('[AUTH] Failed to decrypt WSKEY:', error);
+            return res.status(500).json({
+                error: 'Decryption error',
+                message: 'Errore nella decrittazione delle credenziali'
+            });
+        }
+
+        utente = property.alloggiati_username;
+
+        // Get password from environment or form (password not stored in DB for security)
+        password = body.password || process.env.ALLOGGIATI_PASSWORD;
+
+        if (!password) {
+            return res.status(400).json({
+                error: 'Missing password',
+                message: 'Password Alloggiati Web richiesta'
+            });
+        }
+
+        console.log(`[AUTH] Using property credentials: ${property.property_name}`);
+
+        // Update last_used_at for property
+        await sql`
+            UPDATE properties
+            SET last_used_at = NOW()
+            WHERE id = ${propertyId}
+        `;
+    } else {
+        // OLD METHOD: Direct credentials (backward compatibility)
+        ({ utente, password, wskey } = body);
+    }
 
     console.log('[AUTH] Extracted - utente:', utente ? 'present' : 'missing');
     console.log('[AUTH] Extracted - password:', password ? 'present' : 'missing');
@@ -310,6 +369,105 @@ async function handleSend(body: any, user: any, res: VercelResponse) {
     } catch (error) {
         console.error('[SEND] ❌ Failed to increment scan count:', error);
         // Don't fail the request, just log error
+    }
+
+    // ✅ SAVE RECEIPT PDF (if ricevuta available)
+    if (ricevuta && body.propertyId && body.schedineData) {
+        try {
+            console.log('[SEND] Downloading and saving receipt PDF...');
+
+            // Download receipt PDF via SOAP
+            const receiptDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            const ricevutaSoapEnvelope = `<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:all="AlloggiatiService">
+  <soap:Header/>
+  <soap:Body>
+    <all:GetReceipt>
+      <all:Utente>${escapeXml(utente)}</all:Utente>
+      <all:token>${escapeXml(token)}</all:token>
+      <all:Data>${receiptDate}</all:Data>
+    </all:GetReceipt>
+  </soap:Body>
+</soap:Envelope>`;
+
+            const pdfXmlText = await callSoap(ricevutaSoapEnvelope, 'GetReceipt');
+            const pdfMatch = pdfXmlText.match(/<result>(.*?)<\/result>/s);
+            const pdfBase64 = pdfMatch ? pdfMatch[1].trim() : null;
+
+            if (pdfBase64) {
+                // Extract guest data from schedineData (passed from frontend)
+                const schedData = body.schedineData || {};
+                const guestName = schedData.nome || null;
+                const guestSurname = schedData.cognome || null;
+                const guestBirthDate = schedData.dataNascita || null;
+                const guestNationality = schedData.cittadinanza || null;
+                const checkinDate = schedData.dataArrivo || null;
+                const checkoutDate = schedData.dataPartenza || null;
+
+                // Calculate nights if dates available
+                let nights = null;
+                if (checkinDate && checkoutDate) {
+                    const checkin = new Date(checkinDate);
+                    const checkout = new Date(checkoutDate);
+                    nights = Math.ceil((checkout.getTime() - checkin.getTime()) / (1000 * 60 * 60 * 24));
+                }
+
+                // Get property name
+                const { rows: propRows } = await sql`
+                    SELECT property_name FROM properties WHERE id = ${body.propertyId} LIMIT 1
+                `;
+                const propertyName = propRows[0]?.property_name || null;
+
+                // Calculate file size
+                const fileSize = Buffer.from(pdfBase64, 'base64').length;
+
+                // Save to receipts table
+                await sql`
+                    INSERT INTO receipts (
+                        user_id,
+                        property_id,
+                        receipt_number,
+                        receipt_date,
+                        receipt_pdf_base64,
+                        file_size,
+                        guest_name,
+                        guest_surname,
+                        guest_birth_date,
+                        guest_nationality,
+                        property_name,
+                        checkin_date,
+                        checkout_date,
+                        nights,
+                        submission_timestamp,
+                        soap_response_code
+                    ) VALUES (
+                        ${user.userId},
+                        ${body.propertyId},
+                        ${ricevuta},
+                        ${receiptDate},
+                        ${pdfBase64},
+                        ${fileSize},
+                        ${guestName},
+                        ${guestSurname},
+                        ${guestBirthDate},
+                        ${guestNationality},
+                        ${propertyName},
+                        ${checkinDate},
+                        ${checkoutDate},
+                        ${nights},
+                        NOW(),
+                        'success'
+                    )
+                `;
+
+                console.log('[SEND] ✅ Receipt PDF saved to database');
+            } else {
+                console.warn('[SEND] ⚠️ No PDF received from GetReceipt');
+            }
+        } catch (error) {
+            console.error('[SEND] ❌ Failed to save receipt PDF:', error);
+            // Don't fail the request, just log error
+        }
     }
 
     // Log successful send
