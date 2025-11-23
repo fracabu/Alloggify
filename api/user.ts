@@ -239,7 +239,7 @@ async function handleReceipts(req: VercelRequest, res: VercelResponse, user: any
       });
     }
 
-    // Get receipts
+    // Get receipts (use JSON cast for array support)
     const { rows } = await sql`
       SELECT
         id,
@@ -248,7 +248,7 @@ async function handleReceipts(req: VercelRequest, res: VercelResponse, user: any
         guest_surname,
         receipt_date
       FROM receipts
-      WHERE id = ANY(${receiptIds}) AND user_id = ${user.id}
+      WHERE user_id = ${user.id} AND id = ANY(${JSON.stringify(receiptIds)}::jsonb::text[]::uuid[])
     `;
 
     if (rows.length === 0) {

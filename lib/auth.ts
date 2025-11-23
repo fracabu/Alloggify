@@ -14,8 +14,10 @@ const JWT_REFRESH_EXPIRES_IN = '30d'; // Refresh token expires in 30 days
 
 export interface JWTPayload {
   userId: string;
+  id: string; // Alias for userId (for convenience)
   email: string;
   subscriptionPlan: string;
+  subscription_plan: string; // Alias for subscriptionPlan (snake_case compatibility)
 }
 
 /**
@@ -36,8 +38,15 @@ export async function comparePassword(password: string, hash: string): Promise<b
 /**
  * Generate JWT access token
  */
-export function generateAccessToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, {
+export function generateAccessToken(payload: Omit<JWTPayload, 'id' | 'subscription_plan'>): string {
+  // Add aliases for convenience
+  const fullPayload: JWTPayload = {
+    ...payload,
+    id: payload.userId,
+    subscription_plan: payload.subscriptionPlan
+  };
+
+  return jwt.sign(fullPayload, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
     issuer: 'checkinly',
     audience: 'checkinly-users'
@@ -47,8 +56,15 @@ export function generateAccessToken(payload: JWTPayload): string {
 /**
  * Generate JWT refresh token
  */
-export function generateRefreshToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, {
+export function generateRefreshToken(payload: Omit<JWTPayload, 'id' | 'subscription_plan'>): string {
+  // Add aliases for convenience
+  const fullPayload: JWTPayload = {
+    ...payload,
+    id: payload.userId,
+    subscription_plan: payload.subscriptionPlan
+  };
+
+  return jwt.sign(fullPayload, JWT_SECRET, {
     expiresIn: JWT_REFRESH_EXPIRES_IN,
     issuer: 'checkinly',
     audience: 'checkinly-users'

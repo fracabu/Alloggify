@@ -124,14 +124,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                             ${subscription.customer as string},
                             ${planName},
                             ${subscription.status},
-                            to_timestamp(${subscription.currentPeriodStart}),
-                            to_timestamp(${subscription.currentPeriodEnd})
+                            to_timestamp(${subscription.current_period_start}),
+                            to_timestamp(${subscription.current_period_end})
                         )
                         ON CONFLICT (stripe_subscription_id)
                         DO UPDATE SET
                             status = ${subscription.status},
-                            current_period_start = to_timestamp(${subscription.currentPeriodStart}),
-                            current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
+                            current_period_start = to_timestamp(${subscription.current_period_start}),
+                            current_period_end = to_timestamp(${subscription.current_period_end}),
                             updated_at = NOW()
                     `;
                 }
@@ -147,9 +147,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             case 'invoice.payment_succeeded': {
                 const invoice = event.data.object as Stripe.Invoice;
 
-                if (!invoice.subscription) break;
+                // invoice.subscription can be string ID or null
+                const subscriptionId = (invoice as any).subscription;
+                if (!subscriptionId) break;
 
-                const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+                const subscription = await stripe.subscriptions.retrieve(subscriptionId as string);
                 const userId = subscription.metadata?.userId;
 
                 if (!userId) break;
@@ -171,8 +173,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     UPDATE subscriptions
                     SET
                         status = ${subscription.status},
-                        current_period_start = to_timestamp(${subscription.currentPeriodStart}),
-                        current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
+                        current_period_start = to_timestamp(${subscription.current_period_start}),
+                        current_period_end = to_timestamp(${subscription.current_period_end}),
                         updated_at = NOW()
                     WHERE stripe_subscription_id = ${subscription.id}
                 `;
@@ -241,9 +243,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     UPDATE subscriptions
                     SET
                         status = ${subscription.status},
-                        cancel_at_period_end = ${subscription.cancelAtPeriodEnd || false},
-                        current_period_start = to_timestamp(${subscription.currentPeriodStart}),
-                        current_period_end = to_timestamp(${subscription.currentPeriodEnd}),
+                        cancel_at_period_end = ${subscription.cancel_at_period_end || false},
+                        current_period_start = to_timestamp(${subscription.current_period_start}),
+                        current_period_end = to_timestamp(${subscription.current_period_end}),
                         updated_at = NOW()
                     WHERE stripe_subscription_id = ${subscription.id}
                 `;

@@ -249,25 +249,23 @@ async function handleRegister(req: VercelRequest, res: VercelResponse) {
 
   // Generate verification token
   const verificationToken = generateRandomToken();
-  const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
-  // Create user
+  // Create user (verificationExpires is auto-calculated in createUser)
   const newUser = await createUser({
     email: email.toLowerCase(),
     passwordHash,
     fullName: fullName.trim(),
     companyName: companyName?.trim() || null,
-    verificationToken,
-    verificationExpires
+    verificationToken
   });
 
   // Send verification email
   try {
-    await sendVerificationEmail({
-      to: newUser.email,
-      fullName: newUser.full_name,
+    await sendVerificationEmail(
+      newUser.email,
+      newUser.full_name,
       verificationToken
-    });
+    );
 
     console.log(`✅ Verification email sent to ${newUser.email}`);
   } catch (emailError) {
@@ -364,10 +362,10 @@ async function handleVerify(req: VercelRequest, res: VercelResponse) {
 
   // Send welcome email
   try {
-    await sendWelcomeEmail({
-      to: user.email,
-      fullName: user.full_name
-    });
+    await sendWelcomeEmail(
+      user.email,
+      user.full_name
+    );
   } catch (emailError) {
     console.error('Failed to send welcome email:', emailError);
   }
@@ -439,11 +437,11 @@ async function handleForgotPassword(req: VercelRequest, res: VercelResponse) {
 
   // Send email
   try {
-    await sendPasswordResetEmail({
-      to: user.email,
-      fullName: user.full_name,
+    await sendPasswordResetEmail(
+      user.email,
+      user.full_name,
       resetToken
-    });
+    );
 
     console.log(`✅ Password reset email sent to ${user.email}`);
   } catch (emailError) {
@@ -610,7 +608,7 @@ async function handleGoogleCallback(req: VercelRequest, res: VercelResponse) {
       throw new Error('Failed to exchange code for tokens');
     }
 
-    const tokens = await tokenResponse.json();
+    const tokens = await tokenResponse.json() as { access_token: string; refresh_token?: string };
 
     // Get user info
     const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
@@ -621,7 +619,7 @@ async function handleGoogleCallback(req: VercelRequest, res: VercelResponse) {
       throw new Error('Failed to get user info');
     }
 
-    const googleUser = await userInfoResponse.json();
+    const googleUser = await userInfoResponse.json() as { email: string; name: string; id: string; picture?: string };
 
     // Check if user exists
     let user = await getUserByEmail(googleUser.email);
@@ -634,7 +632,7 @@ async function handleGoogleCallback(req: VercelRequest, res: VercelResponse) {
         fullName: googleUser.name,
         companyName: null,
         verificationToken: null,
-        verificationExpires: null,
+        emailVerified: true, // OAuth users are pre-verified
         googleId: googleUser.id
       });
 
@@ -643,10 +641,10 @@ async function handleGoogleCallback(req: VercelRequest, res: VercelResponse) {
 
       // Send welcome email
       try {
-        await sendWelcomeEmail({
-          to: user.email,
-          fullName: user.full_name
-        });
+        await sendWelcomeEmail(
+          user.email,
+          user.full_name
+        );
       } catch (emailError) {
         console.error('Failed to send welcome email:', emailError);
       }

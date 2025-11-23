@@ -164,7 +164,11 @@ async function handleAuth(body: any, user: any, res: VercelResponse) {
 
     // Log action
     try {
-        await logUserAction(user.userId, 'alloggiati_auth', { utente });
+        await logUserAction({
+            userId: user.userId,
+            action: 'alloggiati_auth',
+            metadata: { utente }
+        });
     } catch (error) {
         console.error('[AUTH] Failed to log action:', error);
     }
@@ -219,7 +223,11 @@ async function handleTest(body: any, user: any, res: VercelResponse) {
 
     // Log action
     try {
-        await logUserAction(user.userId, 'alloggiati_test', { utente });
+        await logUserAction({
+            userId: user.userId,
+            action: 'alloggiati_test',
+            metadata: { utente }
+        });
     } catch (error) {
         console.error('[TEST] Failed to log action:', error);
     }
@@ -348,7 +356,11 @@ async function handleSend(body: any, user: any, res: VercelResponse) {
     if (!esito || schedineValide === 0) {
         // Log failed send attempt
         try {
-            await logUserAction(user.userId, 'alloggiati_send_failed', { utente, error: errorDettaglio });
+            await logUserAction({
+                userId: user.userId,
+                action: 'alloggiati_send_failed',
+                metadata: { utente, error: errorDettaglio }
+            });
         } catch (err) {
             console.error('[SEND] Failed to log failed send:', err);
         }
@@ -472,7 +484,11 @@ async function handleSend(body: any, user: any, res: VercelResponse) {
 
     // Log successful send
     try {
-        await logUserAction(user.userId, 'alloggiati_send_success', { utente, schedineValide, ricevuta });
+        await logUserAction({
+            userId: user.userId,
+            action: 'alloggiati_send_success',
+            metadata: { utente, schedineValide, ricevuta }
+        });
     } catch (error) {
         console.error('[SEND] Failed to log success:', error);
     }
@@ -492,7 +508,11 @@ async function handleRicevuta(body: any, user: any, res: VercelResponse) {
 
     // Log action
     try {
-        await logUserAction(user.userId, 'alloggiati_ricevuta', { utente, data });
+        await logUserAction({
+            userId: user.userId,
+            action: 'alloggiati_ricevuta',
+            metadata: { utente, data }
+        });
     } catch (error) {
         console.error('[RICEVUTA] Failed to log action:', error);
     }
@@ -545,7 +565,11 @@ async function handleTabelle(body: any, user: any, res: VercelResponse) {
 
     // Log action
     try {
-        await logUserAction(user.userId, 'alloggiati_tabelle', { utente, tipo });
+        await logUserAction({
+            userId: user.userId,
+            action: 'alloggiati_tabelle',
+            metadata: { utente, tipo }
+        });
     } catch (error) {
         console.error('[TABELLE] Failed to log action:', error);
     }
