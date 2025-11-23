@@ -26,7 +26,7 @@ export const UpgradePage: React.FC = () => {
                 return;
             }
 
-            const response = await fetch('/api/stripe/create-checkout-session', {
+            const response = await fetch('/api/stripe?action=checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

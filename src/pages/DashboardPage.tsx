@@ -71,7 +71,7 @@ export const DashboardPage: React.FC = () => {
 
             console.log('[Dashboard] Calling payment-success API for plan:', planName);
 
-            const response = await fetch('/api/stripe/payment-success', {
+            const response = await fetch('/api/stripe?action=payment-success', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -211,7 +211,7 @@ export const AIChatWidget: React.FC = () => {
         content: msg.content
       }));
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai/chat`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ai`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

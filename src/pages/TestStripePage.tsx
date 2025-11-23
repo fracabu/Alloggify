@@ -23,7 +23,7 @@ export const TestStripePage: React.FC = () => {
             }
 
             // Call Stripe checkout endpoint
-            const response = await fetch('/api/stripe/create-checkout-session', {
+            const response = await fetch('/api/stripe?action=checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

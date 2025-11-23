@@ -22,7 +22,7 @@ export const VerifyEmailPage: React.FC = () => {
 
     const verifyEmail = async (token: string) => {
         try {
-            const response = await fetch(`/api/auth/verify?token=${token}`);
+            const response = await fetch(`/api/auth?action=verify&token=${token}`);
             const data = await response.json();
 
             if (response.ok) {

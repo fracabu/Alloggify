@@ -347,7 +347,7 @@ export const SignupPage: React.FC = () => {
                             type="button"
                             onClick={() => {
                                 // Redirect to Google OAuth
-                                window.location.href = '/api/auth/google';
+                                window.location.href = '/api/auth?action=google';
                             }}
                             className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
                         >

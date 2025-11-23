@@ -8,6 +8,8 @@ import { LandingPage } from './src/pages/LandingPage';
 import { LoginPage } from './src/pages/LoginPage';
 import { SignupPage } from './src/pages/SignupPage';
 import { DashboardPage } from './src/pages/DashboardPage';
+import { PropertiesPage } from './src/pages/PropertiesPage';
+import { ReceiptsPage } from './src/pages/ReceiptsPage';
 import { VerifyEmailPage } from './src/pages/VerifyEmailPage';
 import { PrivacyPolicyPage } from './src/pages/PrivacyPolicy';
 import { TermsOfServicePage } from './src/pages/TermsOfService';
@@ -31,12 +33,28 @@ const App: React.FC = () => {
                     <Route path="/news" element={<NewsListPage />} />
                     <Route path="/news/:slug" element={<NewsDetailPage />} />
 
-                    {/* Protected Routes */}
+                    {/* Protected Routes - Dashboard */}
                     <Route
                         path="/dashboard/scan"
                         element={
                             <ProtectedRoute>
                                 <DashboardPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/properties"
+                        element={
+                            <ProtectedRoute>
+                                <PropertiesPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/dashboard/receipts"
+                        element={
+                            <ProtectedRoute>
+                                <ReceiptsPage />
                             </ProtectedRoute>
                         }
                     />

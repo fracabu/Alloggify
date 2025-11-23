@@ -5,9 +5,10 @@ export interface User {
     email: string;
     fullName: string;
     companyName?: string;
-    subscriptionPlan: 'free' | 'basic' | 'pro' | 'enterprise';
+    subscriptionPlan: 'free' | 'starter' | 'pro' | 'enterprise';
     scanCount: number;
     monthlyScanLimit: number;
+    propertyLimit?: number; // New: multi-property support
 }
 
 export interface AuthContextType {
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch('/api/auth?action=login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -99,7 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch('/api/auth?action=register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, fullName, companyName })
