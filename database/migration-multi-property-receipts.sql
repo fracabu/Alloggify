@@ -1,19 +1,10 @@
--- Migration: Multi-Property + Receipts System
+-- Migration: Saved Credentials + Receipts System
 -- Date: 2025-11-23
--- Description: Adds properties table, receipts table, and property limits
+-- Description: Adds properties table for saved credentials and receipts table
+-- NOTE: No property_limit - users can save unlimited credentials (only scan_count is limited)
 
 -- ============================================
--- 1. ADD property_limit TO users TABLE
--- ============================================
-ALTER TABLE users
-ADD COLUMN IF NOT EXISTS property_limit INTEGER DEFAULT 1;
-
--- Update existing users based on subscription_plan
-UPDATE users SET property_limit = 1 WHERE subscription_plan IN ('free', 'basic', 'starter');
-UPDATE users SET property_limit = 999999 WHERE subscription_plan IN ('pro', 'enterprise');
-
--- ============================================
--- 2. CREATE properties TABLE
+-- 1. CREATE properties TABLE (Saved Credentials)
 -- ============================================
 CREATE TABLE IF NOT EXISTS properties (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -54,7 +45,7 @@ BEFORE UPDATE ON properties
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================
--- 3. ADD property_id TO scans TABLE
+-- 2. ADD property_id TO scans TABLE
 -- ============================================
 ALTER TABLE scans
 ADD COLUMN IF NOT EXISTS property_id UUID REFERENCES properties(id) ON DELETE SET NULL;
@@ -62,7 +53,7 @@ ADD COLUMN IF NOT EXISTS property_id UUID REFERENCES properties(id) ON DELETE SE
 CREATE INDEX IF NOT EXISTS idx_scans_property ON scans(property_id);
 
 -- ============================================
--- 4. CREATE receipts TABLE
+-- 3. CREATE receipts TABLE
 -- ============================================
 CREATE TABLE IF NOT EXISTS receipts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -107,17 +98,17 @@ CREATE INDEX IF NOT EXISTS idx_receipts_number ON receipts(receipt_number);
 CREATE INDEX IF NOT EXISTS idx_receipts_dates ON receipts(checkin_date, checkout_date);
 
 -- ============================================
--- 5. UPDATE subscriptions TABLE (add property tracking)
+-- 4. UPDATE subscriptions TABLE (optional metadata)
 -- ============================================
-ALTER TABLE subscriptions
-ADD COLUMN IF NOT EXISTS properties_included INTEGER DEFAULT 1;
+-- Note: No need to track properties_included since unlimited
 
 -- ============================================
 -- NOTES:
 -- ============================================
 -- After running this migration:
 -- 1. Generate ENCRYPTION_KEY: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
--- 2. Add to .env.local: ENCRYPTION_KEY=your_generated_key
--- 3. All existing users will have property_limit = 1 (based on their plan)
--- 4. WSKEY will be encrypted before storage using lib/encryption.ts
--- 5. Receipts PDF stored as Base64 text (easier for Vercel Serverless)
+-- 2. Add to Vercel Environment Variables: ENCRYPTION_KEY=your_generated_key
+-- 3. Users can save UNLIMITED credentials (no property_limit)
+-- 4. Only scan_count (total submissions) is limited by subscription plan
+-- 5. WSKEY will be encrypted before storage using lib/encryption.ts
+-- 6. Receipts PDF stored as Base64 text (easier for Vercel Serverless)

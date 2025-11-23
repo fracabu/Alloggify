@@ -99,63 +99,71 @@ async function handleAuth(body: any, user: any, res: VercelResponse) {
     console.log('[AUTH] User:', user.email);
     console.log('[AUTH] Body keys:', Object.keys(body || {}));
 
-    // Support both OLD (direct credentials) and NEW (property_id) methods
+    // PRIORITY 1: Direct credentials (always works, no DB needed)
     let utente, password, wskey;
+    let propertyId = body.propertyId;
 
-    if (body.propertyId) {
-        // NEW METHOD: Get credentials from properties table
-        const { propertyId } = body;
+    // Check if direct credentials are provided
+    if (body.utente && body.password && body.wskey) {
+        // Direct credentials provided - use them
+        utente = body.utente;
+        password = body.password;
+        wskey = body.wskey;
+        console.log('[AUTH] Using direct credentials');
+    } else if (propertyId) {
+        // No direct credentials - try to load from saved property
+        console.log('[AUTH] Loading credentials from property:', propertyId);
 
-        const { rows } = await sql`
-            SELECT wskey_encrypted, alloggiati_username, property_name
-            FROM properties
-            WHERE id = ${propertyId} AND user_id = ${user.userId}
-            LIMIT 1
-        `;
-
-        if (rows.length === 0) {
-            return res.status(404).json({
-                error: 'Property not found',
-                message: 'Struttura non trovata o non autorizzata'
-            });
-        }
-
-        const property = rows[0];
-
-        // Decrypt WSKEY
         try {
+            const { rows } = await sql`
+                SELECT wskey_encrypted, alloggiati_username, property_name
+                FROM properties
+                WHERE id = ${propertyId} AND user_id = ${user.userId}
+                LIMIT 1
+            `;
+
+            if (rows.length === 0) {
+                return res.status(404).json({
+                    error: 'Property not found',
+                    message: 'Credenziali salvate non trovate'
+                });
+            }
+
+            const property = rows[0];
+
+            // Decrypt WSKEY
             wskey = decryptWskey(property.wskey_encrypted);
+            utente = property.alloggiati_username;
+            password = body.password || process.env.ALLOGGIATI_PASSWORD;
+
+            if (!password) {
+                return res.status(400).json({
+                    error: 'Missing password',
+                    message: 'Password Alloggiati Web richiesta'
+                });
+            }
+
+            console.log(`[AUTH] Using saved property: ${property.property_name}`);
+
+            // Update last_used_at
+            await sql`
+                UPDATE properties
+                SET last_used_at = NOW(), total_submissions = total_submissions + 1
+                WHERE id = ${propertyId}
+            `;
         } catch (error) {
-            console.error('[AUTH] Failed to decrypt WSKEY:', error);
+            console.error('[AUTH] Property load failed:', error);
             return res.status(500).json({
-                error: 'Decryption error',
-                message: 'Errore nella decrittazione delle credenziali'
+                error: 'Failed to load saved credentials',
+                message: 'Impossibile caricare le credenziali salvate'
             });
         }
-
-        utente = property.alloggiati_username;
-
-        // Get password from environment or form (password not stored in DB for security)
-        password = body.password || process.env.ALLOGGIATI_PASSWORD;
-
-        if (!password) {
-            return res.status(400).json({
-                error: 'Missing password',
-                message: 'Password Alloggiati Web richiesta'
-            });
-        }
-
-        console.log(`[AUTH] Using property credentials: ${property.property_name}`);
-
-        // Update last_used_at for property
-        await sql`
-            UPDATE properties
-            SET last_used_at = NOW()
-            WHERE id = ${propertyId}
-        `;
     } else {
-        // OLD METHOD: Direct credentials (backward compatibility)
-        ({ utente, password, wskey } = body);
+        // No credentials at all
+        return res.status(400).json({
+            error: 'Missing credentials',
+            message: 'Fornire credenziali dirette (utente, password, wskey) o selezionare credenziali salvate'
+        });
     }
 
     console.log('[AUTH] Extracted - utente:', utente ? 'present' : 'missing');

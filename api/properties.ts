@@ -1,11 +1,12 @@
 /**
- * Properties API - Multi-Property Management
+ * Properties API - Saved Credentials Management
  * Endpoint: /api/properties
  *
- * Handles CRUD operations for user properties with:
- * - Property limit enforcement (based on subscription plan)
- * - WSKEY encryption/decryption
- * - Default property management
+ * Handles CRUD operations for saved Alloggiati Web credentials:
+ * - No limit on number of saved credentials (unlimited)
+ * - WSKEY encryption/decryption (when ENCRYPTION_KEY is configured)
+ * - Quick access to frequently used credentials
+ * - Only scan_count (total submissions) is limited by subscription plan
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
@@ -41,15 +42,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ORDER BY is_default DESC, property_name ASC
       `;
 
-      // Get user's property limit
-      const propertyLimit = getPropertyLimit(user.subscription_plan);
-      const canAdd = canAddProperty(user.subscription_plan, rows.length);
-
+      // No property limit - users can save unlimited credentials
       return res.status(200).json({
         properties: rows,
         count: rows.length,
-        limit: propertyLimit,
-        canAddMore: canAdd
+        limit: null, // Unlimited
+        canAddMore: true // Always true
       });
     }
 
@@ -75,38 +73,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
       }
 
-      // Check property limit
-      const propertyLimit = getPropertyLimit(user.subscription_plan);
+      // No property limit check - users can save unlimited credentials
+      // Only scan_count (invii totali) is limited
+
+      // Encrypt WSKEY
+      const wskeyEncrypted = encryptWskey(wskey);
+
+      // Check if user has any properties
       const { rows: countRows } = await sql`
         SELECT COUNT(*) as count
         FROM properties
         WHERE user_id = ${user.id}
       `;
-      const currentCount = parseInt(countRows[0].count);
-
-      if (currentCount >= propertyLimit) {
-        return res.status(403).json({
-          error: 'Limite strutture raggiunto',
-          details: {
-            currentPlan: user.subscription_plan,
-            currentCount: currentCount,
-            limit: propertyLimit,
-            message:
-              propertyLimit === 1
-                ? 'Il piano FREE permette solo 1 struttura. Passa a STARTER per gestire fino a 5 strutture.'
-                : propertyLimit === 5
-                ? 'Il piano STARTER permette max 5 strutture. Passa a PRO per strutture illimitate.'
-                : `Hai raggiunto il limite di ${propertyLimit} strutture.`,
-            upgradeUrl: '/upgrade'
-          }
-        });
-      }
-
-      // Encrypt WSKEY
-      const wskeyEncrypted = encryptWskey(wskey);
-
-      // If this is the first property OR setAsDefault is true, make it default
-      const isFirstProperty = currentCount === 0;
+      const isFirstProperty = parseInt(countRows[0].count) === 0;
       const shouldBeDefault = isFirstProperty || setAsDefault === true;
 
       // If setting as default, unset other defaults

@@ -1,7 +1,7 @@
 /**
- * Properties Management Page
- * Allows users to manage their properties (hotels, B&Bs, etc.)
- * with WSKEY credentials for Alloggiati Web integration
+ * Saved Credentials Page
+ * Allows users to save and reuse Alloggiati Web credentials (WSKEY)
+ * No limit on number of saved credentials - only submission count is limited
  */
 
 import React, { useState, useEffect } from 'react';
@@ -180,9 +180,6 @@ export const PropertiesPage: React.FC = () => {
     );
   }
 
-  const propertyLimit = user?.propertyLimit || 1;
-  const canAddMore = properties.length < propertyLimit;
-
   return (
     <DashboardLayout>
       <div>
@@ -190,20 +187,18 @@ export const PropertiesPage: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
             <BuildingOfficeIcon className="h-8 w-8 text-primary-600" />
-            Le Mie Strutture
+            Credenziali Salvate
           </h1>
           <p className="mt-2 text-gray-600">
-            Gestisci le tue strutture ricettive e le credenziali Alloggiati Web
+            Salva le credenziali Alloggiati Web per riutilizzarle velocemente
           </p>
           <div className="mt-4 flex items-center gap-4">
             <span className="text-sm text-gray-600">
-              Strutture: <span className="font-semibold">{properties.length}/{propertyLimit}</span>
+              Credenziali salvate: <span className="font-semibold">{properties.length}</span> <span className="text-gray-400">(nessun limite)</span>
             </span>
-            {!canAddMore && propertyLimit < 999999 && (
-              <span className="text-sm text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
-                Limite raggiunto - <a href="/upgrade" className="underline">Upgrade a PRO</a> per strutture illimitate
-              </span>
-            )}
+            <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+              Limite invii: {user?.scanCount || 0}/{user?.monthlyScanLimit || 10} al mese
+            </span>
           </div>
         </div>
 
@@ -235,16 +230,11 @@ export const PropertiesPage: React.FC = () => {
         {/* Add Property Button */}
         <div className="mb-6">
           <button
-            onClick={() => canAddMore && setShowAddModal(true)}
-            disabled={!canAddMore}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-              canAddMore
-                ? 'bg-primary-600 text-white hover:bg-primary-700'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all bg-primary-600 text-white hover:bg-primary-700"
           >
             <PlusIcon className="h-5 w-5" />
-            Aggiungi Struttura
+            Salva Nuove Credenziali
           </button>
         </div>
 
@@ -252,9 +242,9 @@ export const PropertiesPage: React.FC = () => {
         {properties.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <BuildingOfficeIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Nessuna struttura configurata</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Nessuna credenziale salvata</h3>
             <p className="text-gray-600 mb-6">
-              Aggiungi la tua prima struttura per iniziare a inviare schedine
+              Salva le credenziali Alloggiati Web per riutilizzarle velocemente
             </p>
             <button
               onClick={() => setShowAddModal(true)}
