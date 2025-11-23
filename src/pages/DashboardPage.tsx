@@ -12,6 +12,7 @@ import { AlloggiatiCredentials } from '../../components/AlloggiatiCredentials';
 import { alloggiatiApi } from '../../services/alloggiatiApiService';
 import { ConfirmationModal } from '../../components/ConfirmationModal';
 import { AIChatWidget } from '../components/AIChatWidget';
+import { DashboardTabs } from '../components/DashboardTabs';
 import { ArrowRightOnRectangleIcon, UserIcon, ChartBarIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 const initialDocumentData: DocumentData = {
@@ -329,6 +330,8 @@ export const DashboardPage: React.FC = () => {
                             </button>
                         </div>
                     </div>
+                    {/* Navigation Tabs */}
+                    <DashboardTabs />
                 </div>
             </nav>
 

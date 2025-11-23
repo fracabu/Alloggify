@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { DashboardLayout } from '../components/DashboardLayout';
 import {
   BuildingOfficeIcon,
   PlusIcon,
@@ -171,9 +172,11 @@ export const PropertiesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
+      <DashboardLayout>
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        </div>
+      </DashboardLayout>
     );
   }
 
@@ -181,8 +184,8 @@ export const PropertiesPage: React.FC = () => {
   const canAddMore = properties.length < propertyLimit;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <DashboardLayout>
+      <div>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -486,6 +489,6 @@ export const PropertiesPage: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
