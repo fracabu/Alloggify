@@ -20,12 +20,14 @@ import { incrementScanCount, logScan, logUserAction } from '../lib/db';
 import { decryptWskey } from '../lib/encryption';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    // Set CORS headers for all requests
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-        return res.status(200).end();
+        return res.status(200).json({ success: true });
     }
 
     // Only allow POST
