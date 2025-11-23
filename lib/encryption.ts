@@ -18,22 +18,19 @@ const ENCODING = 'hex';
 
 /**
  * Get encryption key from environment
- * Throws error if not configured (fail-fast on startup)
+ * Returns null if not configured (graceful degradation)
  */
-function getEncryptionKey(): Buffer {
+function getEncryptionKey(): Buffer | null {
   const key = process.env.ENCRYPTION_KEY;
 
   if (!key) {
-    throw new Error(
-      'ENCRYPTION_KEY not configured. Generate with: ' +
-      'node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"'
-    );
+    console.warn('[Encryption] ENCRYPTION_KEY not configured - credentials will be stored in plaintext');
+    return null;
   }
 
   if (key.length !== 64) {
-    throw new Error(
-      `ENCRYPTION_KEY must be 64 hex characters (32 bytes). Current length: ${key.length}`
-    );
+    console.error(`[Encryption] ENCRYPTION_KEY must be 64 hex characters (32 bytes). Current length: ${key.length}`);
+    return null;
   }
 
   return Buffer.from(key, ENCODING);
@@ -46,13 +43,19 @@ function getEncryptionKey(): Buffer {
  * Example: "a1b2c3d4...":auth_tag_hex":"encrypted_hex"
  *
  * @param plaintext - Data to encrypt (e.g., WSKEY)
- * @returns Encrypted string in format "iv:authTag:encrypted"
+ * @returns Encrypted string in format "iv:authTag:encrypted", or plaintext with prefix if encryption unavailable
  */
 export function encrypt(plaintext: string): string {
-  try {
-    const key = getEncryptionKey();
-    const iv = crypto.randomBytes(IV_LENGTH);
+  const key = getEncryptionKey();
 
+  if (!key) {
+    // No encryption key - return plaintext with prefix marker
+    console.warn('[Encryption] Storing data in plaintext (ENCRYPTION_KEY not configured)');
+    return `PLAINTEXT:${plaintext}`;
+  }
+
+  try {
+    const iv = crypto.randomBytes(IV_LENGTH);
     const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
 
     let encrypted = cipher.update(plaintext, 'utf8', ENCODING);
@@ -71,14 +74,25 @@ export function encrypt(plaintext: string): string {
 /**
  * Decrypt sensitive data
  *
- * @param encryptedData - String in format "iv:authTag:encrypted"
+ * @param encryptedData - String in format "iv:authTag:encrypted" or "PLAINTEXT:data"
  * @returns Decrypted plaintext
  * @throws Error if decryption fails (wrong key, tampered data, etc.)
  */
 export function decrypt(encryptedData: string): string {
-  try {
-    const key = getEncryptionKey();
+  // Check if data is plaintext (fallback when encryption unavailable)
+  if (encryptedData.startsWith('PLAINTEXT:')) {
+    const plaintext = encryptedData.substring('PLAINTEXT:'.length);
+    console.warn('[Encryption] Reading plaintext data (no encryption was used)');
+    return plaintext;
+  }
 
+  const key = getEncryptionKey();
+
+  if (!key) {
+    throw new Error('ENCRYPTION_KEY not configured but data appears to be encrypted');
+  }
+
+  try {
     // Parse encrypted string
     const parts = encryptedData.split(':');
     if (parts.length !== 3) {
@@ -136,11 +150,17 @@ export function hashData(data: string): string {
 
 /**
  * Validate encryption key format
- * Call on server startup to fail-fast if misconfigured
+ * Call on server startup to check if encryption is available
  */
 export function validateEncryptionConfig(): boolean {
   try {
-    getEncryptionKey();
+    const key = getEncryptionKey();
+
+    if (!key) {
+      console.warn('[Encryption] ENCRYPTION_KEY not configured - operating in plaintext mode');
+      console.warn('[Encryption] To enable encryption, set ENCRYPTION_KEY environment variable');
+      return false; // Encryption not available, but not a failure
+    }
 
     // Test encryption/decryption round-trip
     const testData = 'test-wskey-validation';
@@ -151,7 +171,7 @@ export function validateEncryptionConfig(): boolean {
       throw new Error('Encryption round-trip validation failed');
     }
 
-    console.log('[Encryption] Configuration validated successfully');
+    console.log('[Encryption] Configuration validated successfully - encryption enabled');
     return true;
   } catch (error) {
     console.error('[Encryption] Configuration validation failed:', error);
